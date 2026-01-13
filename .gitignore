@@ -1,0 +1,5 @@
+.env
+hidden/*
+secret/*
+node_modules/*
+build/*

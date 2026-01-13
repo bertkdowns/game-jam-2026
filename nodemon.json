@@ -1,0 +1,6 @@
+{
+  "watch": ["assets"],
+  "ext": "ts",
+  "ignore": [],
+  "exec": "npm run build"
+}

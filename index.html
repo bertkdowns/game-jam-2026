@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>WebGPU + WASM </title>
+    <!-- imports the wasm and sets up the canvas to display webgpu-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="main.js" type="module"> </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+        body { padding: 0; margin: auto; overflow: hidden; width: min-content; font-family: "Outfit";}
+        input {display: inline; font-size: 2.5em; padding: 0.5em; margin: 0.5em;  border-radius: 1rem;  font-family: inherit;}
+        canvas {box-sizing: content-box; }
+        .fa-input { font-family: 'Font Awesome 5 Free', 'Helvetica', sans-serif;  font-weight: 900; }
+        #fullscreen {float:right;  height: 2.5em; aspect-ratio : 1;}
+    </style>
+</head>
+
+<body>
+    <canvas width="1920" height="1080"></canvas>
+    <span id="controls"> 
+    <input type="text" id="text">
+    <input type="button" id="to3D" value="3D control">
+    <input type="button" id="to2D" value="2D control">
+    <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" >
+    <!--canvas width="512" height="512"></canvas-->
+    </span> 
+</body>
+</html>
