@@ -8,19 +8,19 @@
   "main": "main.ts",
   "scripts": {
     "start": "npx serve .",
-    "build": " asc --config asconfig.json --target release -o build/module.wasm && node ./postbuild.js", 
-    "restart": "npm run build && npm run start", 
+    "build": " asc --config asconfig.json --target release -o build/module.wasm && node ./postbuild.js",
+    "restart": "npm run build && npm run start",
     "asbuild": "npm run asbuild:debug && npm run asbuild:release",
     "asbuild:debug": "asc main.ts --target debug",
     "asbuild:release": "asc main.ts --target release"
   },
   "devDependencies": {
     "@webgpu/types": "^0.1.68",
+    "assemblyscript": "^0.28.9",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "webpack": "^5.104.1",
-    "webpack-cli": "^6.0.1",
-    "assemblyscript": "^0.28.9"
+    "webpack-cli": "^6.0.1"
   },
   "exports": {
     ".": {
