@@ -34,3 +34,5 @@ GameEngineStuff:
 ☐ physics colliders 
 ☐ physics solver (handle wasm side)
 
+   scene management:
+☐ have a way of loading a scene [serialising objects/loading in all] 

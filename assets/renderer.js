@@ -102,6 +102,17 @@ export function AllocateTexture(bitmap) {
     return { view: texture.createView(), width: bitmap.width, height: bitmap.height};
 }
 
+export function AllocateCubeMap(bitmap) {
+    const texture = gpu.createTexture(Object.assign({ size: [bitmap.width, bitmap.height] }, bitmap.textureFormat));
+    gpu.queue.writeTexture(
+        { texture },
+        bitmap.data,
+        { bytesPerRow: bitmap.width * 4 },
+        { width: bitmap.width, height: bitmap.height }
+    );
+    return { view: texture.createView({dimension: "cube"}), width: bitmap.width, height: bitmap.height};
+}
+
 
 
 

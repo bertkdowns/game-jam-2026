@@ -1,14 +1,17 @@
 
-import { AllocateMesh, AllocateTexture, AllocateShaderModule, AllocateTextureArray } from "./renderer.js";
+import { AllocateMesh, AllocateTexture, AllocateShaderModule, AllocateTextureArray, AllocateCubeMap } from "./renderer.js";
 import { audioCtx } from "./audio.js";
 
 
 export const loadImages = (...src) => Promise.all(src.map(loadImage));
+export const loadCubeMaps = (...src) => Promise.all(src.map(loadCubeMap));
 export const loadShaders = (...src) => Promise.all(src.map(loadShader));
 export const loadAudioClips = (...src) => Promise.all(src.map(loadAudioClip));
 export const loadObjects = (...src) => Promise.all(src.map(loadObject));
 
+
 export const loadImage = (src) => fetch(src).then(r => r.blob()).then(decodeImage).then(bitmap => AllocateTexture(bitmap));
+export const loadCubeMap = (src) => fetch(src).then(r => r.blob()).then(decodeImage).then(bitmap => AllocateCubeMap(bitmap));
 export const loadShader = (src) => fetch(src).then(r => r.text()).then(decodeShader).then(text => AllocateShaderModule({ label: src, code: text }));
 export const loadAudioClip = (src) => fetch(src).then(r => r.arrayBuffer()).then(decodeAudio).then(buffer => { return { src, buffer } });
 export const loadObject = (src) => fetch(src).then(r => r.text()).then(decodeObject).then(array => AllocateMesh(array));

@@ -6,13 +6,14 @@ import { Scene } from "./assets/scene.js";
 import { audioCtx, Play } from "./assets/audio.js";
 
 
-import { loadAudioClips, loadImages, loadObjects, loadShaders, loadTextureArray } from "./assets/asset_io.js";
+import { loadAudioClips, loadImages, loadObjects, loadShaders, loadTextureArray , loadCubeMaps} from "./assets/asset_io.js";
 import { Renderer, AllocateUniformBuffer, AllocateInstancedBuffer, newFrameView } from "./assets/renderer.js";
 
-import { material, SpriteRenderer } from "./assets/components/spriteRenderer.js";
+import { SpriteRenderer } from "./assets/components/spriteRenderer.js";
 import { TextRenderer } from "./assets/components/textRenderer.js";
 import { TileRenderer } from "./assets/components/tileRenderer.js";
 import { MeshRenderer } from "./assets/components/meshRenderer.js";
+import { SkyboxRenderer } from "./assets/components/skyboxRenderer.js";
 import { material as HDRmaterial } from "./assets/shader/hdrMaterial.js";
 
 import { InitTextSystem, textboxAt, DrawPage, ClearPage, DrawMap } from "./build/module.js";
@@ -51,9 +52,9 @@ console.log("waiting for image...");
 
 // write textures shaders etc into seperate arrays so we can either collect them as an array per type or referance them individually. 
 const [
-    [playerTexture, fontTexture, tileTexture, backgroundTexture,flatColor],
+    [playerTexture, fontTexture, tileTexture, backgroundTexture,flatColorTexture, skyboxTexture],
     explosionTexture,
-    [spriteShader, tileShader, textShader, meshShader, spriteShaderWithAtlus],
+    [spriteShader, tileShader, textShader, meshShader,skyboxShader, spriteShaderWithAtlus],
     [quadMesh, textMesh, cubeMesh, suzanne],
     audioClips,
 ] = await Promise.all([
@@ -63,7 +64,8 @@ const [
         "./assets/sprites/groundTile.png",
         "./assets/sprites/background.png",
         "./assets/sprites/flatColor.png",
-    ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1/64})))
+        "./assets/sprites/skybox.png",
+    ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1/64})))   
     , loadTextureArray(
         "./assets/sprites/explosion/explosion0000.png",
         "./assets/sprites/explosion/explosion0001.png",
@@ -85,6 +87,7 @@ const [
         "./assets/shader/tileShader.wgsl",
         "./assets/shader/textShader.wgsl",
         "./assets/shader/meshShader.wgsl",
+        "./assets/shader/skyboxShader.wgsl",
         "./assets/shader/spriteShaderWithAtlus.wgsl",
     ), loadObjects(
         "./assets/models/quad.obj",
@@ -95,6 +98,7 @@ const [
         "./assets/audio/footstep1.wav",
         "./assets/audio/footstep2.wav",
     ),
+
 ]);
 
 
@@ -104,7 +108,10 @@ const [
 
 window.quadMesh = quadMesh; 
 
-// creates seperate instances of the object, order follows sorting order, higher is further back.  
+
+
+
+/*// creates seperate instances of the object, order follows sorting order, higher is further back.  
 const background = window.background = scene.heirachy["background"] = Instantiate(SpriteRenderer, {
     cameraMatrixBuffer: AllocateUniformBuffer(208),
     vertexBuffer: quadMesh,
@@ -116,7 +123,7 @@ const background = window.background = scene.heirachy["background"] = Instantiat
     },
 
 });
-
+*/
 
 
 scene.heirachy["ground"] = Instantiate(TileRenderer, quadMesh, {
@@ -175,11 +182,20 @@ const player = window.player = scene.heirachy["player"] = InstantiateEntity(Spri
 
 
 // #region 3D SCENE 
+
+const skybox = scene.heirachy["skybox"] = Instantiate(SkyboxRenderer, {
+    vertexBuffer : cubeMesh, 
+    cameraMatrixBuffer: AllocateUniformBuffer(2 * 64),
+    shaderModule: skyboxShader, 
+    texture: skyboxTexture, 
+});
+
+
 const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshRenderer, {
     vertexBuffer: suzanne,
     cameraMatrixBuffer: AllocateUniformBuffer(3 * 64),
     shaderModule: meshShader,
-    texture: flatColor,
+    texture: flatColorTexture,
     Start() {
         this.position.set([0, -1, -6]);
         this.scale.set([0.4, 0.4, 0.4]);

@@ -193,6 +193,8 @@ export function quatFromEuler([pitch, roll, yaw = 0]) {
     ];
 }
 
+
+
 export function eulerFromQuaternion([x, y, z, w]) {
   // roll (X axis)
   const sinr_cosp = 2 * (w * x + y * z);
