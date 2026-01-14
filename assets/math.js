@@ -1,5 +1,7 @@
-// vector math
+export const degToRad = Math.PI/180; 
+export const radToDeg = 180/Math.PI; 
 
+// vector math
 export class Vec3 extends Array {
     constructor(x = 0, y = 0, z = 0) {
         super(x, y, z);
@@ -16,7 +18,13 @@ export class Vec3 extends Array {
     set([x = 0, y = 0, z = 0]) {
         this[0] = x; this[1] = y; this[2] = z;
     }
+
+    static zero(){ return new Vec3(0,0,0)}; 
+    static one(){ return new Vec3(1,1,1)};
 }
+
+window.Vec3 = Vec3;  // exposes the vec3 class to call in the console
+
 
 export function dot(a, b) {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
@@ -96,6 +104,7 @@ export function invertMat4(m) {
     for (let i = 0; i < 16; i++) inv[i] *= det;
     return inv;
 }
+
 
 
 // Matrix from Quaternion. 
@@ -184,6 +193,26 @@ export function quatFromEuler([pitch, roll, yaw = 0]) {
     ];
 }
 
+export function eulerFromQuaternion([x, y, z, w]) {
+  // roll (X axis)
+  const sinr_cosp = 2 * (w * x + y * z);
+  const cosr_cosp = 1 - 2 * (x * x + y * y);
+  const roll = Math.atan2(sinr_cosp, cosr_cosp);
+
+  // pitch (Y axis)
+  const sinp = 2 * (w * y - z * x);
+  const pitch = Math.abs(sinp) >= 1
+    ? Math.sign(sinp) * Math.PI / 2
+    : Math.asin(sinp);
+
+  // yaw (Z axis)
+  const siny_cosp = 2 * (w * z + x * y);
+  const cosy_cosp = 1 - 2 * (y * y + z * z);
+  const yaw = Math.atan2(siny_cosp, cosy_cosp);
+
+  // match your original argument order
+  return [pitch, roll, yaw];
+}
 
 
 

@@ -1,40 +1,140 @@
-import { Vec3, quatFromEuler } from "../math.js";
+import { Vec3, quatFromEuler, eulerFromQuaternion, degToRad, radToDeg, TransformFromTRS } from "../math.js";
 
 
-const degToRad = Math.PI/180; 
 
-export const Transform = {
-   
-    rotation : new Vec3(0,0,0),
-    position : new Vec3(0,0,0),
-    scale : new Vec3(1,1,1),
 
-    quaternion : [0,0,0,0],
-    transformMatrix : [ 1,0,0,0 ,0,1,0,0 ,0,0,1,0 ,0,0,0,1],
+export class Transform {
+    _position = Vec3.zero();
+    _scale = Vec3.one();
+    // rotations are paired together in the constructor
+    _rotation = Vec3.zero();
+    _quaternion = [0, 0, 0, 0];
+    // matrix should be updated before rendering via "UpdateTransformMatrix()" 
+    transformMatrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 
-    UpdateTransformMatrix() { 
 
-        this.quaternion = quatFromEuler(this.rotation.map(deg=> deg * degToRad));
-        this.transformMatrix = TransformFromTRS(this.quaternion, this.position, this.scale);
 
-        return [this.quaternion, this.transformMatrix];
-    },
+    constructor() {
+        const t = this;
+        // creates an interface that allows us to access the vec3.x etc properties as normal 
+        // and inserts an update function to keep rotation and quaternion synced 
+        // since updating the transform should be infrequent (maybe once per frame, the overhead introduced should be fine.
+        // === rotation ===
+        const eulerView = new Array();
+        Object.defineProperties(eulerView, {
+            // adds per axis setters 
+            x: { get() { return t._rotation[0]; }, set(v) { t._rotation[0] = v; t.UpdateQuaternion() } },
+            y: { get() { return t._rotation[1]; }, set(v) { t._rotation[1] = v; t.UpdateQuaternion() } },
+            z: { get() { return t._rotation[2]; }, set(v) { t._rotation[2] = v; t.UpdateQuaternion() } },
+            0: { get() { return t._rotation[0]; }, set(v) { t._rotation[0] = v; t.UpdateQuaternion() } },
+            1: { get() { return t._rotation[1]; }, set(v) { t._rotation[1] = v; t.UpdateQuaternion() } },
+            2: { get() { return t._rotation[2]; }, set(v) { t._rotation[2] = v; t.UpdateQuaternion() } },
+        });
+        eulerView.set = function (values) {
+            const [x, y, z] = values;
+            t._rotation[0] = x;
+            t._rotation[1] = y;
+            t._rotation[2] = z;
+            t.UpdateQuaternion();
+        }
+        Object.defineProperty(t, "rotation", {
+            get() { return eulerView },
+            set(rotation) {
+                console.log("updating rotation");
+                if (rotation instanceof Vec3) {
+                    t._rotation = rotation;
+                }
+                else if (Array.isArray(rotation)) {
+                    t._rotation.set(rotation);
+
+                } else return;
+
+                t.UpdateQuaternion();
+            }
+        });
+
+        // ===  quaternion  === 
+        const quaternionView = new Array();
+        Object.defineProperties(quaternionView, {
+            // adds per axis setters 
+            x: { get() { return t._quaternion[0]; }, set(v) { t._quaternion[0] = v; t.UpdateEuler() } },
+            y: { get() { return t._quaternion[1]; }, set(v) { t._quaternion[1] = v; t.UpdateEuler() } },
+            z: { get() { return t._quaternion[2]; }, set(v) { t._quaternion[2] = v; t.UpdateEuler() } },
+            w: { get() { return t._quaternion[3]; }, set(v) { t._quaternion[3] = v; t.UpdateEuler() } },
+            0: { get() { return t._quaternion[0]; }, set(v) { t._quaternion[0] = v; t.UpdateEuler() } },
+            1: { get() { return t._quaternion[1]; }, set(v) { t._quaternion[1] = v; t.UpdateEuler() } },
+            2: { get() { return t._quaternion[2]; }, set(v) { t._quaternion[2] = v; t.UpdateEuler() } },
+            3: { get() { return t._quaternion[3]; }, set(v) { t._quaternion[3] = v; t.UpdateEuler() } },
+        });
+        Object.defineProperty(t, "quaternion", {
+            get() { return quaternionView },
+            set(quaternion) {
+                console.log("updating quaternion");
+                if (Array.isArray(quaternion) && quaternion.length == 4) {
+                    t._quaternion = quaternion;
+                }
+                else return;
+                t.UpdateEuler();
+            },
+        });
+
+
+        // ===  position  ===
+        const positionView = new Array();
+        Object.defineProperties(positionView, {
+            // adds per axis setters 
+            x: { get() { return t._position[0]; }, set(v) { t._position[0] = v; } },
+            y: { get() { return t._position[1]; }, set(v) { t._position[1] = v; } },
+            z: { get() { return t._position[2]; }, set(v) { t._position[2] = v; } },
+            0: { get() { return t._position[0]; }, set(v) { t._position[0] = v; } },
+            1: { get() { return t._position[1]; }, set(v) { t._position[1] = v; } },
+            2: { get() { return t._position[2]; }, set(v) { t._position[2] = v; } },
+        });
+        Object.defineProperty(t, "position", {
+            get() { return positionView },
+            set(position) {
+                if (position instanceof Vec3) {
+                    t._position = position;
+                } else if (Array.isArray(position)) {
+                    t._position.set(position);
+                }
+            },
+        }); 
+        positionView.set = t._position.set;
+
+        // ===  scale  ===
+        const scaleView = new Array();
+        Object.defineProperties(scaleView, {
+            // adds per axis setters 
+            x: { get() { return t._scale[0]; }, set(v) { t._scale[0] = v; } },
+            y: { get() { return t._scale[1]; }, set(v) { t._scale[1] = v; } },
+            z: { get() { return t._scale[2]; }, set(v) { t._scale[2] = v; } },
+            0: { get() { return t._scale[0]; }, set(v) { t._scale[0] = v; } },
+            1: { get() { return t._scale[1]; }, set(v) { t._scale[1] = v; } },
+            2: { get() { return t._scale[2]; }, set(v) { t._scale[2] = v; } },
+        });
+        Object.defineProperty(t, "scale", {
+            get() { return scaleView },
+            set(scale) {
+                if (scale instanceof Vec3) {
+                    t._scale = scale;
+                } else if (Array.isArray(scale)) {
+                    t._scale.set(scale);
+                }
+            },
+        });
+        scaleView.set = t._scale.set;
+
+
+    }
+
+    UpdateQuaternion() { this._quaternion = quatFromEuler(this._rotation.map(deg => deg * degToRad)) }
+    UpdateEuler() { this._rotation = eulerFromQuaternion(this._quaternion).map(rad => rad * radToDeg) }
+
+    UpdateTransformMatrix() {
+        this.transformMatrix = TransformFromTRS(this._quaternion, this.position, this.scale);
+    }
 }
 
 
-
-export function TransformFromTRS([qx, qy, qz, qw], [tx, ty, tz], [sx, sy, sz]) {
-        const x2 = qx + qx, y2 = qy + qy, z2 = qz + qz;
-
-        const xx = qx * x2, yy = qy * y2, zz = qz * z2;
-        const xy = qx * y2, xz = qx * z2, yz = qy * z2;
-        const wx = qw * x2, wy = qw * y2, wz = qw * z2;
-
-        return [
-            (1 - (yy + zz)) * sx, (xy + wz) * sx, (xz - wy) * sx, 0,
-            (xy - wz) * sy, (1 - (xx + zz)) * sy, (yz + wx) * sy, 0,
-            (xz + wy) * sz, (yz - wx) * sz, (1 - (xx + yy)) * sz, 0,
-            tx, ty, tz, 1,
-        ];
-    }
-    
+window.Transform = Transform; // exposes the transform class to call in the console

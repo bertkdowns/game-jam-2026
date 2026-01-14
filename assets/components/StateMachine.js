@@ -49,9 +49,9 @@ class StateList {
 export class DemoEntity {
     // setter for state allows some transformation before updating the state
     set state(newState) {
-        // if its undefined, or a skill, or exists within DemoEntity.STATES (index, or key) 
+        // if its undefined, or a State, or exists within DemoEntity.STATES (index, or key) 
         if (newState == undefined
-            || Object.getPrototypeOf(newState)?.constructor.name === "State"
+            || newState instanceof State
             || (newState = DemoEntity.STATES[newState])) {
             this.skillSystem.set(newState);
         }

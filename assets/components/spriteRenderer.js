@@ -70,7 +70,7 @@ export const SpriteRenderer = {
     handlePass: HandlePass,
     init(gpu) {
         [this.renderPipeline, this.bindGroup] = InitRenderer.bind(this)(gpu)
-        Object.assignByVal(this, Transform);
+        Object.assignByVal(this, new Transform());
     },
 }
 

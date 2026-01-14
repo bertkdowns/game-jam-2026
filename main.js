@@ -13,10 +13,11 @@ import { material, SpriteRenderer } from "./assets/components/spriteRenderer.js"
 import { TextRenderer } from "./assets/components/textRenderer.js";
 import { TileRenderer } from "./assets/components/tileRenderer.js";
 import { MeshRenderer } from "./assets/components/meshRenderer.js";
-import { material as HDRmaterial } from "./assets/components/hdr.js";
+import { material as HDRmaterial } from "./assets/shader/hdrMaterial.js";
 
 import { InitTextSystem, textboxAt, DrawPage, ClearPage, DrawMap } from "./build/module.js";
 import { DemoEntity } from "./assets/components/StateMachine.js";
+
 
 
 
@@ -38,9 +39,7 @@ scene.heirachy["camera"] = window.camera = camera;
 console.log(camera); 
 
 // sets the camera position
-camera.position.x = 0;
-camera.position.y = -1;
-camera.position.z = -10;
+camera.position = [0, -1, -10];
 
 
 // load in the assets 
@@ -198,9 +197,9 @@ const plane = window.plane = scene.heirachy["plane"] = Instantiate(MeshRenderer,
     shaderModule: meshShader,
     texture: backgroundTexture,
     Start() {
-        this.position.set([1, -11, -20]);
-        this.rotation.set([0, 0,0]);
-        this.scale.set([20, 1, 20]);
+        this.position = [1, -11, -20];
+        this.rotation = [0, 0,0];
+        this.scale = [20, 1, 20];
     }
 }); 
 

@@ -1,5 +1,4 @@
 
-
 // adds a way to murge objects and their childn objects together recursively 
 Object.assign(Object, {
     murge: (first, second) => {
@@ -26,9 +25,20 @@ Object.assign(Object, {
         // loops through the sources your wanting to assign to the target, if they are objects. 
         for (const source of sources) {
             if (source && typeof source == "object") {
+                // adds entries 
                 for (const [key, value] of Object.entries(source)) {
                     // loops through the entries and copies them, creating instances of the class prototypes etc as it goes. 
                     target[key] = deepAssign(target[key], value);
+                }
+                // adds getters and setters 
+                Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+
+                // adds prototype functions 
+                const proto = Object.getPrototypeOf(source);
+                for (const [key, descriptor] of Object.entries(Object.getOwnPropertyDescriptors(proto))) {
+                    if (typeof descriptor.value === "function") {
+                        Object.defineProperty(target, key, descriptor);
+                    }
                 }
             }
         }
@@ -64,10 +74,4 @@ Object.assign(Object, {
 });
 
 
-
-
 export function Instantiate(...components) { return Object.assign({}, ...components); }
-
-
-
-

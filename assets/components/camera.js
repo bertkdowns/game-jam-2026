@@ -4,7 +4,7 @@ import { Transform } from "./transform.js"
 
 export class Camera {
     constructor() {
-        Object.assignByVal(this, Transform);
+        Object.assignByVal(this, new Transform());
     }
 
     // actual camera stuff

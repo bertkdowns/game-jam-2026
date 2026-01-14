@@ -11,6 +11,10 @@ export var input = {
     lookVertical: 0,
 };
 
+class Input{
+    
+}
+
 
 document.addEventListener("keydown", (event) => {
     if (input[event.code] != undefined) {

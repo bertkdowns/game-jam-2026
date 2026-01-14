@@ -2,8 +2,8 @@ wasm intergration:
     ✔ get assemblyscript to work for backend stuff. (not a fan of having to rebuild everytime. @done(26-01-01 16:25)
     
 webgpu: 
-    [x] decouple rendering from the objects themselves  
-    ☐ camera /transformation matrix 
+    ✔ decouple rendering from the objects themselves @done(26-01-14 20:52)
+    ✔ camera /transformation matrix @done(26-01-14 20:51)
     ☐ lighting/shadows?
 
 GameEngineStuff: 
@@ -24,10 +24,13 @@ GameEngineStuff:
  ☐ 
 
     Entity: 
- ☐ finite/infinite state machine
+ ✔ finite/infinite state machine @done(26-01-14 06:07)
 
     Camera: 
  ☐ virtual camera/ cinimachine stuff. 
 
-
+   physic: 
+☐ gravity + simple collider? 
+☐ physics colliders 
+☐ physics solver (handle wasm side)
 
