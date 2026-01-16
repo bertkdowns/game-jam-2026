@@ -1,5 +1,5 @@
-export const degToRad = Math.PI/180; 
-export const radToDeg = 180/Math.PI; 
+export const degToRad = Math.PI / 180;
+export const radToDeg = 180 / Math.PI;
 
 // vector math
 export class Vec3 extends Array {
@@ -19,8 +19,8 @@ export class Vec3 extends Array {
         this[0] = x; this[1] = y; this[2] = z;
     }
 
-    static zero(){ return new Vec3(0,0,0)}; 
-    static one(){ return new Vec3(1,1,1)};
+    static zero() { return new Vec3(0, 0, 0) };
+    static one() { return new Vec3(1, 1, 1) };
 }
 
 window.Vec3 = Vec3;  // exposes the vec3 class to call in the console
@@ -59,22 +59,62 @@ export function subtract(a, b) {
 
 export function multiplyMat4Vec4(m, v) {
     return [
-        m[0]*v[0] + m[1]*v[1] + m[2]*v[2] + m[3]*v[3],
-        m[4]*v[0] + m[5]*v[1] + m[6]*v[2] + m[7]*v[3],
-        m[8]*v[0] + m[9]*v[1] + m[10]*v[2] + m[11]*v[3],
-        m[12]*v[0] + m[13]*v[1] + m[14]*v[2] + m[15]*v[3],
+        m[0] * v[0] + m[1] * v[1] + m[2] * v[2] + m[3] * v[3],
+        m[4] * v[0] + m[5] * v[1] + m[6] * v[2] + m[7] * v[3],
+        m[8] * v[0] + m[9] * v[1] + m[10] * v[2] + m[11] * v[3],
+        m[12] * v[0] + m[13] * v[1] + m[14] * v[2] + m[15] * v[3],
     ];
 }
+export function multiplyMat4(a, b) {
+    const out = new Array(16);
 
+    const
+        a00 = a[0],  a10 = a[1],  a20 = a[2],  a30 = a[3],
+        a01 = a[4],  a11 = a[5],  a21 = a[6],  a31 = a[7],
+        a02 = a[8],  a12 = a[9],  a22 = a[10], a32 = a[11],
+        a03 = a[12], a13 = a[13], a23 = a[14], a33 = a[15];
+
+    let b0, b1, b2, b3;
+
+    // column 0
+    b0 = b[0]; b1 = b[1]; b2 = b[2]; b3 = b[3];
+    out[0]  = a00*b0 + a01*b1 + a02*b2 + a03*b3;
+    out[1]  = a10*b0 + a11*b1 + a12*b2 + a13*b3;
+    out[2]  = a20*b0 + a21*b1 + a22*b2 + a23*b3;
+    out[3]  = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+
+    // column 1
+    b0 = b[4]; b1 = b[5]; b2 = b[6]; b3 = b[7];
+    out[4]  = a00*b0 + a01*b1 + a02*b2 + a03*b3;
+    out[5]  = a10*b0 + a11*b1 + a12*b2 + a13*b3;
+    out[6]  = a20*b0 + a21*b1 + a22*b2 + a23*b3;
+    out[7]  = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+
+    // column 2
+    b0 = b[8]; b1 = b[9]; b2 = b[10]; b3 = b[11];
+    out[8]  = a00*b0 + a01*b1 + a02*b2 + a03*b3;
+    out[9]  = a10*b0 + a11*b1 + a12*b2 + a13*b3;
+    out[10] = a20*b0 + a21*b1 + a22*b2 + a23*b3;
+    out[11] = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+
+    // column 3
+    b0 = b[12]; b1 = b[13]; b2 = b[14]; b3 = b[15];
+    out[12] = a00*b0 + a01*b1 + a02*b2 + a03*b3;
+    out[13] = a10*b0 + a11*b1 + a12*b2 + a13*b3;
+    out[14] = a20*b0 + a21*b1 + a22*b2 + a23*b3;
+    out[15] = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+
+    return out;
+}
 
 // Inverts A matrix
 export function invertMat4(m) {
     const inv = new Array(16);
     const [
-        m00, m01, m02, m03,
-        m10, m11, m12, m13,
-        m20, m21, m22, m23,
-        m30, m31, m32, m33
+        m00, m10, m20, m30,
+        m01, m11, m21, m31,
+        m02, m12, m22, m32,
+        m03, m13, m23, m33
     ] = m;
 
     inv[0] = m11 * m22 * m33 - m11 * m23 * m32 - m21 * m12 * m33 + m21 * m13 * m32 + m31 * m12 * m23 - m31 * m13 * m22;
@@ -196,24 +236,24 @@ export function quatFromEuler([pitch, roll, yaw = 0]) {
 
 
 export function eulerFromQuaternion([x, y, z, w]) {
-  // roll (X axis)
-  const sinr_cosp = 2 * (w * x + y * z);
-  const cosr_cosp = 1 - 2 * (x * x + y * y);
-  const roll = Math.atan2(sinr_cosp, cosr_cosp);
+    // roll (X axis)
+    const sinr_cosp = 2 * (w * x + y * z);
+    const cosr_cosp = 1 - 2 * (x * x + y * y);
+    const roll = Math.atan2(sinr_cosp, cosr_cosp);
 
-  // pitch (Y axis)
-  const sinp = 2 * (w * y - z * x);
-  const pitch = Math.abs(sinp) >= 1
-    ? Math.sign(sinp) * Math.PI / 2
-    : Math.asin(sinp);
+    // pitch (Y axis)
+    const sinp = 2 * (w * y - z * x);
+    const pitch = Math.abs(sinp) >= 1
+        ? Math.sign(sinp) * Math.PI / 2
+        : Math.asin(sinp);
 
-  // yaw (Z axis)
-  const siny_cosp = 2 * (w * z + x * y);
-  const cosy_cosp = 1 - 2 * (y * y + z * z);
-  const yaw = Math.atan2(siny_cosp, cosy_cosp);
+    // yaw (Z axis)
+    const siny_cosp = 2 * (w * z + x * y);
+    const cosy_cosp = 1 - 2 * (y * y + z * z);
+    const yaw = Math.atan2(siny_cosp, cosy_cosp);
 
-  // match your original argument order
-  return [pitch, roll, yaw];
+    // match your original argument order
+    return [pitch, roll, yaw];
 }
 
 

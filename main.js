@@ -1,5 +1,5 @@
 import { Instantiate } from "./assets/utils.js";
-import { input, Enable2DMouse, Disable2DMouse, DisableCanvasLock, EnableCanvasLock, HandleControllers } from "./assets/input.js"
+import { input, Enable2DMouse, Disable2DMouse, DisableCanvasLock, EnableCanvasLock, InputUpdate, InputLateUpdate } from "./assets/input.js"
 import { Manager } from "./assets/manager.js";
 import { Camera } from "./assets/components/camera.js";
 import { Scene } from "./assets/scene.js";
@@ -18,10 +18,6 @@ import { material as HDRmaterial } from "./assets/shader/hdrMaterial.js";
 
 import { InitTextSystem, textboxAt, DrawPage, ClearPage, DrawMap } from "./build/module.js";
 import { DemoEntity } from "./assets/components/StateMachine.js";
-
-
-
-
 
 
 
@@ -109,9 +105,15 @@ const [
 window.quadMesh = quadMesh; 
 
 
+// 3d skybox behind everything.
+const skybox = scene.heirachy["skybox"] = Instantiate(SkyboxRenderer, {
+    vertexBuffer : cubeMesh, 
+    cameraMatrixBuffer: AllocateUniformBuffer(2 * 64),
+    shaderModule: skyboxShader, 
+    texture: skyboxTexture, 
+});
 
-
-/*// creates seperate instances of the object, order follows sorting order, higher is further back.  
+// creates seperate instances of the object, order follows sorting order, higher is further back.  
 const background = window.background = scene.heirachy["background"] = Instantiate(SpriteRenderer, {
     cameraMatrixBuffer: AllocateUniformBuffer(208),
     vertexBuffer: quadMesh,
@@ -123,7 +125,7 @@ const background = window.background = scene.heirachy["background"] = Instantiat
     },
 
 });
-*/
+
 
 
 scene.heirachy["ground"] = Instantiate(TileRenderer, quadMesh, {
@@ -183,12 +185,7 @@ const player = window.player = scene.heirachy["player"] = InstantiateEntity(Spri
 
 // #region 3D SCENE 
 
-const skybox = scene.heirachy["skybox"] = Instantiate(SkyboxRenderer, {
-    vertexBuffer : cubeMesh, 
-    cameraMatrixBuffer: AllocateUniformBuffer(2 * 64),
-    shaderModule: skyboxShader, 
-    texture: skyboxTexture, 
-});
+
 
 
 const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshRenderer, {
@@ -201,7 +198,7 @@ const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshRenderer, {
         this.scale.set([0.4, 0.4, 0.4]);
     }, 
     Update() {
-        //this.rotation.set([(lastTime%360) *180 , 0,0]);
+        this.rotation = [(lastTime%360) *180 , 0,0];
     }
 });
 
@@ -348,21 +345,20 @@ function HandleTime() {
 
 // INPUT/MOVEMENT CONTROL FOR SPRITE 2
 var x = 0, y = -1, xv = 0, yv = 0, zv = 0;
+window.xv = xv; 
+window.xv = yv;
+window.zv = zv;  
+
 
 const cameraMouseSensitivity = 1 / 20;
-const cameraControllerSensitivity = 1 / 10;
+const cameraControllerSensitivity = 1 * 3;
 
 function Move3D() {
     
-
-    var dx = input["ArrowRight"] - input["ArrowLeft"];
-    var dz = input["ArrowUp"] - input["ArrowDown"];
-    var cdx = input.moveHorizontal;
-    var cdz = -input.moveVertical;
-    // chooses the larger input
-    dx = (Math.abs(cdx) > Math.abs(dx)) ? cdx : dx;
-    dz = (Math.abs(cdz) > Math.abs(dz)) ? cdz : dz;
-
+    var dx = input.moveHorizontal;
+    var dz = -input.moveVertical; // look axis is inverted (same for all controllers, so ive made the mouse and keyboard act the same)
+    //console.log(dx, dz, deltaTime);
+   
     // sets the players speed. 
     const speed = 5;  
     xv += dx * speed * deltaTime;
@@ -378,8 +374,12 @@ function Move3D() {
     // moves relitive to camera direction
     const sin = Math.sin(camera.rotation.x * Math.PI/180);
     const cos = Math.cos(camera.rotation.x * Math.PI/180);
+    
+    //console.warn(sin, cos,xv, zv);
+
     camera.position.x += sin * zv + cos * xv;
     camera.position.z += cos * zv - sin * xv;
+
 }
 
 
@@ -389,8 +389,8 @@ function HandleCameraRotation() {
     camera.rotation.x += input.lookHorizontal * cameraControllerSensitivity;
     camera.rotation.y += input.lookVertical * cameraControllerSensitivity; 
     // mouse look rotation
-    camera.rotation.x += input["mouseX"] * cameraMouseSensitivity;
-    camera.rotation.y += input["mouseY"] * cameraMouseSensitivity;
+    camera.rotation.x += input.mouseX * cameraMouseSensitivity;
+    camera.rotation.y += input.mouseY * cameraMouseSensitivity;
 
     // clamps camera look rotation so you cant get upside down
     if (Math.abs(camera.rotation.y) > 90)
@@ -401,14 +401,8 @@ function HandleCameraRotation() {
 // MOVE 2D 
 function Move2D() {
     const speed = 2;
-    var dx = input["ArrowRight"] - input["ArrowLeft"];
-    var dy = input["ArrowUp"] - input["ArrowDown"];
-    var cdx = input.moveHorizontal;
-    var cdy = -input.moveVertical;
-
-    // chooses the larger input
-    dx = (Math.abs(cdx) > Math.abs(dx)) ? cdx : dx;
-    dy = (Math.abs(cdy) > Math.abs(dy)) ? cdy : dy;
+    var dx = input.moveHorizontal;
+    var dy = -input.moveVertical;
 
     xv += dx * speed * deltaTime;
     yv += dy * speed * deltaTime;
@@ -419,8 +413,10 @@ function Move2D() {
     x += xv;
     y += yv;
 
+    
     camera.position.x += ((x - camera.position.x) * 0.05);
     camera.position.y += ((y - camera.position.y) * 0.05);
+    
 }
 
 
@@ -448,7 +444,7 @@ function HandleUpdate() {
 //-- sets up the game update order (all functions are once per frame) -- 
 Manager.AddUpdateEvents([
     HandleTime,
-    HandleControllers,
+    InputUpdate,
     HandleUpdate,
     () => (using3D) ? Move3D() : Move2D(),
     /*begin rendering*/
@@ -456,14 +452,7 @@ Manager.AddUpdateEvents([
         init: newFrameView,
         drawPass: (pass, gpu) => scene.ForAllObjects(obj => obj?.handlePass?.(pass, gpu, camera)) // draws the scene heirachy 
     }]),
-
-    () => {
-        // resets mouse input to avoid drift
-        if (document.pointerLockElement) {
-            input.mouseX = 0;
-            input.mouseY = 0;
-        }
-    }
+    InputLateUpdate
 ]);
 // starts the game loop
 Manager.StartUpdateLoop();

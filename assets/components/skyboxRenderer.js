@@ -1,4 +1,4 @@
-import { invertMat4 } from "../math.js";
+import { invertMat4, multiplyMat4 } from "../math.js";
 
 export const material = {
     bindingGroupLayout: {
@@ -113,8 +113,10 @@ function HandlePass(pass, gpu, camera) {
     pass.setPipeline(this.renderPipeline);
     pass.setVertexBuffer(0, this.vertexBuffer);
 
+    
+    const ViewMatrix = multiplyMat4(camera.PerspectiveMatrix() , stripTranslation(camera.ViewMatrix()))
 
-    gpu.queue.writeBuffer(this.cameraMatrixBuffer, 0, new Float32Array(invertMat4(camera.ViewMatrix())));
+    gpu.queue.writeBuffer(this.cameraMatrixBuffer, 0, new Float32Array(invertMat4(ViewMatrix)));
 
 
     pass.setBindGroup(0, this.bindGroup); // attaches the texture (bindGroup) to the pass so i can draw it 
@@ -122,8 +124,7 @@ function HandlePass(pass, gpu, camera) {
 }
 
 
-function stripTranslation(view) {
-    const m = view.slice();
+function stripTranslation(m) {
     m[12] = m[13] = m[14] = 0;
     return m;
 }
