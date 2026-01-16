@@ -31,7 +31,7 @@ const gamepadProfiles = {
     },
     "3537-0102-GameSir-X2 Pro-Xbox": {
         axes: {
-            lHorizontal: 0, 
+            lHorizontal: 0,
             lVertical: 1,
             rHorizontal: 2,
             rVertical: 5,
@@ -40,10 +40,10 @@ const gamepadProfiles = {
         mapAxes: (axis, value) => {
 
             value -= 1; //  ["lHorizontal","lVertical", "rHorizontal"].includes(axis)? 1: 0; 
-            
-            
-            return Math.abs(value) > deadzone ? value : 0;  
-             // adds a deadzone
+
+
+            return Math.abs(value) > deadzone ? value : 0;
+            // adds a deadzone
         },
         buttons: {
             dpadUp: 12,
@@ -103,9 +103,9 @@ const gamepadProfiles = {
 
 // target is our formatted controller input
 class InputTarget {
-    constructor(){
+    constructor() {
         // makes sure it has defaults so we dont get any errors if we are missing a button. 
-        this.addBindingsFromDeviceProfile(gamepadProfiles["standard"]); 
+        this.addBindingsFromDeviceProfile(gamepadProfiles["standard"]);
     }
 
 
@@ -131,7 +131,7 @@ class InputTarget {
                         // (this targets the generated properties which have deadzones and offsets that are factored in when it provides it here)
                         var value = 0;
                         for (const device of this.devices) {
-                            if(Object.hasOwn(device, field) && Math.abs(device[field]) > Math.abs(value))
+                            if (Object.hasOwn(device, field) && Math.abs(device[field]) > Math.abs(value))
                                 value = device[field];
                         }
                         return value;
@@ -151,7 +151,7 @@ class InputTarget {
                         // returns the value from the device with the greatest value 
                         var value = 0;
                         for (const device of this.devices) {
-                            if(Object.hasOwn(device, field))
+                            if (Object.hasOwn(device, field))
                                 value = Math.max(value, device[field]);
                         }
                         return value;
@@ -199,8 +199,17 @@ class GamepadDevice {
         // looks through the buttons and axes in this gamepads profile.
         // if there is a known alias we will bind input to the alias instead (allows us to call input.shoot instead of input.r2) etc. 
         // then we create the properties on the target, making their getter return the value of the button or axis it represents.  
+
+        if (this.profile.mapAxes == null)
+            this.profile.mapAxes = gamepadProfiles["standard"].mapAxes; 
+
         for (const [label, index] of Object.entries(this.profile.axes))
-            Object.defineProperty(this, label, { enumerable: true, get() { return this.profile.mapAxes(label, gamepads[this.gamepadIndex].axes[index]); } });
+            Object.defineProperty(this, label, {
+                enumerable: true, get() {
+                    return this.profile.mapAxes(label, gamepads[this.gamepadIndex].axes[index]);
+                    
+                }
+            });
 
         for (const [label, index] of Object.entries(this.profile.buttons))
             Object.defineProperty(this, label, { enumerable: true, get() { return gamepads[this.gamepadIndex].buttons[index].value; } });
@@ -259,8 +268,8 @@ class MouseKeyboardDevice {
         axes: {
             lHorizontal: () => this.pressed.ArrowRight - this.pressed.ArrowLeft,
             lVertical: () => this.pressed.ArrowDown - this.pressed.ArrowUp,
-            rHorizontal: ()=> 0, 
-            rVertical: ()=> 0, 
+            rHorizontal: () => 0,
+            rVertical: () => 0,
             mouseX: () => this._mouseX,
             mouseY: () => this._mouseY,
         },
@@ -340,7 +349,7 @@ const allCanvas = document.querySelectorAll("canvas");
 
 export const Enable2DMouse = () => allCanvas.forEach(canvas => canvas.addEventListener("mousemove", HandleUnlockedMouse));
 export const Disable2DMouse = () => allCanvas.forEach(canvas => canvas.removeEventListener("mousemove", HandleUnlockedMouse));
-Enable2DMouse(); 
+Enable2DMouse();
 
 
 export const EnableCanvasLock = () => allCanvas.forEach(canvas => {
@@ -410,14 +419,14 @@ const last = {
     buttons: {},
 }
 // call this function from the console to help figure out button bindings
-window.detectGameadChanges = ()=> {
-    detectGameadChanges(); 
+window.detectGameadChanges = () => {
+    detectGameadChanges();
     // makes it repeat 10 times per second 
     setInterval(() => navigator.getGamepads().map(detectGameadChanges), 100);
 };
 
 function detectGameadChanges(gamepad) {
-    if(gamepad == null) return; 
+    if (gamepad == null) return;
     for (const key in gamepad.axes) {
         if (last.axes[key] != gamepad.axes[key]) console.warn(`axis ${key} changed from ${last.axes[key]} to ${gamepad.axes[key]}`);
         last.axes[key] = gamepad.axes[key];
