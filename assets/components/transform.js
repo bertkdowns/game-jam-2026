@@ -40,7 +40,6 @@ export class Transform {
         Object.defineProperty(t, "rotation", {
             get() { return eulerView },
             set(rotation) {
-                console.log("updating rotation");
                 if (rotation instanceof Vec3) {
                     t._rotation = rotation;
                 }
