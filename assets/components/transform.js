@@ -37,15 +37,12 @@ export class Transform {
             get() { return eulerView },
             set(rotation) {
                 if (rotation instanceof Vec3) {
-                    console.log("was vec3")
                     t._rotation = rotation;
                 }
                 else if (Array.isArray(rotation)) {
-                    console.log("was array");
                     t._rotation.set(rotation);
 
                 } else return;
-                console.log("updated, quaternion");
                 t.UpdateQuaternion();
             }
         });
@@ -66,7 +63,6 @@ export class Transform {
         Object.defineProperty(t, "quaternion", {
             get() { return quaternionView },
             set(quaternion) {
-                console.log("updating quaternion");
                 if (Array.isArray(quaternion) && quaternion.length == 4) {
                     t._quaternion = quaternion;
                 }
@@ -125,15 +121,15 @@ export class Transform {
 
     }
 
-    UpdateQuaternion() { 
-        console.log("rotation is now",[...this._rotation]); 
-        this._quaternion = quatFromEuler(this._rotation.map(deg => deg * degToRad));
-        console.log("quaternion updated, is now", [...this.quaternion]);
-        
+    UpdateQuaternion() {   
+        this._quaternion = quatFromEuler(this._rotation.map(deg => deg * degToRad)); 
     }
-    UpdateEuler() { this._rotation = eulerFromQuaternion(this._quaternion).map(rad => rad * radToDeg) }
-
-    GetTransformMatrix = () => TransformFromTRS(this._quaternion, this._position, this._scale);
+    UpdateEuler() { 
+        this._rotation = eulerFromQuaternion(this._quaternion).map(rad => rad * radToDeg);
+    }
+    GetTransformMatrix () {
+        TransformFromTRS(this._quaternion, this._position, this._scale);
+    }
 }
 
 
