@@ -124,12 +124,9 @@ export class Transform {
     UpdateQuaternion() {   
         this._quaternion = quatFromEuler(this._rotation.map(deg => deg * degToRad)); 
     }
-    UpdateEuler() { 
-        this._rotation = eulerFromQuaternion(this._quaternion).map(rad => rad * radToDeg);
-    }
-    GetTransformMatrix () {
-        TransformFromTRS(this._quaternion, this._position, this._scale);
-    }
+    UpdateEuler() { this._rotation = eulerFromQuaternion(this._quaternion).map(rad => rad * radToDeg) }
+
+    GetTransformMatrix = () => TransformFromTRS(this._quaternion, this._position, this._scale);
 }
 
 
