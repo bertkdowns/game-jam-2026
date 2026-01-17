@@ -382,11 +382,33 @@ function HandleUnlockedMouse(e) {
     if (document.pointerLockElement)
         return;
     const rect = canvas.getBoundingClientRect();
-    const halfW = canvas.width / 2;
-    const halfH = canvas.height / 2;
 
-    MKBDevice._mouseX = ((e.clientX - rect.left) - halfW) / halfW;
-    MKBDevice._mouseY = (halfH - (e.clientY - rect.top)) / halfH;
+    const canvasAspect = canvas.width / canvas.height;
+    const rectAspect = rect.width / rect.height;
+
+    let viewX = rect.left;
+    let viewY = rect.top;
+    let viewW = rect.width;
+    let viewH = rect.height;
+
+    // letterbox or pillarbox
+    if (rectAspect > canvasAspect) {
+        // pillarbox (bars left/right)
+        viewW = rect.height * canvasAspect;
+        viewX += (rect.width - viewW) * 0.5;
+    } else {
+        // letterbox (bars top/bottom)
+        viewH = rect.width / canvasAspect;
+        viewY += (rect.height - viewH) * 0.5;
+    }
+
+    // mouse relative to visible canvas
+    const mx = e.clientX - viewX;
+    const my = e.clientY - viewY;
+
+    // normalize to [-1, 1], Y up
+    MKBDevice._mouseX = (mx / viewW) * 2 - 1;
+    MKBDevice._mouseY = -(my / viewH) * 2 + 1;
 }
 
 
