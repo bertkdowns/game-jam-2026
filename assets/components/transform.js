@@ -9,10 +9,6 @@ export class Transform {
     // rotations are paired together in the constructor
     _rotation = Vec3.zero();
     _quaternion = [0, 0, 0, 0];
-    // matrix should be updated before rendering via "UpdateTransformMatrix()" 
-    transformMatrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
-
-
 
     constructor() {
         const t = this;
@@ -22,13 +18,13 @@ export class Transform {
         // === rotation ===
         const eulerView = new Array();
         Object.defineProperties(eulerView, {
-            // adds per axis setters 
-            x: { get() { return t._rotation[0]; }, set(v) { t._rotation[0] = v; t.UpdateQuaternion() } },
-            y: { get() { return t._rotation[1]; }, set(v) { t._rotation[1] = v; t.UpdateQuaternion() } },
-            z: { get() { return t._rotation[2]; }, set(v) { t._rotation[2] = v; t.UpdateQuaternion() } },
-            0: { get() { return t._rotation[0]; }, set(v) { t._rotation[0] = v; t.UpdateQuaternion() } },
-            1: { get() { return t._rotation[1]; }, set(v) { t._rotation[1] = v; t.UpdateQuaternion() } },
-            2: { get() { return t._rotation[2]; }, set(v) { t._rotation[2] = v; t.UpdateQuaternion() } },
+            // aenumerable: true,dds per axis setters 
+            x: {enumerable: true, get() { return t._rotation[0]; }, set(v) { t._rotation[0] = v; t.UpdateQuaternion() } },
+            y: {enumerable: true, get() { return t._rotation[1]; }, set(v) { t._rotation[1] = v; t.UpdateQuaternion() } },
+            z: {enumerable: true, get() { return t._rotation[2]; }, set(v) { t._rotation[2] = v; t.UpdateQuaternion() } },
+            0: {enumerable: true, get() { return t._rotation[0]; }, set(v) { t._rotation[0] = v; t.UpdateQuaternion() } },
+            1: {enumerable: true, get() { return t._rotation[1]; }, set(v) { t._rotation[1] = v; t.UpdateQuaternion() } },
+            2: {enumerable: true, get() { return t._rotation[2]; }, set(v) { t._rotation[2] = v; t.UpdateQuaternion() } },
         });
         eulerView.set = function (values) {
             const [x, y, z] = values;
@@ -41,13 +37,15 @@ export class Transform {
             get() { return eulerView },
             set(rotation) {
                 if (rotation instanceof Vec3) {
+                    console.log("was vec3")
                     t._rotation = rotation;
                 }
                 else if (Array.isArray(rotation)) {
+                    console.log("was array");
                     t._rotation.set(rotation);
 
                 } else return;
-
+                console.log("updated, quaternion");
                 t.UpdateQuaternion();
             }
         });
@@ -56,14 +54,14 @@ export class Transform {
         const quaternionView = new Array();
         Object.defineProperties(quaternionView, {
             // adds per axis setters 
-            x: { get() { return t._quaternion[0]; }, set(v) { t._quaternion[0] = v; t.UpdateEuler() } },
-            y: { get() { return t._quaternion[1]; }, set(v) { t._quaternion[1] = v; t.UpdateEuler() } },
-            z: { get() { return t._quaternion[2]; }, set(v) { t._quaternion[2] = v; t.UpdateEuler() } },
-            w: { get() { return t._quaternion[3]; }, set(v) { t._quaternion[3] = v; t.UpdateEuler() } },
-            0: { get() { return t._quaternion[0]; }, set(v) { t._quaternion[0] = v; t.UpdateEuler() } },
-            1: { get() { return t._quaternion[1]; }, set(v) { t._quaternion[1] = v; t.UpdateEuler() } },
-            2: { get() { return t._quaternion[2]; }, set(v) { t._quaternion[2] = v; t.UpdateEuler() } },
-            3: { get() { return t._quaternion[3]; }, set(v) { t._quaternion[3] = v; t.UpdateEuler() } },
+            x: {enumerable: true, get() { return t._quaternion[0]; }, set(v) { t._quaternion[0] = v; t.UpdateEuler() } },
+            y: {enumerable: true, get() { return t._quaternion[1]; }, set(v) { t._quaternion[1] = v; t.UpdateEuler() } },
+            z: {enumerable: true, get() { return t._quaternion[2]; }, set(v) { t._quaternion[2] = v; t.UpdateEuler() } },
+            w: {enumerable: true, get() { return t._quaternion[3]; }, set(v) { t._quaternion[3] = v; t.UpdateEuler() } },
+            0: {enumerable: true, get() { return t._quaternion[0]; }, set(v) { t._quaternion[0] = v; t.UpdateEuler() } },
+            1: {enumerable: true, get() { return t._quaternion[1]; }, set(v) { t._quaternion[1] = v; t.UpdateEuler() } },
+            2: {enumerable: true, get() { return t._quaternion[2]; }, set(v) { t._quaternion[2] = v; t.UpdateEuler() } },
+            3: {enumerable: true, get() { return t._quaternion[3]; }, set(v) { t._quaternion[3] = v; t.UpdateEuler() } },
         });
         Object.defineProperty(t, "quaternion", {
             get() { return quaternionView },
@@ -82,12 +80,12 @@ export class Transform {
         const positionView = new Array();
         Object.defineProperties(positionView, {
             // adds per axis setters 
-            x: { get() { return t._position[0]; }, set(v) { t._position[0] = v; } },
-            y: { get() { return t._position[1]; }, set(v) { t._position[1] = v; } },
-            z: { get() { return t._position[2]; }, set(v) { t._position[2] = v; } },
-            0: { get() { return t._position[0]; }, set(v) { t._position[0] = v; } },
-            1: { get() { return t._position[1]; }, set(v) { t._position[1] = v; } },
-            2: { get() { return t._position[2]; }, set(v) { t._position[2] = v; } },
+            x: {enumerable: true, get() { return t._position[0]; }, set(v) { t._position[0] = v; } },
+            y: {enumerable: true, get() { return t._position[1]; }, set(v) { t._position[1] = v; } },
+            z: {enumerable: true, get() { return t._position[2]; }, set(v) { t._position[2] = v; } },
+            0: {enumerable: true, get() { return t._position[0]; }, set(v) { t._position[0] = v; } },
+            1: {enumerable: true, get() { return t._position[1]; }, set(v) { t._position[1] = v; } },
+            2: {enumerable: true, get() { return t._position[2]; }, set(v) { t._position[2] = v; } },
         });
         Object.defineProperty(t, "position", {
             get() { return positionView },
@@ -105,12 +103,12 @@ export class Transform {
         const scaleView = new Array();
         Object.defineProperties(scaleView, {
             // adds per axis setters 
-            x: { get() { return t._scale[0]; }, set(v) { t._scale[0] = v; } },
-            y: { get() { return t._scale[1]; }, set(v) { t._scale[1] = v; } },
-            z: { get() { return t._scale[2]; }, set(v) { t._scale[2] = v; } },
-            0: { get() { return t._scale[0]; }, set(v) { t._scale[0] = v; } },
-            1: { get() { return t._scale[1]; }, set(v) { t._scale[1] = v; } },
-            2: { get() { return t._scale[2]; }, set(v) { t._scale[2] = v; } },
+            x: {enumerable: true,  get() { return t._scale[0]; }, set(v) { t._scale[0] = v; } },
+            y: {enumerable: true,  get() { return t._scale[1]; }, set(v) { t._scale[1] = v; } },
+            z: {enumerable: true,  get() { return t._scale[2]; }, set(v) { t._scale[2] = v; } },
+            0: {enumerable: true,  get() { return t._scale[0]; }, set(v) { t._scale[0] = v; } },
+            1: {enumerable: true,  get() { return t._scale[1]; }, set(v) { t._scale[1] = v; } },
+            2: {enumerable: true,  get() { return t._scale[2]; }, set(v) { t._scale[2] = v; } },
         });
         Object.defineProperty(t, "scale", {
             get() { return scaleView },
@@ -127,12 +125,15 @@ export class Transform {
 
     }
 
-    UpdateQuaternion() { this._quaternion = quatFromEuler(this._rotation.map(deg => deg * degToRad)) }
+    UpdateQuaternion() { 
+        console.log("rotation is now",[...this._rotation]); 
+        this._quaternion = quatFromEuler(this._rotation.map(deg => deg * degToRad));
+        console.log("quaternion updated, is now", [...this.quaternion]);
+        
+    }
     UpdateEuler() { this._rotation = eulerFromQuaternion(this._quaternion).map(rad => rad * radToDeg) }
 
-    UpdateTransformMatrix() {
-        this.transformMatrix = TransformFromTRS(this._quaternion, this.position, this.scale);
-    }
+    GetTransformMatrix = () => TransformFromTRS(this._quaternion, this._position, this._scale);
 }
 
 

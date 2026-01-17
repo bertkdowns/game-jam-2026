@@ -124,7 +124,7 @@ function HandlePass(pass, gpu, camera) {
     pass.setVertexBuffer(0, this.vertexBuffer);
 
     const buffer = [].concat(
-        this.transformMatrix,
+        this.GetTransformMatrix(),
         camera.ViewMatrix(),
         camera.PerspectiveMatrix(),
         [this.texture.width, this.texture.height, this.texture.pixelScale, this.textureIndex || 0],

@@ -45,9 +45,8 @@ export function subtract(a, b) {
 }
 
 
-
 // Matrix multiplication  
-/*export function multiplyMat4Vec4(m, v) {
+export function multiplyMat4Vec4(m, v) {
     const [x, y, z, w] = v;
     return [
         m[0] * x + m[4] * y + m[8] * z + m[12] * w,
@@ -55,16 +54,9 @@ export function subtract(a, b) {
         m[2] * x + m[6] * y + m[10] * z + m[14] * w,
         m[3] * x + m[7] * y + m[11] * z + m[15] * w,
     ];
-}*/
-
-export function multiplyMat4Vec4(m, v) {
-    return [
-        m[0] * v[0] + m[1] * v[1] + m[2] * v[2] + m[3] * v[3],
-        m[4] * v[0] + m[5] * v[1] + m[6] * v[2] + m[7] * v[3],
-        m[8] * v[0] + m[9] * v[1] + m[10] * v[2] + m[11] * v[3],
-        m[12] * v[0] + m[13] * v[1] + m[14] * v[2] + m[15] * v[3],
-    ];
 }
+
+
 export function multiplyMat4(a, b) {
     const out = new Array(16);
 
@@ -162,6 +154,10 @@ export function quatToMat4(q) {
         0, 0, 0, 1
     ];
 }
+
+
+
+
 export function quatFromMat4(m) {
     // m is a 16-element column-major array (WebGPU/GL style)
     const m00 = m[0], m01 = m[4], m02 = m[8];
@@ -286,3 +282,4 @@ export function TransformFromTRS([qx, qy, qz, qw], [tx, ty, tz], [sx, sy, sz]) {
         tx, ty, tz, 1,
     ];
 }
+

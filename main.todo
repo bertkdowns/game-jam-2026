@@ -7,11 +7,9 @@ webgpu:
     ☐ lighting/shadows?
 
 GameEngineStuff: 
-     ✔ Needs audio. @done(26-01-01 16:26)
-
- ☐ Better input handling / controller/ mouse support. 
- 
-  ✔ 3d support (needs a way to add 3d objects + shader and transform matrix for it.) @done(26-01-01 22:15)
+   ✔ Needs audio. @done(26-01-01 16:26)
+   ✔ Better input handling / controller/ mouse support. @done(26-01-17 17:59)
+   ✔ 3d support (needs a way to add 3d objects + shader and transform matrix for it.) @done(26-01-01 22:15)
 
     UI: 
  ☐ Some UI layout / styling system, as well as a bvh structure for mouse interactions etc.
@@ -36,3 +34,6 @@ GameEngineStuff:
 
    scene management:
 ☐ have a way of loading a scene [serialising objects/loading in all] 
+
+multiplayer: 
+   ☐ scene sync

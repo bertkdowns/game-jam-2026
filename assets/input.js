@@ -201,13 +201,13 @@ class GamepadDevice {
         // then we create the properties on the target, making their getter return the value of the button or axis it represents.  
 
         if (this.profile.mapAxes == null)
-            this.profile.mapAxes = gamepadProfiles["standard"].mapAxes; 
+            this.profile.mapAxes = gamepadProfiles["standard"].mapAxes;
 
         for (const [label, index] of Object.entries(this.profile.axes))
             Object.defineProperty(this, label, {
                 enumerable: true, get() {
                     return this.profile.mapAxes(label, gamepads[this.gamepadIndex].axes[index]);
-                    
+
                 }
             });
 
@@ -355,11 +355,15 @@ Enable2DMouse();
 export const EnableCanvasLock = () => allCanvas.forEach(canvas => {
     canvas.addEventListener("click", canvas.requestPointerLock);
     document.addEventListener("mousemove", HandleLockedMouse);
+    MKBDevice._mouseX = 0;
+    MKBDevice._mouseY = 0;
 });
 
 export const DisableCanvasLock = () => allCanvas.forEach(canvas => {
     canvas.removeEventListener("click", canvas.requestPointerLock);
     document.removeEventListener("mousemove", HandleLockedMouse);
+    MKBDevice._mouseX = 0;
+    MKBDevice._mouseY = 0;
 });
 
 function HandleLockedMouse(e) {

@@ -18,6 +18,7 @@ import { material as HDRmaterial } from "./assets/shader/hdrMaterial.js";
 
 import { InitTextSystem, textboxAt, DrawPage, ClearPage, DrawMap } from "./build/module.js";
 import { DemoEntity } from "./assets/components/StateMachine.js";
+import { Vec3 } from "./assets/math.js";
 
 
 
@@ -121,7 +122,7 @@ const background = window.background = scene.heirachy["background"] = Instantiat
     texture: backgroundTexture,
 
      Start() {
-        this.position.set([0,0,0]);
+        this.position = [0,0,0];
     },
 
 });
@@ -129,7 +130,7 @@ const background = window.background = scene.heirachy["background"] = Instantiat
 
 
 scene.heirachy["ground"] = Instantiate(TileRenderer, quadMesh, {
-    transformBuffer: AllocateInstancedBuffer(8, (10 * 10)),
+    transformBuffer: AllocateInstancedBuffer(8, (100 * 10)),
     cameraMatrixBuffer: AllocateUniformBuffer(208),
     tileLayout: DrawMap(0),
     vertexBuffer: quadMesh,
@@ -148,14 +149,14 @@ scene.heirachy["sprite1"] = Instantiate(SpriteRenderer, {
     texture: playerTexture,
 
     Start() {
-        this.position.set([0,0,10]);
+        this.position = [0,0,10];
     },
 
 
     distance : 0.2,
     Update() {
         const rotation = lastTime * 5;
-        this.position.set([Math.sin(rotation) * this.distance, Math.cos(rotation) * this.distance, 0])
+        this.position = [Math.sin(rotation) * this.distance, Math.cos(rotation) * this.distance, 0];
     },
 
 });
@@ -173,7 +174,7 @@ const player = window.player = scene.heirachy["player"] = InstantiateEntity(Spri
     shaderModule: spriteShader,
     texture: playerTexture,
     Update() {
-        this.position.set([x, y]);
+        this.position = [x, y];
         this.skillSystem.call("onEvent");
     },
 });
@@ -194,11 +195,16 @@ const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshRenderer, {
     shaderModule: meshShader,
     texture: flatColorTexture,
     Start() {
-        this.position.set([0, -1, -6]);
-        this.scale.set([0.4, 0.4, 0.4]);
+        this.position = [0, -1, -6];
+        this.scale = [0.4, 0.4, 0.4];
     }, 
     Update() {
-        this.rotation = [(lastTime%360) *180 , 0,0];
+        this.rotation = [Date.now()/50 % 360, 0,0]; 
+        this.position.x = Math.sin(Date.now()/1000) * 0.2; 
+
+       
+        
+        //console.log(this.quaternion); 
     }
 });
 
@@ -244,7 +250,7 @@ const explosion = scene.heirachy["explosion"] = Instantiate(SpriteRenderer, {
             const hit = camera.rayPlaneZ0(ray); 
             console.log(ray, hit); 
 
-            this.position.set(hit);
+            this.position = hit;
         });
     },
 
@@ -437,7 +443,6 @@ scene.ForAllObjects(obj => {
 function HandleUpdate() {
     scene.ForAllObjects(obj => {
         obj.Update?.();
-        obj.UpdateTransformMatrix?.();
     });
 }
 

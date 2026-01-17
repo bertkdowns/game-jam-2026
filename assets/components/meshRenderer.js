@@ -118,7 +118,7 @@ function HandlePass(pass, gpu, camera) {
 
 
     const buffer = [].concat(
-        this.transformMatrix,
+        this.GetTransformMatrix(),
         camera.ViewMatrix(),
         camera.PerspectiveMatrix(),
     );
