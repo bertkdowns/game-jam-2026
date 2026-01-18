@@ -143,7 +143,7 @@ async function decodeObject(text = "") {
         // not handling ngons
     });
 
-    console.log(label, vertCount); 
+    //console.log(label, vertCount); 
 
     // are building up an array of arrays so flatten it to a single buffer [[corner(x,y,u,v)],[corner(x,y,u,v)]] -> [x,y,u,v,x,y,u,v]
     return {vertCount, verts: new Float32Array(buffer.flat())};

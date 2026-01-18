@@ -143,7 +143,6 @@ export function AllocateTextureArray(bitmaps) {
 
 
 export function AllocateMesh(mesh) {
-    console.log(mesh);
     const createBuffer = (arr, usage) => {
         let desc = {
             size: (arr.byteLength + 3) & ~3, // Align to 4 bytes (thanks @chrimsonite)

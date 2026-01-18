@@ -111,7 +111,7 @@ class InputTarget {
 
     removeDevice = (device) => this.devices.remove(device);
     addDevice(device) {
-        console.log("adding device");
+        console.log(`adding input device: ${device.constructor?.name}`);
         this.devices.push(device);
         this.addBindingsFromDeviceProfile(device.profile);
         // add fields
@@ -122,7 +122,7 @@ class InputTarget {
         if (profile.axes) {
             for (const [field] of Object.entries(profile.axes)) {
                 const alias = InputTarget.inputProfile.axes[field]; // checks if theres an alias for this field.
-                console.log(field, alias, ` already exists: ${this[field] != null || this[alias] != null}`);
+                //console.log(field, alias, ` already exists: ${this[field] != null || this[alias] != null}`);
                 if (this[field] != null || this[alias] != null) continue; // skips field if it already exist
                 Object.defineProperty(this, alias || field, {
                     enumerable: true,
@@ -143,7 +143,7 @@ class InputTarget {
         if (profile.buttons) {
             for (const [field] of Object.entries(profile.buttons)) {
                 const alias = InputTarget.inputProfile.buttons[field]; // checks if theres an alias for this field. 
-                console.log(field, alias, ` already exists: ${this[field] != null || this[alias] != null}`);
+                //console.log(field, alias, ` already exists: ${this[field] != null || this[alias] != null}`);
                 if (this[field] != null || this[alias] != null) continue; // skips field if it already exist
                 Object.defineProperty(this, alias || field, {
                     enumerable: true,
@@ -287,13 +287,6 @@ export const [input] = users;
 window.input = input;
 
 const gamepads = {}; // the source of all gamepad state, is updated everyframe with the new state.  
-
-
-
-
-
-
-console.log("adding mouse and keyboard");
 
 // adds mouse and keyboard device to 'input' (user 1)
 const MKBDevice = new MouseKeyboardDevice();

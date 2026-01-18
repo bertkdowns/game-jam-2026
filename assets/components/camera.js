@@ -1,10 +1,10 @@
-import { dot, quatToMat4, invertMat4, multiplyMat4Vec4, normalize, subtract } from "../math.js";
+import { dot, quatToMat4, invertMat4, multiplyMat4Vec4, normalize, subtract } from "../engine_core/math.js";
 import { Transform } from "./transform.js"
 
 
 export class Camera {
     constructor() {
-        Object.assignByVal(this, new Transform());
+        Object.assignWithProperties(this, new Transform());
     }
 
     // actual camera stuff

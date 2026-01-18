@@ -1,15 +1,14 @@
-import { Instantiate } from "./assets/utils.js";
-import { input, Enable2DMouse, Disable2DMouse, DisableCanvasLock, EnableCanvasLock, InputUpdate, InputLateUpdate } from "./assets/input.js"
-import { Manager } from "./assets/manager.js";
+import { Instantiate } from "./assets/engine_core/utils.js";
+import { input, Enable2DMouse, Disable2DMouse, DisableCanvasLock, EnableCanvasLock, InputUpdate, InputLateUpdate } from "./assets/engine_core/input.js"
+import { Manager } from "./assets/engine_core/manager.js";
+import { Scene } from "./assets/engine_core/scene.js";
+import { audioCtx, Play } from "./assets/engine_core/audio.js";
+import { loadAudioClips, loadImages, loadObjects, loadShaders, loadTextureArray, loadCubeMaps } from "./assets/engine_core/asset_io.js";
+import { Renderer, AllocateUniformBuffer, AllocateInstancedBuffer, newFrameView } from "./assets/engine_core/renderer.js";
+
+
 import { Camera } from "./assets/components/camera.js";
-import { Scene } from "./assets/scene.js";
-import { audioCtx, Play } from "./assets/audio.js";
-
-
-import { loadAudioClips, loadImages, loadObjects, loadShaders, loadTextureArray , loadCubeMaps} from "./assets/asset_io.js";
-import { Renderer, AllocateUniformBuffer, AllocateInstancedBuffer, newFrameView } from "./assets/renderer.js";
-
-import { SpriteRenderer } from "./assets/components/spriteRenderer.js";
+import { material, SpriteRenderer } from "./assets/components/spriteRenderer.js";
 import { TextRenderer } from "./assets/components/textRenderer.js";
 import { TileRenderer } from "./assets/components/tileRenderer.js";
 import { MeshRenderer } from "./assets/components/meshRenderer.js";
@@ -18,7 +17,7 @@ import { material as HDRmaterial } from "./assets/shader/hdrMaterial.js";
 
 import { InitTextSystem, textboxAt, DrawPage, ClearPage, DrawMap } from "./build/module.js";
 import { DemoEntity } from "./assets/components/StateMachine.js";
-import { Vec3 } from "./assets/math.js";
+import { Transform } from "./assets/components/transform.js";
 
 
 
@@ -34,24 +33,19 @@ const [camera] = [new Camera()];
 camera.initialise(canvas);
 
 scene.heirachy["camera"] = window.camera = camera;
-console.log(camera); 
+console.log(camera);
 
 // sets the camera position
 camera.position = [0, -1, -10];
 
 
 // load in the assets 
-console.log("waiting for image...");
-
-
-
-
-
+console.log("waiting for assets...");
 // write textures shaders etc into seperate arrays so we can either collect them as an array per type or referance them individually. 
 const [
-    [playerTexture, fontTexture, tileTexture, backgroundTexture,flatColorTexture, skyboxTexture],
+    [playerTexture, fontTexture, tileTexture, backgroundTexture, flatColorTexture, skyboxTexture],
     explosionTexture,
-    [spriteShader, tileShader, textShader, meshShader,skyboxShader, spriteShaderWithAtlus],
+    [spriteShader, tileShader, textShader, meshShader, skyboxShader, spriteShaderWithAtlus],
     [quadMesh, textMesh, cubeMesh, suzanne],
     audioClips,
 ] = await Promise.all([
@@ -62,7 +56,7 @@ const [
         "./assets/sprites/background.png",
         "./assets/sprites/flatColor.png",
         "./assets/sprites/skybox.png",
-    ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1/64})))   
+    ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1 / 64 })))
     , loadTextureArray(
         "./assets/sprites/explosion/explosion0000.png",
         "./assets/sprites/explosion/explosion0001.png",
@@ -78,7 +72,7 @@ const [
         "./assets/sprites/explosion/explosion0011.png",
         "./assets/sprites/explosion/explosion0012.png",
         "./assets/sprites/explosion/empty.png",
-    ).then(texture => Object.assign(texture, { pixelScale: 1/64}))
+    ).then(texture => Object.assign(texture, { pixelScale: 1 / 64 }))
     , loadShaders(
         "./assets/shader/spriteShader.wgsl",
         "./assets/shader/tileShader.wgsl",
@@ -98,16 +92,16 @@ const [
 
 ]);
 
+console.log("loaded assets");
 
 
 
 
-
-window.quadMesh = quadMesh; 
+window.quadMesh = quadMesh;
 
 
 // 3d skybox behind everything.
-const skybox = scene.heirachy["skybox"] = Instantiate(SkyboxRenderer, {
+const skybox = scene.heirachy["skybox"] = Instantiate(SkyboxRenderer, new Transform(),  {
     vertexBuffer : cubeMesh, 
     cameraMatrixBuffer: AllocateUniformBuffer(2 * 64),
     shaderModule: skyboxShader, 
@@ -115,7 +109,7 @@ const skybox = scene.heirachy["skybox"] = Instantiate(SkyboxRenderer, {
 });
 
 // creates seperate instances of the object, order follows sorting order, higher is further back.  
-const background = window.background = scene.heirachy["background"] = Instantiate(SpriteRenderer, {
+const background = window.background = scene.heirachy["background"] = Instantiate(SpriteRenderer,new Transform(), {
     cameraMatrixBuffer: AllocateUniformBuffer(208),
     vertexBuffer: quadMesh,
     shaderModule: spriteShader,
@@ -129,8 +123,9 @@ const background = window.background = scene.heirachy["background"] = Instantiat
 
 
 
-scene.heirachy["ground"] = Instantiate(TileRenderer, quadMesh, {
-    transformBuffer: AllocateInstancedBuffer(8, (100 * 10)),
+
+scene.heirachy["ground"] = Instantiate(TileRenderer, quadMesh, new Transform(), {
+    transformBuffer: AllocateInstancedBuffer(8, (100 * 100)),
     cameraMatrixBuffer: AllocateUniformBuffer(208),
     tileLayout: DrawMap(0),
     vertexBuffer: quadMesh,
@@ -142,7 +137,8 @@ scene.heirachy["ground"] = Instantiate(TileRenderer, quadMesh, {
     }
 });
 
-scene.heirachy["sprite1"] = Instantiate(SpriteRenderer, {
+
+scene.heirachy["sprite1"] = Instantiate(SpriteRenderer,new Transform(),  {
     cameraMatrixBuffer: AllocateUniformBuffer(208),
     vertexBuffer: quadMesh,
     shaderModule: spriteShader,
@@ -150,6 +146,7 @@ scene.heirachy["sprite1"] = Instantiate(SpriteRenderer, {
 
     Start() {
         this.position = [0,0,10];
+
     },
 
 
@@ -163,11 +160,7 @@ scene.heirachy["sprite1"] = Instantiate(SpriteRenderer, {
 
 
 
-window.DemoEntity = DemoEntity; 
-function InstantiateEntity(...components) { return Object.assign(new DemoEntity(), ...components); }
-
-
-const player = window.player = scene.heirachy["player"] = InstantiateEntity(SpriteRenderer, {
+const player = window.player = scene.heirachy["player"] = Instantiate(SpriteRenderer, new Transform(), new DemoEntity(), {
     cameraMatrixBuffer: AllocateUniformBuffer(208),
     getPosition: () => [x, y],
     vertexBuffer: quadMesh,
@@ -189,7 +182,7 @@ const player = window.player = scene.heirachy["player"] = InstantiateEntity(Spri
 
 
 
-const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshRenderer, {
+const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshRenderer, new Transform(), {
     vertexBuffer: suzanne,
     cameraMatrixBuffer: AllocateUniformBuffer(3 * 64),
     shaderModule: meshShader,
@@ -210,7 +203,7 @@ const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshRenderer, {
 
 
 
-const plane = window.plane = scene.heirachy["plane"] = Instantiate(MeshRenderer, {
+const plane = window.plane = scene.heirachy["plane"] = Instantiate(MeshRenderer, new Transform(), {
     vertexBuffer: cubeMesh,
     cameraMatrixBuffer: AllocateUniformBuffer(3 * 64),
     shaderModule: meshShader,
@@ -227,16 +220,14 @@ const plane = window.plane = scene.heirachy["plane"] = Instantiate(MeshRenderer,
 
 
 
-
-const explosion = scene.heirachy["explosion"] = Instantiate(SpriteRenderer, {
+// since we are assigning a new material (since its using a texture array, instead of single texture, need to assign it first to replace the existing texture) 
+const explosion = scene.heirachy["explosion"] = Instantiate(SpriteRenderer, new Transform(), {
     cameraMatrixBuffer: AllocateUniformBuffer(208),
     vertexBuffer: quadMesh,
     shaderModule: spriteShaderWithAtlus,
     texture: explosionTexture,
-    material: HDRmaterial,  // not actually hdr yet
+    material: HDRmaterial,
     startTime: Date.now() / 1000,
-    mouseClickPosX : 0, 
-    mouseClickPosY : 0,
 
     Start() {
         canvas.addEventListener("mousedown", (e) => {
@@ -244,11 +235,11 @@ const explosion = scene.heirachy["explosion"] = Instantiate(SpriteRenderer, {
             const currentTime = Date.now() / 1000;
             explosion.startTime = currentTime;
 
-            const x = using3D? 0:input.mouseX; 
-            const y = using3D? 0: input.mouseY; 
-            const ray = camera.screenPositionToRay(x,y ); 
-            const hit = camera.rayPlaneZ0(ray); 
-            console.log(ray, hit); 
+            const x = using3D ? 0 : input.mouseX;
+            const y = using3D ? 0 : input.mouseY;
+            const ray = camera.screenPositionToRay(x, y);
+            const hit = camera.rayPlaneZ0(ray);
+            console.log(ray, hit);
 
             this.position = hit;
         });
@@ -268,8 +259,7 @@ const explosion = scene.heirachy["explosion"] = Instantiate(SpriteRenderer, {
 });
 
 
-
-const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, {
+const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transform(), {
     vertexBuffer: textMesh,
     cameraMatrixBuffer: AllocateUniformBuffer(88),
     transformBuffer: AllocateInstancedBuffer(256, 1000, 255),
@@ -351,22 +341,22 @@ function HandleTime() {
 
 // INPUT/MOVEMENT CONTROL FOR SPRITE 2
 var x = 0, y = -1, xv = 0, yv = 0, zv = 0;
-window.xv = xv; 
+window.xv = xv;
 window.xv = yv;
-window.zv = zv;  
+window.zv = zv;
 
 
 const cameraMouseSensitivity = 1 / 20;
 const cameraControllerSensitivity = 1 * 3;
 
 function Move3D() {
-    
+
     var dx = input.moveHorizontal;
     var dz = -input.moveVertical; // look axis is inverted (same for all controllers, so ive made the mouse and keyboard act the same)
     //console.log(dx, dz, deltaTime);
-   
+
     // sets the players speed. 
-    const speed = 5;  
+    const speed = 5;
     xv += dx * speed * deltaTime;
     zv += dz * speed * deltaTime;
 
@@ -378,9 +368,9 @@ function Move3D() {
     HandleCameraRotation();
 
     // moves relitive to camera direction
-    const sin = Math.sin(camera.rotation.x * Math.PI/180);
-    const cos = Math.cos(camera.rotation.x * Math.PI/180);
-    
+    const sin = Math.sin(camera.rotation.x * Math.PI / 180);
+    const cos = Math.cos(camera.rotation.x * Math.PI / 180);
+
     //console.warn(sin, cos,xv, zv);
 
     camera.position.x += sin * zv + cos * xv;
@@ -393,7 +383,7 @@ function Move3D() {
 function HandleCameraRotation() {
     // controller look rotation 
     camera.rotation.x += input.lookHorizontal * cameraControllerSensitivity;
-    camera.rotation.y += input.lookVertical * cameraControllerSensitivity; 
+    camera.rotation.y += input.lookVertical * cameraControllerSensitivity;
     // mouse look rotation
     camera.rotation.x += input.mouseX * cameraMouseSensitivity;
     camera.rotation.y += input.mouseY * cameraMouseSensitivity;
@@ -419,10 +409,10 @@ function Move2D() {
     x += xv;
     y += yv;
 
-    
+
     camera.position.x += ((x - camera.position.x) * 0.05);
     camera.position.y += ((y - camera.position.y) * 0.05);
-    
+
 }
 
 

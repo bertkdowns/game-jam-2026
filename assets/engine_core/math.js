@@ -3,8 +3,11 @@ export const radToDeg = 180 / Math.PI;
 
 // vector math
 export class Vec3 extends Array {
-    constructor(x = 0, y = 0, z = 0) {
-        super(x, y, z);
+    constructor(x = 0, y = 0, z = 0 ) {
+        if(Array.isArray(x))
+            super(x[0], x[1], x[2]);  
+        else 
+            super(x, y, z);
     }
     get x() { return this[0]; }
     set x(v) { this[0] = v; }
@@ -22,6 +25,7 @@ export class Vec3 extends Array {
     static zero() { return new Vec3(0, 0, 0) };
     static one() { return new Vec3(1, 1, 1) };
 }
+
 
 window.Vec3 = Vec3;  // exposes the vec3 class to call in the console
 

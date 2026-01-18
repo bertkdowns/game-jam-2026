@@ -85,7 +85,6 @@ export const TileRenderer = {
     handlePass: HandlePass,
     init(gpu) {
         [this.renderPipeline, this.bindGroup] = InitRenderer.bind(this)(gpu);
-        Object.assignByVal(this, new Transform());
     },
 }
 
