@@ -1,12 +1,5 @@
 import { dot, quatToMat4, invertMat4, multiplyMat4Vec4, normalize, subtract } from "../engine_core/math.js";
-import { Transform } from "./transform.js"
-
-
 export class Camera {
-    constructor() {
-        Object.assignWithProperties(this, new Transform());
-    }
-
     // actual camera stuff
     initialise(canvas) {
         const camera = this;
@@ -32,17 +25,17 @@ export class Camera {
     f = 1 / Math.tan((this.fovY * Math.PI) / 360);
 
     // camera perspective projection 
-    PerspectiveMatrix = () => [
-        this.f / this.aspect, 0, 0, 0,
-        0, this.f, 0, 0,
-        0, 0, this.far / (this.far - this.near), 1,
-        0, 0, (-this.near * this.far) / (this.far - this.near), 0,
-    ];
-
-
+    PerspectiveMatrix() {
+        return [
+            this.f / this.aspect, 0, 0, 0,
+            0, this.f, 0, 0,
+            0, 0, this.far / (this.far - this.near), 1,
+            0, 0, (-this.near * this.far) / (this.far - this.near), 0,
+        ]
+    };
 
     // translation matrix functions
-    ViewMatrix = () => {
+    ViewMatrix() {
         const eye = this.position;
         const rot = quatToMat4(this.quaternion);
 
@@ -50,7 +43,7 @@ export class Camera {
         const x = [rot[0], rot[1], rot[2]];
         const y = [rot[4], rot[5], rot[6]];
         const z = [rot[8], rot[9], rot[10]];
-        
+
         return [
             x[0], y[0], z[0], 0,
             x[1], y[1], z[1], 0,
@@ -59,39 +52,41 @@ export class Camera {
         ];
     }
 
-
-
-
     pixelScale = (1 / 256);
-    UIToScreenMatrix = () => [
-        this.pixelScale / this.aspect, 0, 0, 0,
-        0, this.pixelScale, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1,
-    ];
-    ScreenToUIMatrix = () => [
-        this.aspect / this.pixelScale, 0, 0, 0,
-        0, 1 / this.pixelScale, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1,
-    ];
-
-
+    UIToScreenMatrix() {
+        return [
+            this.pixelScale / this.aspect, 0, 0, 0,
+            0, this.pixelScale, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1,
+        ];
+    }
+    ScreenToUIMatrix() {
+        return [
+            this.aspect / this.pixelScale, 0, 0, 0,
+            0, 1 / this.pixelScale, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1,
+        ];
+    }
 
     //#region  /* will probably not need this after making sprites inherit from transfrom()  */
-    WorldToScreenMatrix = () => [
-        1 / (this.aspect * this.pixelScale), 0, 0, 0,
-        0, 1 / this.pixelScale, 0, 0,
-        0, 0, 1, 0,
-        -this.position.x / this.aspect, -this.position.y, 0, 1,
-    ];
-    ScreenToWorldMatrix = () => [
-        this.aspect * this.pixelScale, 0, 0, 0,
-        0, this.pixelScale, 0, 0,
-        0, 0, 1, 0,
-        this.position.x * this.aspect, this.position.y, 0, 1,
-    ];
-
+    WorldToScreenMatrix() {
+        return [
+            1 / (this.aspect * this.pixelScale), 0, 0, 0,
+            0, 1 / this.pixelScale, 0, 0,
+            0, 0, 1, 0,
+            -this.position.x / this.aspect, -this.position.y, 0, 1,
+        ];
+    }
+    ScreenToWorldMatrix() {
+        return [
+            this.aspect * this.pixelScale, 0, 0, 0,
+            0, this.pixelScale, 0, 0,
+            0, 0, 1, 0,
+            this.position.x * this.aspect, this.position.y, 0, 1,
+        ];
+    }
 
     screenToWorld(x, y, z = 1) {
         // screenX, screenY in pixels, (0,0) top-left
@@ -140,7 +135,6 @@ export class Camera {
             oy + dy * t,
             0
         ];
-
     }
     /*
     intersectRayZ0(ray) {
@@ -149,22 +143,5 @@ export class Camera {
         return add(ray.origin, scale(ray.direction, t));
     }*/
 
-
-    transformRotationScale(rotation, [tx, ty, tz], [sx, sy, sz]) {
-        // rotates around y
-        const c = Math.cos(rotation);
-        const s = Math.sin(rotation);
-
-        return [
-            c * sx, 0, -s * sx, 0,
-            0, sy, 0, 0,
-            s * sz, 0, c * sz, 0,
-            tx, ty, tz, 1,
-        ];
-    }
     //#endregion
-
-
-
-
 }

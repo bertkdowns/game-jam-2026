@@ -12,6 +12,14 @@ export class Transform {
 
     constructor() {
         const t = this;
+
+        // needs to be created this way so 't' and 'this' target the same thing
+        Object.defineProperties(t, {
+            UpdateQuaternion :{ value: ()=> { t._quaternion = quatFromEuler(t._rotation.map(deg => deg * degToRad)) }},
+            UpdateEuler: { value: () =>{ t._rotation = eulerFromQuaternion(t._quaternion).map(rad => rad * radToDeg) }},
+            GetTransformMatrix: {value: () => TransformFromTRS(t._quaternion, t._position, t._scale)}
+        });
+
         // creates an interface that allows us to access the vec3.x etc properties as normal 
         // and inserts an update function to keep rotation and quaternion synced 
         // since updating the transform should be infrequent (maybe once per frame, the overhead introduced should be fine.
@@ -43,6 +51,7 @@ export class Transform {
                     t._rotation.set(rotation);
 
                 } else return;
+                
                 t.UpdateQuaternion();
             }
         });
@@ -115,10 +124,6 @@ export class Transform {
             },
         });
     }
-
-    UpdateQuaternion() { this._quaternion = quatFromEuler(this._rotation.map(deg => deg * degToRad)) }
-    UpdateEuler() { this._rotation = eulerFromQuaternion(this._quaternion).map(rad => rad * radToDeg) }
-    GetTransformMatrix = () => TransformFromTRS(this._quaternion, this._position, this._scale);
 }
 
 

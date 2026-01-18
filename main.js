@@ -8,7 +8,7 @@ import { Renderer, AllocateUniformBuffer, AllocateInstancedBuffer, newFrameView 
 
 
 import { Camera } from "./assets/components/camera.js";
-import { material, SpriteRenderer } from "./assets/components/spriteRenderer.js";
+import { SpriteRenderer } from "./assets/components/spriteRenderer.js";
 import { TextRenderer } from "./assets/components/textRenderer.js";
 import { TileRenderer } from "./assets/components/tileRenderer.js";
 import { MeshRenderer } from "./assets/components/meshRenderer.js";
@@ -29,11 +29,9 @@ const [canvas, canvas2] = document.querySelectorAll("canvas");
 const [renderer, renderer2] = [new Renderer(), /* new Renderer()*/];
 await Promise.all([renderer.initialise(canvas), /*renderer2.initialise(canvas2)*/]);
 
-const [camera] = [new Camera()];
+const camera = Instantiate(new Camera(), new Transform());
 camera.initialise(canvas);
-
-scene.heirachy["camera"] = window.camera = camera;
-console.log(camera);
+window.camera = camera;
 
 // sets the camera position
 camera.position = [0, -1, -10];
@@ -97,28 +95,41 @@ console.log("loaded assets");
 
 
 
-window.quadMesh = quadMesh;
+// abstracted out the dependancies for sprites. 
+// (can be passed in directly to the instantiate function)
+const SpriteDependencies = () => ([
+    new SpriteRenderer(),
+    new Transform(),
+    {
+        cameraMatrixBuffer: AllocateUniformBuffer(208),
+        vertexBuffer: quadMesh,
+        shaderModule: spriteShader,
+    }
+]);
+// abstracted out dependancies for meshes.
+const MeshDependacies = () => ([MeshRenderer, new Transform(), {
+        cameraMatrixBuffer: AllocateUniformBuffer(3 * 64),
+        shaderModule: meshShader,
+    }
+]);
+
+
 
 
 // 3d skybox behind everything.
-const skybox = scene.heirachy["skybox"] = Instantiate(SkyboxRenderer, new Transform(),  {
-    vertexBuffer : cubeMesh, 
+const skybox = scene.heirachy["skybox"] = Instantiate(SkyboxRenderer, new Transform(), {
+    vertexBuffer: cubeMesh,
     cameraMatrixBuffer: AllocateUniformBuffer(2 * 64),
-    shaderModule: skyboxShader, 
-    texture: skyboxTexture, 
+    shaderModule: skyboxShader,
+    texture: skyboxTexture,
 });
 
 // creates seperate instances of the object, order follows sorting order, higher is further back.  
-const background = window.background = scene.heirachy["background"] = Instantiate(SpriteRenderer,new Transform(), {
-    cameraMatrixBuffer: AllocateUniformBuffer(208),
-    vertexBuffer: quadMesh,
-    shaderModule: spriteShader,
+const background = window.background = scene.heirachy["background"] = Instantiate(SpriteDependencies, {
     texture: backgroundTexture,
-
-     Start() {
-        this.position = [0,0,0];
+    Start() {
+        this.position = [0, 0, 0];
     },
-
 });
 
 
@@ -132,25 +143,19 @@ scene.heirachy["ground"] = Instantiate(TileRenderer, quadMesh, new Transform(), 
     shaderModule: tileShader,
     texture: tileTexture,
 
-    Update(){
+    Update() {
         this.tileLayout = DrawMap(Date.now() / 1000);
     }
 });
 
 
-scene.heirachy["sprite1"] = Instantiate(SpriteRenderer,new Transform(),  {
-    cameraMatrixBuffer: AllocateUniformBuffer(208),
-    vertexBuffer: quadMesh,
-    shaderModule: spriteShader,
+scene.heirachy["sprite1"] = Instantiate(SpriteDependencies, {
     texture: playerTexture,
-
     Start() {
-        this.position = [0,0,10];
+        this.position = [0, 0, 10];
 
     },
-
-
-    distance : 0.2,
+    distance: 0.2,
     Update() {
         const rotation = lastTime * 5;
         this.position = [Math.sin(rotation) * this.distance, Math.cos(rotation) * this.distance, 0];
@@ -158,13 +163,7 @@ scene.heirachy["sprite1"] = Instantiate(SpriteRenderer,new Transform(),  {
 
 });
 
-
-
-const player = window.player = scene.heirachy["player"] = Instantiate(SpriteRenderer, new Transform(), new DemoEntity(), {
-    cameraMatrixBuffer: AllocateUniformBuffer(208),
-    getPosition: () => [x, y],
-    vertexBuffer: quadMesh,
-    shaderModule: spriteShader,
+const player = window.player = scene.heirachy["player"] = Instantiate(SpriteDependencies, new DemoEntity(), {
     texture: playerTexture,
     Update() {
         this.position = [x, y];
@@ -182,38 +181,34 @@ const player = window.player = scene.heirachy["player"] = Instantiate(SpriteRend
 
 
 
-const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshRenderer, new Transform(), {
+const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshDependacies, {
     vertexBuffer: suzanne,
-    cameraMatrixBuffer: AllocateUniformBuffer(3 * 64),
-    shaderModule: meshShader,
     texture: flatColorTexture,
     Start() {
         this.position = [0, -1, -6];
         this.scale = [0.4, 0.4, 0.4];
-    }, 
+    },
     Update() {
-        this.rotation = [Date.now()/50 % 360, 0,0]; 
-        this.position.x = Math.sin(Date.now()/1000) * 0.2; 
+        this.rotation = [Date.now() / 50 % 360, 0, 0];
+        this.position.x = Math.sin(Date.now() / 1000) * 0.2;
 
-       
-        
+
+
         //console.log(this.quaternion); 
     }
 });
 
 
 
-const plane = window.plane = scene.heirachy["plane"] = Instantiate(MeshRenderer, new Transform(), {
+const plane = window.plane = scene.heirachy["plane"] = Instantiate(MeshDependacies, {
     vertexBuffer: cubeMesh,
-    cameraMatrixBuffer: AllocateUniformBuffer(3 * 64),
-    shaderModule: meshShader,
     texture: backgroundTexture,
     Start() {
         this.position = [1, -11, -20];
-        this.rotation = [0, 0,0];
+        this.rotation = [0, 0, 0];
         this.scale = [20, 1, 20];
     }
-}); 
+});
 
 //#endregion */
 
@@ -221,12 +216,11 @@ const plane = window.plane = scene.heirachy["plane"] = Instantiate(MeshRenderer,
 
 
 // since we are assigning a new material (since its using a texture array, instead of single texture, need to assign it first to replace the existing texture) 
-const explosion = scene.heirachy["explosion"] = Instantiate(SpriteRenderer, new Transform(), {
-    cameraMatrixBuffer: AllocateUniformBuffer(208),
-    vertexBuffer: quadMesh,
+const explosion = scene.heirachy["explosion"] = Instantiate(SpriteDependencies, {
     shaderModule: spriteShaderWithAtlus,
-    texture: explosionTexture,
     material: HDRmaterial,
+    texture: explosionTexture,
+
     startTime: Date.now() / 1000,
 
     Start() {
@@ -266,15 +260,15 @@ const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transf
     shaderModule: textShader,
     texture: fontTexture,
 
-    Start(){
+    Start() {
         InitTextSystem();
     },
     Update() {
         // Layout For a page
         ClearPage();
 
-        screenLeft = -camera.aspect * (0.5/camera.pixelScale);
-        screenTop = (0.5/camera.pixelScale) ;
+        screenLeft = -camera.aspect * (0.5 / camera.pixelScale);
+        screenTop = (0.5 / camera.pixelScale);
 
         textboxAt(screenLeft + 2, screenTop - 8, `fps ${(lastFPS).toFixed(1)}`);
         textboxAt(Math.sin(Date.now() / 1000) * 20, 10, "wooo!!");
@@ -290,21 +284,6 @@ const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transf
         textObj.textLayout = DrawPage();
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -528,7 +507,3 @@ document.addEventListener("mousedown", () => {
 });
 //#endregion
 console.log("added audio");
-
-
-
-

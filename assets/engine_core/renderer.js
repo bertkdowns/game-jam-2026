@@ -77,13 +77,13 @@ export class Renderer {
 
 
 
-        passes.forEach(pass => {
+        for(const pass of passes){
             // starts pass (add whatever to renderpass then end it)
             const renderPass = CB_encoder.beginRenderPass(pass.init(renderer));
             pass.drawPass(renderPass, gpu);
             renderPass.end();
             // ends the pass
-        });
+        }
 
         gpu.queue.submit([CB_encoder.finish()]); // submits the commandbuffer directly
     }

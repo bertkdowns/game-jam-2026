@@ -1,5 +1,3 @@
-import { Transform } from "./transform.js";
-
 const fontMaterial = {
     bindingGroupLayout: {
         entries: [{

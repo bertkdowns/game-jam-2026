@@ -1,5 +1,3 @@
-import { Transform } from "./transform.js";
-
 export const material = {
     bindingGroupLayout: {
         entries: [{
@@ -64,13 +62,13 @@ export const material = {
     }
 };
 
-export const SpriteRenderer = {
+export class SpriteRenderer {
     // x, y, u, v 
-    material: material,
-    handlePass: HandlePass,
+    material = material;
+    handlePass = HandlePass;
     init(gpu) {
         [this.renderPipeline, this.bindGroup] = InitRenderer.bind(this)(gpu)
-    },
+    }
 }
 
 

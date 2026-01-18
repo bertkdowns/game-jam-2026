@@ -106,11 +106,18 @@ Object.assign(Object, {
             if (source && typeof source == "object") {
                 // adds entries 
                 for (const [key, value] of Object.entries(source)) {
+                    if (key.charAt(0) == '_') continue;
                     // loops through the entries and copies them, creating instances of the class prototypes etc as it goes. 
                     target[key] = value;
                 }
-                // adds getters and setters 
-                Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+
+                // adds getters and setters removes properties that are meant to be hidden (starting with '_')
+                Object.entries(Object.getOwnPropertyDescriptors(source)).map(([key, property]) => {
+                    if (key.charAt(0) != '_')
+                        Object.defineProperty(target, key, property);
+                });
+
+                //Object.defineProperties(target,Object.getOwnPropertyDescriptors(source));
 
                 // adds prototype functions 
                 const proto = Object.getPrototypeOf(source);
@@ -125,32 +132,20 @@ Object.assign(Object, {
     }
 });
 
-export function Instantiate(...components) { return Object.assignWithProperties({}, ...components); }
+//export function Instantiate(...components) { return Object.assignWithProperties({}, ...components); }
 
+export function Instantiate(...components) {
+    const sources = components;
+    const out = [];
+    for (var source of sources) {
+        if (typeof source === "function")
+            source = source();
 
+        if (Array.isArray(source))
+            out.push(...source);
+        else
+            out.push(source);
+    }
 
-
-/*
-        function deepAssign(target, source) {
-            // if its null or a primitive. (will assign to object, or if at parent level wont overwrite target)
-            if (source === null || typeof source !== "object") {
-                return source;
-            }
-
-            if (Array.isArray(source)) {
-                // preserve subclass
-                const out = new source.constructor(...source);
-                return out;
-            }
-
-            // Objects / class instances (non-array)
-            if (!target || Object.getPrototypeOf(target) !== Object.getPrototypeOf(source)) {
-                target = Object.create(Object.getPrototypeOf(source));
-            }
-
-            for (const [key, value] of Object.entries(source)) {
-                target[key] = deepAssign(target[key], value);
-            }
-
-            return target;
-        }*/
+    return Object.assignWithProperties({}, ...out);
+}

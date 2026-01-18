@@ -1,6 +1,6 @@
 export class Manager {
     static frameUpdateEvent = [];
-    static Update = () => Manager.frameUpdateEvent.forEach(fn => fn());
+    static Update() {for(const fn of Manager.frameUpdateEvent) fn();}
 
 
     static AddUpdateEvents = (list) => Manager.frameUpdateEvent = Manager.frameUpdateEvent.concat(list);

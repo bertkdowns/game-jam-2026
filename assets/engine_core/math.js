@@ -3,10 +3,10 @@ export const radToDeg = 180 / Math.PI;
 
 // vector math
 export class Vec3 extends Array {
-    constructor(x = 0, y = 0, z = 0 ) {
-        if(Array.isArray(x))
-            super(x[0], x[1], x[2]);  
-        else 
+    constructor(x = 0, y = 0, z = 0) {
+        if (Array.isArray(x))
+            super(x[0], x[1], x[2]);
+        else
             super(x, y, z);
     }
     get x() { return this[0]; }
@@ -65,40 +65,40 @@ export function multiplyMat4(a, b) {
     const out = new Array(16);
 
     const
-        a00 = a[0],  a10 = a[1],  a20 = a[2],  a30 = a[3],
-        a01 = a[4],  a11 = a[5],  a21 = a[6],  a31 = a[7],
-        a02 = a[8],  a12 = a[9],  a22 = a[10], a32 = a[11],
+        a00 = a[0], a10 = a[1], a20 = a[2], a30 = a[3],
+        a01 = a[4], a11 = a[5], a21 = a[6], a31 = a[7],
+        a02 = a[8], a12 = a[9], a22 = a[10], a32 = a[11],
         a03 = a[12], a13 = a[13], a23 = a[14], a33 = a[15];
 
     let b0, b1, b2, b3;
 
     // column 0
     b0 = b[0]; b1 = b[1]; b2 = b[2]; b3 = b[3];
-    out[0]  = a00*b0 + a01*b1 + a02*b2 + a03*b3;
-    out[1]  = a10*b0 + a11*b1 + a12*b2 + a13*b3;
-    out[2]  = a20*b0 + a21*b1 + a22*b2 + a23*b3;
-    out[3]  = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+    out[0] = a00 * b0 + a01 * b1 + a02 * b2 + a03 * b3;
+    out[1] = a10 * b0 + a11 * b1 + a12 * b2 + a13 * b3;
+    out[2] = a20 * b0 + a21 * b1 + a22 * b2 + a23 * b3;
+    out[3] = a30 * b0 + a31 * b1 + a32 * b2 + a33 * b3;
 
     // column 1
     b0 = b[4]; b1 = b[5]; b2 = b[6]; b3 = b[7];
-    out[4]  = a00*b0 + a01*b1 + a02*b2 + a03*b3;
-    out[5]  = a10*b0 + a11*b1 + a12*b2 + a13*b3;
-    out[6]  = a20*b0 + a21*b1 + a22*b2 + a23*b3;
-    out[7]  = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+    out[4] = a00 * b0 + a01 * b1 + a02 * b2 + a03 * b3;
+    out[5] = a10 * b0 + a11 * b1 + a12 * b2 + a13 * b3;
+    out[6] = a20 * b0 + a21 * b1 + a22 * b2 + a23 * b3;
+    out[7] = a30 * b0 + a31 * b1 + a32 * b2 + a33 * b3;
 
     // column 2
     b0 = b[8]; b1 = b[9]; b2 = b[10]; b3 = b[11];
-    out[8]  = a00*b0 + a01*b1 + a02*b2 + a03*b3;
-    out[9]  = a10*b0 + a11*b1 + a12*b2 + a13*b3;
-    out[10] = a20*b0 + a21*b1 + a22*b2 + a23*b3;
-    out[11] = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+    out[8] = a00 * b0 + a01 * b1 + a02 * b2 + a03 * b3;
+    out[9] = a10 * b0 + a11 * b1 + a12 * b2 + a13 * b3;
+    out[10] = a20 * b0 + a21 * b1 + a22 * b2 + a23 * b3;
+    out[11] = a30 * b0 + a31 * b1 + a32 * b2 + a33 * b3;
 
     // column 3
     b0 = b[12]; b1 = b[13]; b2 = b[14]; b3 = b[15];
-    out[12] = a00*b0 + a01*b1 + a02*b2 + a03*b3;
-    out[13] = a10*b0 + a11*b1 + a12*b2 + a13*b3;
-    out[14] = a20*b0 + a21*b1 + a22*b2 + a23*b3;
-    out[15] = a30*b0 + a31*b1 + a32*b2 + a33*b3;
+    out[12] = a00 * b0 + a01 * b1 + a02 * b2 + a03 * b3;
+    out[13] = a10 * b0 + a11 * b1 + a12 * b2 + a13 * b3;
+    out[14] = a20 * b0 + a21 * b1 + a22 * b2 + a23 * b3;
+    out[15] = a30 * b0 + a31 * b1 + a32 * b2 + a33 * b3;
 
     return out;
 }
@@ -287,3 +287,17 @@ export function TransformFromTRS([qx, qy, qz, qw], [tx, ty, tz], [sx, sy, sz]) {
     ];
 }
 
+
+
+export function transformRotationScale(rotation, [tx, ty, tz], [sx, sy, sz]) {
+    // rotates around y
+    const c = Math.cos(rotation);
+    const s = Math.sin(rotation);
+
+    return [
+        c * sx, 0, -s * sx, 0,
+        0, sy, 0, 0,
+        s * sz, 0, c * sz, 0,
+        tx, ty, tz, 1,
+    ];
+}

@@ -1,5 +1,3 @@
-import { Transform } from "./transform.js";
-
 // everything to do with rendering to the screen
 const tileMaterial = {
     bindingGroupLayout: {

@@ -1,5 +1,3 @@
-import { Transform } from "./transform.js";
-
 export const material = {
     bindingGroupLayout: {
         entries: [{
