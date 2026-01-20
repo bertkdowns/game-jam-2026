@@ -19,6 +19,8 @@ import { InitTextSystem, textboxAt, DrawPage, ClearPage, DrawMap } from "./build
 import { DemoEntity } from "./assets/components/StateMachine.js";
 import { Transform } from "./assets/components/transform.js";
 
+import { BeginHosting } from "./assets/components/multiplayerHost.js";
+import { BeginClient } from "./assets/components/multiplayerClient.js";
 
 
 // creates an instance of the object to use for the background (window scene allows me to access objects from the console)
@@ -26,7 +28,7 @@ const scene = window.scene = new Scene();
 
 // initialises the renderer and camera from the canvas; 
 const [canvas, canvas2] = document.querySelectorAll("canvas");
-const [renderer, renderer2] = [new Renderer(), /* new Renderer()*/];
+export const [renderer, renderer2] = [new Renderer(), /* new Renderer()*/];
 await Promise.all([renderer.initialise(canvas), /*renderer2.initialise(canvas2)*/]);
 
 const camera = Instantiate(new Camera(), new Transform());
@@ -97,7 +99,7 @@ console.log("loaded assets");
 
 // abstracted out the dependancies for sprites. 
 // (can be passed in directly to the instantiate function)
-const SpriteDependencies = () => ([
+export const SpriteDependencies = () => ([
     new SpriteRenderer(),
     new Transform(),
     {
@@ -107,12 +109,12 @@ const SpriteDependencies = () => ([
     }
 ]);
 // abstracted out dependancies for meshes.
-const MeshDependacies = () => ([MeshRenderer, new Transform(), {
+export const MeshDependacies = () => ([MeshRenderer, new Transform(), {
         cameraMatrixBuffer: AllocateUniformBuffer(3 * 64),
         shaderModule: meshShader,
     }
 ]);
-
+window.playerTexture = playerTexture; 
 
 
 
