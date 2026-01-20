@@ -350,6 +350,7 @@ export const EnableCanvasLock = () => allCanvas.forEach(canvas => {
     document.addEventListener("mousemove", HandleLockedMouse);
     MKBDevice._mouseX = 0;
     MKBDevice._mouseY = 0;
+    window.using3D = true; 
 });
 
 export const DisableCanvasLock = () => allCanvas.forEach(canvas => {
@@ -357,6 +358,7 @@ export const DisableCanvasLock = () => allCanvas.forEach(canvas => {
     document.removeEventListener("mousemove", HandleLockedMouse);
     MKBDevice._mouseX = 0;
     MKBDevice._mouseY = 0;
+    window.using3D = false; 
 });
 
 function HandleLockedMouse(e) {

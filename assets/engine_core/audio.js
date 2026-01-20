@@ -4,11 +4,6 @@ const audioStream = new MediaStream();
 const audioEl = document.createElement('audio');
 
 
-function InitAudio() {
-    audioEl.srcObject = audioStream;
-    audioEl.play();
-}
-InitAudio();
 
 
 export function Play(clip, {
@@ -28,3 +23,19 @@ export function Play(clip, {
     source.connect(gain).connect(audioCtx.destination);
     source.start(audioCtx.currentTime + delay, offset);
 }
+
+
+
+
+// on user start called only on first user input, 
+document.addEventListener("mousedown", OnUserStart);
+function OnUserStart() {
+    // makes sure the user permissions haven't paused the audio 
+    audioCtx.resume();
+    console.log("starting audio");
+    document.removeEventListener("mousedown", OnUserStart);
+};
+
+audioEl.srcObject = audioStream;
+audioEl.play();
+

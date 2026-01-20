@@ -30,5 +30,32 @@
     <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" >
     <!--canvas width="512" height="512"></canvas-->
     </span> 
+
+
+    <script type="module">
+        import {Disable2DMouse, Enable2DMouse, EnableCanvasLock, DisableCanvasLock} from "./assets/engine_core/input.js";
+        // #region Input Elements 
+        document.getElementById("to2D").addEventListener("click", (e) => {
+            DisableCanvasLock();
+            Enable2DMouse();
+        });
+        document.getElementById("to3D").addEventListener("click", (e) => {
+            Disable2DMouse();
+            EnableCanvasLock();
+        });
+        document.getElementById("fullscreen").addEventListener("click", (e) => {
+        
+            const el = document.querySelector("canvas");
+            if (el.requestFullscreen) {
+                el.requestFullscreen();
+            } else if (el.webkitRequestFullscreen) { /* Safari */
+                el.webkitRequestFullscreen();
+            } else if (el.msRequestFullscreen) { /* IE11 */
+                el.msRequestFullscreen();
+            }
+        });
+        //#endregion
+        console.log("added external 'inputs'");
+    </script>
 </body>
 </html>

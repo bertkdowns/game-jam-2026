@@ -1,5 +1,6 @@
 import { Instantiate } from "./assets/engine_core/utils.js";
-import { input, Enable2DMouse, Disable2DMouse, DisableCanvasLock, EnableCanvasLock, InputUpdate, InputLateUpdate } from "./assets/engine_core/input.js"
+import { input, InputUpdate, InputLateUpdate } from "./assets/engine_core/input.js"
+import { Time } from "./assets/engine_core/time.js";
 import { Manager } from "./assets/engine_core/manager.js";
 import { Scene } from "./assets/engine_core/scene.js";
 import { audioCtx, Play } from "./assets/engine_core/audio.js";
@@ -27,9 +28,9 @@ import { } from "./assets/components/multiplayerClient.js";
 const scene = window.scene = new Scene();
 
 // initialises the renderer and camera from the canvas; 
-const [canvas, canvas2] = document.querySelectorAll("canvas");
-export const [renderer, renderer2] = [new Renderer(), /* new Renderer()*/];
-await Promise.all([renderer.initialise(canvas), /*renderer2.initialise(canvas2)*/]);
+const canvas = document.querySelector("canvas");
+export const renderer = new Renderer();
+await Promise.all([renderer.initialise(canvas)]);
 
 const camera = Instantiate(new Camera(), new Transform());
 camera.initialise(canvas);
@@ -110,11 +111,11 @@ export const SpriteDependencies = () => ([
 ]);
 // abstracted out dependancies for meshes.
 export const MeshDependacies = () => ([MeshRenderer, new Transform(), {
-        cameraMatrixBuffer: AllocateUniformBuffer(3 * 64),
-        shaderModule: meshShader,
-    }
+    cameraMatrixBuffer: AllocateUniformBuffer(3 * 64),
+    shaderModule: meshShader,
+}
 ]);
-window.playerTexture = playerTexture; 
+window.playerTexture = playerTexture;
 
 
 
@@ -159,7 +160,7 @@ scene.heirachy["sprite1"] = Instantiate(SpriteDependencies, {
     },
     distance: 0.2,
     Update() {
-        const rotation = lastTime * 5;
+        const rotation = Time.lastTime * 5;
         this.position = [Math.sin(rotation) * this.distance, Math.cos(rotation) * this.distance, 0];
     },
 
@@ -168,6 +169,7 @@ scene.heirachy["sprite1"] = Instantiate(SpriteDependencies, {
 const player = window.player = scene.heirachy["player"] = Instantiate(SpriteDependencies, new DemoEntity(), {
     texture: playerTexture,
     Update() {
+        (window.using3D) ? Move3D() : Move2D();
         this.position = [x, y];
         this.skillSystem.call("onEvent");
     },
@@ -179,10 +181,6 @@ const player = window.player = scene.heirachy["player"] = Instantiate(SpriteDepe
 
 
 // #region 3D SCENE 
-
-
-
-
 const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshDependacies, {
     vertexBuffer: suzanne,
     texture: flatColorTexture,
@@ -193,15 +191,8 @@ const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshDependacies,
     Update() {
         this.rotation = [Date.now() / 50 % 360, 0, 0];
         this.position.x = Math.sin(Date.now() / 1000) * 0.2;
-
-
-
-        //console.log(this.quaternion); 
     }
 });
-
-
-
 const plane = window.plane = scene.heirachy["plane"] = Instantiate(MeshDependacies, {
     vertexBuffer: cubeMesh,
     texture: backgroundTexture,
@@ -211,7 +202,6 @@ const plane = window.plane = scene.heirachy["plane"] = Instantiate(MeshDependaci
         this.scale = [20, 1, 20];
     }
 });
-
 //#endregion */
 
 
@@ -228,21 +218,31 @@ const explosion = scene.heirachy["explosion"] = Instantiate(SpriteDependencies, 
     Start() {
         canvas.addEventListener("mousedown", (e) => {
             console.log("updating Explosiion position");
+            // CALULATE ANIMATION START TIME
             const currentTime = Date.now() / 1000;
             explosion.startTime = currentTime;
 
-            const x = using3D ? 0 : input.mouseX;
-            const y = using3D ? 0 : input.mouseY;
+            // POSITION AT CURSOR POSITION ON THE Z PLANE
+            const x = document.pointerLockElement ? 0 : input.mouseX;
+            const y = document.pointerLockElement ? 0 : input.mouseY;
             const ray = camera.screenPositionToRay(x, y);
             const hit = camera.rayPlaneZ0(ray);
             console.log(ray, hit);
 
             this.position = hit;
+
+            // PLAY AUDIO CLIP 
+            console.log("playing clip");
+            const clip = Math.floor(Math.random() * 2);
+            const volume = 0.9 + (Math.random() * 0.1);
+            const pitch = 0.7 + (Math.random() * 0.3);
+
+            Play(audioClips[clip], { delay: 0, offset: 0, volume, pitch });
         });
     },
 
     Update() {
-        const currentTime = Date.now() / 1000;
+        const currentTime = Time.getCurrentTime();
         const animStartTime = this.startTime || currentTime;
         const timePerFrame = 1 / 12;
         const currentFrame = Math.min(Math.floor((currentTime - animStartTime) / timePerFrame), explosionTexture.layers - 1);
@@ -262,6 +262,11 @@ const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transf
     shaderModule: textShader,
     texture: fontTexture,
 
+    //for better fps tracking
+   
+    lastFPS: 0,
+    timeLastUpdate: 0,
+
     Start() {
         InitTextSystem();
     },
@@ -272,7 +277,16 @@ const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transf
         screenLeft = -camera.aspect * (0.5 / camera.pixelScale);
         screenTop = (0.5 / camera.pixelScale);
 
-        textboxAt(screenLeft + 2, screenTop - 8, `fps ${(lastFPS).toFixed(1)}`);
+
+        // updates fps for
+        const roundedTime = Time.getCurrentTime().toFixed(1); 
+        if (this.timeLastUpdate != roundedTime) {
+            this.timeLastUpdate = roundedTime;
+            this.lastFPS = 1/Time.deltaTime; 
+        }
+
+
+        textboxAt(screenLeft + 2, screenTop - 8, `fps ${(this.lastFPS).toFixed(1)}`);
         textboxAt(Math.sin(Date.now() / 1000) * 20, 10, "wooo!!");
         textboxAt(0, 0, "hello world");
 
@@ -295,38 +309,8 @@ const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transf
 
 
 
-// sets up delta time for frame independant movement *almost
-var lastTime = Date.now();
-var deltaTime = 1;
-var smoothedFPS = 0.1;
-var lastFPS = 0;
-var fpsCounter = 0;
-
-
-function HandleTime() {
-    const currentTime = Date.now() / 1000; // time in seconds 
-    deltaTime = currentTime - lastTime;
-    lastTime = currentTime;
-    const fps = 1 / deltaTime;
-
-    if (Math.abs(smoothedFPS - fps) > smoothedFPS || smoothedFPS != Number.isFinite)
-        smoothedFPS = fps;
-    smoothedFPS = (smoothedFPS * 0.9) + (fps * 0.1);
-
-    if (fpsCounter != currentTime.toFixed(1)) {
-        fpsCounter = currentTime.toFixed(1);
-        lastFPS = smoothedFPS;
-    }
-}
-
-
 // INPUT/MOVEMENT CONTROL FOR SPRITE 2
 var x = 0, y = -1, xv = 0, yv = 0, zv = 0;
-window.xv = xv;
-window.xv = yv;
-window.zv = zv;
-
-
 const cameraMouseSensitivity = 1 / 20;
 const cameraControllerSensitivity = 1 * 3;
 
@@ -338,8 +322,8 @@ function Move3D() {
 
     // sets the players speed. 
     const speed = 5;
-    xv += dx * speed * deltaTime;
-    zv += dz * speed * deltaTime;
+    xv += dx * speed * Time.deltaTime;
+    zv += dz * speed * Time.deltaTime;
 
     // adds drag
     xv *= 0.8;
@@ -358,9 +342,6 @@ function Move3D() {
     camera.position.z += cos * zv - sin * xv;
 
 }
-
-
-
 function HandleCameraRotation() {
     // controller look rotation 
     camera.rotation.x += input.lookHorizontal * cameraControllerSensitivity;
@@ -374,15 +355,14 @@ function HandleCameraRotation() {
         camera.rotation.y = Math.sign(camera.rotation.y) * 90;
 }
 
-
 // MOVE 2D 
 function Move2D() {
     const speed = 2;
     var dx = input.moveHorizontal;
     var dy = -input.moveVertical;
 
-    xv += dx * speed * deltaTime;
-    yv += dy * speed * deltaTime;
+    xv += dx * speed * Time.deltaTime;
+    yv += dy * speed * Time.deltaTime;
 
     xv *= 0.8;
     yv *= 0.8;
@@ -393,7 +373,6 @@ function Move2D() {
 
     camera.position.x += ((x - camera.position.x) * 0.05);
     camera.position.y += ((y - camera.position.y) * 0.05);
-
 }
 
 
@@ -402,27 +381,11 @@ function Move2D() {
 
 
 
-
-// initialisation of all the objects in the scene 
-
-scene.ForAllObjects(obj => {
-    //console.log(obj);
-    obj.init?.(renderer.device);
-    obj.Start?.();
-});
-
-function HandleUpdate() {
-    scene.ForAllObjects(obj => {
-        obj.Update?.();
-    });
-}
 
 //-- sets up the game update order (all functions are once per frame) -- 
 Manager.AddUpdateEvents([
-    HandleTime,
     InputUpdate,
-    HandleUpdate,
-    () => (using3D) ? Move3D() : Move2D(),
+    () => Scene.HandleUpdate(scene),
     /*begin rendering*/
     () => renderer.RenderPasses([{
         init: newFrameView,
@@ -433,79 +396,3 @@ Manager.AddUpdateEvents([
 // starts the game loop
 Manager.StartUpdateLoop();
 console.log("started gameloop");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// #region Input Elements 
-var using3D = false;
-document.getElementById("to2D").addEventListener("click", (e) => {
-    DisableCanvasLock();
-    Enable2DMouse();
-    using3D = false;
-});
-document.getElementById("to3D").addEventListener("click", (e) => {
-    Disable2DMouse();
-    EnableCanvasLock();
-    using3D = true;
-});
-document.getElementById("fullscreen").addEventListener("click", (e) => {
-
-    const elem = canvas;
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) { /* Safari */
-        elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { /* IE11 */
-        elem.msRequestFullscreen();
-    }
-});
-//#endregion
-console.log("added external 'inputs'");
-
-
-
-
-
-//#region  AUDIO
-// on user start called only on first user input, 
-document.addEventListener("mousedown", OnUserStart);
-function OnUserStart() {
-    // makes sure the user permissions haven't paused the audio 
-    audioCtx.resume();
-    console.log("starting audio");
-    document.removeEventListener("mousedown", OnUserStart);
-};
-// click to play clip
-document.addEventListener("mousedown", () => {
-    console.log("playing clip");
-    const clip = Math.floor(Math.random() * 2);
-    const volume = 0.9 + (Math.random() * 0.1);
-    const pitch = 0.7 + (Math.random() * 0.3);
-
-    Play(audioClips[clip], { delay: 0, offset: 0, volume, pitch });
-});
-//#endregion
-console.log("added audio");

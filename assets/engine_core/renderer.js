@@ -68,6 +68,7 @@ export class Renderer {
 
         gpu = device;
         this.depthTexture = createDepthTextureFromCanvas(canvas);
+        window.renderer = this; 
     }
 
     // draws all the passes, then submits the resulting comandbuffer to the gpu

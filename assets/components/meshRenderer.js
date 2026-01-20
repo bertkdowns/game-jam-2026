@@ -73,7 +73,8 @@ export const MeshRenderer = {
     // x, y, u, v 
     material: material,
     handlePass: HandlePass,
-    init(gpu) {
+    init() {
+        const gpu = window.renderer.device;
         [this.renderPipeline, this.bindGroup] = InitRenderer.bind(this)(gpu); 
     },
 }

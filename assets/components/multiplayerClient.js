@@ -96,8 +96,6 @@ export class MultiplayerClient {
             var user = multiplayerClient.synced[clientID] || CreateNewUser(clientID);
             user.position = client.position;
         }
-
-        
         function CreateNewUser(clientID) {
             const newUser = Instantiate(SpriteDependencies, { texture: window.playerTexture });
             newUser.init(renderer.device);
@@ -105,6 +103,8 @@ export class MultiplayerClient {
             return newUser;
         }
     }
+
+
 }
 
 

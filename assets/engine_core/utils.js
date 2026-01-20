@@ -1,3 +1,4 @@
+import { Manager } from "./manager.js";
 
 // adds a way to murge objects and their childn objects together recursively 
 Object.assign(Object, {
@@ -132,20 +133,30 @@ Object.assign(Object, {
     }
 });
 
-//export function Instantiate(...components) { return Object.assignWithProperties({}, ...components); }
 
 export function Instantiate(...components) {
-    const sources = components;
     const out = [];
-    for (var source of sources) {
-        if (typeof source === "function")
-            source = source();
+    // allows components to be
+    for (var c of components) {
+        if (typeof c === "function")
+            c = c();
 
-        if (Array.isArray(source))
-            out.push(...source);
+        if (Array.isArray(c))
+            out.push(...c);
         else
-            out.push(source);
+            out.push(c);
     }
 
-    return Object.assignWithProperties({}, ...out);
+    // look for init functions and turn them into an array
+    const initList = []; 
+    for(const o of out){
+        if(typeof o["init"] === "function"){
+            initList.push(o.init);
+        }
+    }
+
+    const obj = Object.assignWithProperties({initList}, ...out);
+    // the first function in the Managers update loop initialises everything and also calls start. 
+    Manager.PushObjectInit(obj);
+    return obj; 
 }

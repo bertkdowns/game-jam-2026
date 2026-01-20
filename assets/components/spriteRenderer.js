@@ -66,7 +66,8 @@ export class SpriteRenderer {
     // x, y, u, v 
     material = material;
     handlePass = HandlePass;
-    init(gpu) {
+    init() {
+        const gpu = window.renderer.device; // window.renderer.device might also work;
         [this.renderPipeline, this.bindGroup] = InitRenderer.bind(this)(gpu)
     }
 }

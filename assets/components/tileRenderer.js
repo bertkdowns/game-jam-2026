@@ -81,7 +81,8 @@ export const TileRenderer = {
 
     // to be attached to objects that get drawn to the screen
     handlePass: HandlePass,
-    init(gpu) {
+    init() {
+        const gpu = window.renderer.device; 
         [this.renderPipeline, this.bindGroup] = InitRenderer.bind(this)(gpu);
     },
 }

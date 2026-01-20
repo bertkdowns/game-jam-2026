@@ -77,7 +77,8 @@ export const TextRenderer = {
     layoutLastLength: 0,
     material: fontMaterial,
     handlePass: HandlePass,
-    init(gpu) {
+    init() {
+        const gpu = window.renderer.device; 
         [this.renderPipeline, this.bindGroup] = InitRenderer.bind(this)(gpu)
     },
 }

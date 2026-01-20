@@ -121,7 +121,8 @@ export class MultiplayerHost {
 
 
         function CreateNewUser(clientID) {
-            const newUser = Instantiate(SpriteDependencies, { texture: window.playerTexture });
+            const newUser = this.instantiateUserEntity(clientID);  
+            // needs to init it since were not managing them after game start
             newUser.init(renderer.device);
             scene.heirachy[clientID] = multiplayerHost.synced[clientID] = newUser;
             return newUser;
@@ -131,6 +132,10 @@ export class MultiplayerHost {
 
     SyncClient({ clientID, position }) {
         multiplayerHost.synced[clientID].position = position;
+    }
+
+    instantiateUserEntity(){
+        return Instantiate(SpriteDependencies, { texture: window.playerTexture });
     }
 }
 
