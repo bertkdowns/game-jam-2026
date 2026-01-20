@@ -19,8 +19,8 @@ import { InitTextSystem, textboxAt, DrawPage, ClearPage, DrawMap } from "./build
 import { DemoEntity } from "./assets/components/StateMachine.js";
 import { Transform } from "./assets/components/transform.js";
 
-import { BeginHosting } from "./assets/components/multiplayerHost.js";
-import { BeginClient } from "./assets/components/multiplayerClient.js";
+import { } from "./assets/components/multiplayerHost.js";
+import { } from "./assets/components/multiplayerClient.js";
 
 
 // creates an instance of the object to use for the background (window scene allows me to access objects from the console)
