@@ -33,7 +33,7 @@ export class State {
         this.events = events;
     }
 }
-class StateList {
+export class StateList {
     // assigns the states as read-only values. 
     // these values can be accessed via their index or key
     // (this allows you to set state to [0] to return the first state as a default value)
