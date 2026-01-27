@@ -10,6 +10,10 @@ export class StateSystem {
     }
 
     set(newState) {
+         if (!(newState == undefined || newState instanceof State || (newState = DemoEntity.STATES[newState]))) {
+            console.error(`state ${newState} is not a valid state`);
+            return;
+        }
         // switches to the current state, exiting the old state first. 
         console.log("setting to state ", newState?.name);
         this.currentState?.onExit?.(this.entity);
@@ -47,21 +51,12 @@ class StateList {
 
 // 
 export class DemoEntity {
-    // setter for state allows some transformation before updating the state
-    set state(newState) {
-        // if its undefined, or a State, or exists within DemoEntity.STATES (index, or key) 
-        if (newState == undefined
-            || newState instanceof State
-            || (newState = DemoEntity.STATES[newState])) {
-            this.skillSystem.set(newState);
-        }
-        else console.error(`state ${newState} is not a valid state`);
-    };
-    /// simple test to make sure state is being assigned properly 
-    /// when being transformed via Object.assign
-    get state() { return "state is still working"; };
-    // skill system passes in a referance to this entity so we can use it inside the StateList
+   
     skillSystem = new StateSystem(this);
+
+    // setter for state allows some transformation before updating the state
+    set state(newState) { this.skillSystem.set(newState) };
+    get state() { return this.skillSystem.currentState };
 
 
     /// static as DemoEntity.STATES being able to be accessed outside of any object 
