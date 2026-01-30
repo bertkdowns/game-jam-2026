@@ -24,28 +24,35 @@
 
 <body>
     
-    <div style="position: relative; height:1080px;width:1920px" id="modal">
-        <div class="absolute w-[1920px] h-[1080px] flex border justify-center items-center flex-col">
-            
+    <div style="position: relative; height:1080px;width:1920px" >
+        <dialog class="absolute w-[1920px] h-[1080px] flex border justify-center items-center flex-col bg-transparent" id="modal">
             <div class="flex flex-col w-[80%] h-[80%] justify-center text-center bg-gray-800 rounded-md text-white p-8 items-center shadow-lg">
                 <!-- Character -->
                 <div>
-                    <img src="assets/sprites/character.png" class="w-48 h-48 mb-4">
+                    <img src="assets/sprites/character.png" class="w-48 h-48 mb-4" id="CharacterImage">
                 </div>
-                <div class="w-full h-[40%] bg-black rounded-md p-8 mb-8 gap-3 flex flex-col justify-start items-start shadow-lg">
-                    <span class="w-full text-wrap border-b-2 text-start">Binga Bonga</span>
-                    <span class="w-full text-wrap text-gray-400 text-start">Do you think jim is sus?</span>
+                <div id="CharacterTalk" class="w-full h-[40%] bg-black rounded-md p-8 mb-8 gap-3 flex flex-col justify-start items-start shadow-lg text-wrap text-start text-gray-400">
+                    <span>Do you think jim is sus? i don't know what test to put her ebut hte ick brown fox jumps over the lazy doing veryv quickly</span>
                 </div>
-                <div class="flex gap-8 w-full justify-center">
-                    <button class="p-4 bg-black rounded-md w-full">
+                <div id="DialogChoices" class="flex flex-col gap-2 w-full justify-center">
+                    <button>
                         Dialog Option 1
                     </button>
-                    <button class="p-4 bg-black rounded-md w-full">
+                    <button>
                         Dialog Option 2
                     </button>
                 </div>
+                <style>
+                    #DialogChoices button {
+                        padding: 4px 12px;
+                        background-color: black;
+                        border-radius: 0.5rem;
+                        width: 100%;
+                        text-align: left;
+                    }
+                </style>
             </div>
-        </div>
+        </dialog>
         
     <canvas width="1920" height="1080"></canvas>
     </div>

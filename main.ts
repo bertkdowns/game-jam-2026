@@ -22,7 +22,7 @@ import { Transform } from "./assets/components/transform.js";
 
 import { } from "./assets/components/multiplayerHost.js";
 import { } from "./assets/components/multiplayerClient.js";
-
+import {testrun} from "./assets/inkle/inkle.js"
 
 // creates an instance of the object to use for the background (window scene allows me to access objects from the console)
 const scene = window.scene = new Scene();
@@ -396,3 +396,4 @@ Manager.AddUpdateEvents([
 // starts the game loop
 Manager.StartUpdateLoop();
 console.log("started gameloop");
+testrun();
