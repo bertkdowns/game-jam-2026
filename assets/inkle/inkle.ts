@@ -71,6 +71,6 @@ class Character {
 
 
 export function testrun() {
-  let character = new Character(inkStory, "assets/sprites/character.png")
+  let character = new Character(inkStory, "assets/sprites/characterPortraits/characters.portraits/noble lady1 .PNG")
   character.chat()
 }
