@@ -21,7 +21,7 @@ import { DemoEntity } from "./src/components/StateMachine.js";
 import { Transform } from "./src/components/transform.js";
 
 
-import {testrun} from "./inkle/inkle.js"
+import { testrun } from "./inkle/inkle.js"
 
 // creates an instance of the object to use for the background (window scene allows me to access objects from the console)
 const scene = window.scene = new Scene();
@@ -46,21 +46,23 @@ console.log("waiting for assets...");
 // write textures shaders etc into seperate arrays so we can either collect them as an array per type or referance them individually. 
 const [
     [backgroundTexture],
-    [playerTexture, fontTexture, tileTexture, flatColorTexture, skyboxTexture],
+    [playerTexture, fontTexture, tileTexture, flatColorTexture, skyboxTexture, stablemasterTexture, bishopTexture],
     explosionTexture,
     [spriteShader, tileShader, textShader, meshShader, skyboxShader, spriteShaderWithAtlus],
     [quadMesh, textMesh, cubeMesh, suzanne],
     audioClips,
-] = await Promise.all([ 
+] = await Promise.all([
     loadImages(
         `/assets/sprites/ballroom_background.png`,
     ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1 / 256 })))
-    ,loadImages(
+    , loadImages(
         `/assets/sprites/character.png`,
         `/assets/sprites/font.png`,
         `/assets/sprites/groundTile.png`,
         `/assets/sprites/flatColor.png`,
         `/assets/sprites/skybox.png`,
+        `/assets/sprites/characterStanding/stablemaster.png`,
+        `/assets/sprites/characterStanding/bishop.png`,
     ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1 / 64 })))
     , loadTextureArray(
         `/assets/sprites/explosion/explosion0000.png`,
@@ -169,6 +171,15 @@ scene.heirachy["sprite1"] = Instantiate(SpriteDependencies, {
     },
 
 });
+scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, {
+    texture: stablemasterTexture,
+    Start() {
+        this.position = [5, 0, 10];
+    },
+    distance: 0.10,
+    Update() {
+    }
+})
 
 const player = window.player = scene.heirachy["player"] = Instantiate(SpriteDependencies, new DemoEntity(), {
     texture: playerTexture,
@@ -243,7 +254,7 @@ const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transf
     texture: fontTexture,
 
     //for better fps tracking
-   
+
     lastFPS: 0,
     timeLastUpdate: 0,
 
@@ -259,10 +270,10 @@ const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transf
 
 
         // updates fps for
-        const roundedTime = Time.getCurrentTime().toFixed(1); 
+        const roundedTime = Time.getCurrentTime().toFixed(1);
         if (this.timeLastUpdate != roundedTime) {
             this.timeLastUpdate = roundedTime;
-            this.lastFPS = 1/Time.deltaTime; 
+            this.lastFPS = 1 / Time.deltaTime;
         }
 
 
@@ -273,7 +284,7 @@ const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transf
         textboxAt(0, -10, "this is a test");
         textboxAt(0, -20, "the more lines the better");
         const el = document.getElementById("text");
-        if(el) textboxAt(0, -40, el.value);
+        if (el) textboxAt(0, -40, el.value);
         textboxAt(0, -50, `mouse x:${input.mouseX.toPrecision(3)} y${input.mouseY.toPrecision(3)}`);
 
         // completes page draw
@@ -335,6 +346,12 @@ function HandleCameraRotation() {
         camera.rotation.y = Math.sign(camera.rotation.y) * 90;
 }
 
+
+const MIN_X = -15
+const MAX_X = 15
+const MIN_Y = -15
+const MAX_Y = 8
+
 // MOVE 2D 
 function Move2D() {
     const speed = 2;
@@ -349,6 +366,8 @@ function Move2D() {
 
     x += xv;
     y += yv;
+    x = Math.min(Math.max(x, MIN_X), MAX_X);
+    y = Math.min(Math.max(y, MIN_Y), MAX_Y);
 
 
     camera.position.x += ((x - camera.position.x) * 0.05);
@@ -382,28 +401,28 @@ testrun();
 
 /* INPUT */
 document.getElementById("to2D")?.addEventListener("click", () => {
-      DisableCanvasLock();
-      Enable2DMouse();
-    });
+    DisableCanvasLock();
+    Enable2DMouse();
+});
 
-    document.getElementById("to3D")?.addEventListener("click", () => {
-      Disable2DMouse();
-      EnableCanvasLock();
-    });
+document.getElementById("to3D")?.addEventListener("click", () => {
+    Disable2DMouse();
+    EnableCanvasLock();
+});
 
 
-    const fsBtn = document.getElementById("fullscreen");
-    fsBtn.addEventListener(
-      "click",
-      (e) => {
+const fsBtn = document.getElementById("fullscreen");
+fsBtn.addEventListener(
+    "click",
+    (e) => {
         e.stopImmediatePropagation();
         const el =
-          document.getElementById("modal") || document.documentElement;
+            document.getElementById("modal") || document.documentElement;
         if (el.requestFullscreen) el.requestFullscreen();
         else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
         else if (el.msRequestFullscreen) el.msRequestFullscreen();
-      },
-      true,
-    );
+    },
+    true,
+);
 
-    console.log("added external 'inputs'");
+console.log("added external 'inputs'");

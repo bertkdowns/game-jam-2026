@@ -27,59 +27,64 @@ gameStory.BindExternalFunction("closeModal", closeModal);
 class Character {
   story: Story;
   characterImage: string
-  constructor(image: string) {
+  name: string
+  constructor(name: string, image: string) {
     this.characterImage = image
-
+    this.name = name // the character name is used to jump to their story path whenever you chat with them.
   }
 
   chat() {
-    this.clearText()
+    clearText()
     this.setCharacterImage()
+    gameStory.ChoosePathString(this.name)
     openModal()
-    this.continueStory()
+    continueStory()
   }
-  continueStory() {
-    this.displayText()
-    this.setDialogOptions(gameStory.currentChoices)
-  }
+
   private setCharacterImage() {
-    // let img = document.getElementById("CharacterImage") as HTMLImageElement
-    // img.src = this.characterImage
+    let img = document.getElementById("CharacterImage") as HTMLImageElement
+    img.src = this.characterImage
   }
 
-  private setDialogOptions(choices: Choice[]) {
-    let dialogChoicesDiv = document.getElementById("DialogChoices")
-    dialogChoicesDiv.innerHTML = ""
-    for (let i = 0; i < choices.length; i++) {
-      let choice = choices[i]
-      let button = document.createElement("button")
-      button.innerText = choice.text
-      button.onclick = () => {
-        gameStory.ChooseChoiceIndex(i)
-        this.continueStory()
-      }
-      dialogChoicesDiv.appendChild(button)
-    }
-  }
-  private displayText() {
-    let characterTalkDiv = document.getElementById("CharacterTalk")
-    characterTalkDiv.innerHTML = ""
-    while (gameStory.canContinue) {
-      characterTalkDiv.innerHTML += `<span>${gameStory.Continue()}</span>`
-    }
 
+}
+function continueStory() {
+  displayText()
+  setDialogOptions(gameStory.currentChoices)
+}
+
+function setDialogOptions(choices: Choice[]) {
+  let dialogChoicesDiv = document.getElementById("DialogChoices")
+  dialogChoicesDiv.innerHTML = ""
+  for (let i = 0; i < choices.length; i++) {
+    let choice = choices[i]
+    let button = document.createElement("button")
+    button.innerText = choice.text
+    button.onclick = () => {
+      gameStory.ChooseChoiceIndex(i)
+      continueStory()
+    }
+    dialogChoicesDiv.appendChild(button)
   }
-  private clearText() {
-    let characterTalkDiv = document.getElementById("CharacterTalk")
-    characterTalkDiv.innerHTML = ""
+}
+function displayText() {
+  let characterTalkDiv = document.getElementById("CharacterTalk")
+  characterTalkDiv.innerHTML = ""
+  while (gameStory.canContinue) {
+    characterTalkDiv.innerHTML += `<span>${gameStory.Continue()}</span>`
   }
+
+}
+function clearText() {
+  let characterTalkDiv = document.getElementById("CharacterTalk")
+  characterTalkDiv.innerHTML = ""
 }
 
 
-
-
+let character = new Character("HeadEngineer", "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG")
 
 export function testrun() {
-  let character = new Character("assets/sprites/characterPortraits/characters.portraits/noble lady1.PNG")
   character.chat()
+  gameStory.ChoosePathString("CharacterSelection")
+  continueStory()
 }
