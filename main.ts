@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Instantiate } from "./assets/utils.js";
 import { input, Enable2DMouse, Disable2DMouse, DisableCanvasLock, EnableCanvasLock, InputUpdate, InputLateUpdate } from "./assets/input.js"
 import { Manager } from "./assets/manager.js";
@@ -35,7 +34,6 @@ camera.initialise(canvas);
 
 scene.heirachy["camera"] = window.camera = camera;
 console.log(camera); 
-console.log("hello peoples")
 
 // sets the camera position
 camera.position = [0, -1, -10];
@@ -103,6 +101,7 @@ const [
 
 
 
+
 window.quadMesh = quadMesh; 
 
 
@@ -126,6 +125,7 @@ const background = window.background = scene.heirachy["background"] = Instantiat
     },
 
 });
+
 
 
 scene.heirachy["ground"] = Instantiate(TileRenderer, quadMesh, {
@@ -182,7 +182,9 @@ const player = window.player = scene.heirachy["player"] = InstantiateEntity(Spri
 
 
 
+
 // #region 3D SCENE 
+
 
 
 
@@ -199,6 +201,7 @@ const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshRenderer, {
         this.rotation = [(lastTime%360) *180 , 0,0];
     }
 });
+
 
 
 const plane = window.plane = scene.heirachy["plane"] = Instantiate(MeshRenderer, {
@@ -259,6 +262,7 @@ const explosion = scene.heirachy["explosion"] = Instantiate(SpriteRenderer, {
 });
 
 
+
 const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, {
     vertexBuffer: textMesh,
     cameraMatrixBuffer: AllocateUniformBuffer(88),
@@ -290,6 +294,21 @@ const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, {
         textObj.textLayout = DrawPage();
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -364,6 +383,7 @@ function Move3D() {
 }
 
 
+
 function HandleCameraRotation() {
     // controller look rotation 
     camera.rotation.x += input.lookHorizontal * cameraControllerSensitivity;
@@ -376,4 +396,144 @@ function HandleCameraRotation() {
     if (Math.abs(camera.rotation.y) > 90)
         camera.rotation.y = Math.sign(camera.rotation.y) * 90;
 }
+
+
+// MOVE 2D 
+function Move2D() {
+    const speed = 2;
+    var dx = input.moveHorizontal;
+    var dy = -input.moveVertical;
+
+    xv += dx * speed * deltaTime;
+    yv += dy * speed * deltaTime;
+
+    xv *= 0.8;
+    yv *= 0.8;
+
+    x += xv;
+    y += yv;
+
+    
+    camera.position.x += ((x - camera.position.x) * 0.05);
+    camera.position.y += ((y - camera.position.y) * 0.05);
+    
+}
+
+
+
+
+
+
+
+
+// initialisation of all the objects in the scene 
+
+scene.ForAllObjects(obj => {
+    //console.log(obj);
+    obj.init?.(renderer.device);
+    obj.Start?.();
+});
+
+function HandleUpdate() {
+    scene.ForAllObjects(obj => {
+        obj.Update?.();
+        obj.UpdateTransformMatrix?.();
+    });
+}
+
+//-- sets up the game update order (all functions are once per frame) -- 
+Manager.AddUpdateEvents([
+    HandleTime,
+    InputUpdate,
+    HandleUpdate,
+    () => (using3D) ? Move3D() : Move2D(),
+    /*begin rendering*/
+    () => renderer.RenderPasses([{
+        init: newFrameView,
+        drawPass: (pass, gpu) => scene.ForAllObjects(obj => obj?.handlePass?.(pass, gpu, camera)) // draws the scene heirachy 
+    }]),
+    InputLateUpdate
+]);
+// starts the game loop
+Manager.StartUpdateLoop();
+console.log("started gameloop");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// #region Input Elements 
+var using3D = false;
+document.getElementById("to2D").addEventListener("click", (e) => {
+    DisableCanvasLock();
+    Enable2DMouse();
+    using3D = false;
+});
+document.getElementById("to3D").addEventListener("click", (e) => {
+    Disable2DMouse();
+    EnableCanvasLock();
+    using3D = true;
+});
+document.getElementById("fullscreen").addEventListener("click", (e) => {
+
+    const elem = canvas;
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+    }
+});
+//#endregion
+console.log("added external 'inputs'");
+
+
+
+
+
+//#region  AUDIO
+// on user start called only on first user input, 
+document.addEventListener("mousedown", OnUserStart);
+function OnUserStart() {
+    // makes sure the user permissions haven't paused the audio 
+    audioCtx.resume();
+    console.log("starting audio");
+    document.removeEventListener("mousedown", OnUserStart);
+};
+// click to play clip
+document.addEventListener("mousedown", () => {
+    console.log("playing clip");
+    const clip = Math.floor(Math.random() * 2);
+    const volume = 0.9 + (Math.random() * 0.1);
+    const pitch = 0.7 + (Math.random() * 0.3);
+
+    Play(audioClips[clip], { delay: 0, offset: 0, volume, pitch });
+});
+//#endregion
+console.log("added audio");
+
+
+
 
