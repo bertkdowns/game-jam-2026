@@ -27,14 +27,16 @@ gameStory.BindExternalFunction("closeModal", closeModal);
 class Character {
   story: Story;
   characterImage: string
-  constructor(image: string) {
+  name: string
+  constructor(name: string, image: string) {
     this.characterImage = image
-
+    this.name = name // the character name is used to jump to their story path whenever you chat with them.
   }
 
   chat() {
     this.clearText()
     this.setCharacterImage()
+    gameStory.ChoosePathString(this.name)
     openModal()
     this.continueStory()
   }
@@ -43,8 +45,8 @@ class Character {
     this.setDialogOptions(gameStory.currentChoices)
   }
   private setCharacterImage() {
-    // let img = document.getElementById("CharacterImage") as HTMLImageElement
-    // img.src = this.characterImage
+    let img = document.getElementById("CharacterImage") as HTMLImageElement
+    img.src = this.characterImage
   }
 
   private setDialogOptions(choices: Choice[]) {
@@ -77,9 +79,8 @@ class Character {
 
 
 
-
+let character = new Character("HeadEngineer", "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG")
 
 export function testrun() {
-  let character = new Character("assets/sprites/characterPortraits/characters.portraits/noble lady1.PNG")
   character.chat()
 }

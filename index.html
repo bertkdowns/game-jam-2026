@@ -1,157 +1,176 @@
 <!doctype html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>WebGPU + WASM</title>
 
-<head>
-  <meta charset="utf-8" />
-  <title>WebGPU + WASM</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- WebGPU / WASM entry -->
+    <script type="module" src="./main.ts"></script>
 
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
-  <!-- WebGPU / WASM entry -->
-  <script type="module" src="./main.ts"></script>
+      body {
+        padding: 0;
+        margin: auto;
+        height: max-content;
+        width: min-content;
+        font-family: "Outfit";
+        font-size: 2.5em;
+      }
 
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+      input {
+        display: inline;
+        font-size: inherit;
+        padding: 0.5em;
+        margin: 0.5em;
+        border-radius: 1rem;
+        font-family: inherit;
+      }
 
-    body {
-      padding: 0;
-      margin: auto;
-      height: max-content;
-      width: min-content;
-      font-family: "Outfit";
-      font-size: 2.5em;
-    }
+      canvas {
+        box-sizing: content-box;
+      }
 
-    input {
-      display: inline;
-      font-size: inherit;
-      padding: 0.5em;
-      margin: 0.5em;
-      border-radius: 1rem;
-      font-family: inherit;
-    }
+      #DialogChoices {
+        font-size: 0.6em;
+        overflow-y: auto;
+      }
 
-    canvas {
-      box-sizing: content-box;
-    }
+      #DialogChoices button {
+        padding: 0.5em 0.75em;
+        background-color: black;
+        flex: 1;
+        border-radius: 0.5rem;
+        text-align: left;
+        transition: background 0.15s ease;
+      }
 
-    #DialogChoices {
-      font-size: 0.6em;
-      overflow-y: auto;
-    }
+      #DialogChoices button:hover {
+        background-color: #222;
+      }
 
-    #DialogChoices button {
-      padding: 0.5em 0.75em;
-      background-color: black;
-      flex: 1;
-      border-radius: 0.5rem;
-      text-align: left;
-      transition: background 0.15s ease;
-    }
+      #CharacterTalk {
+        font-size: 0.9em;
+        line-height: 1.3;
+      }
 
-    #DialogChoices button:hover {
-      background-color: #222;
-    }
+      .fa-input {
+        font-family: "Font Awesome 5 Free", "Helvetica", sans-serif;
+        font-weight: 900;
+      }
 
-    #CharacterTalk {
-      font-size: 0.9em;
-      line-height: 1.3;
-    }
+      #fullscreen {
+        float: right;
+        height: 2.5em;
+        aspect-ratio: 1;
+      }
 
-    .fa-input {
-      font-family: "Font Awesome 5 Free", "Helvetica", sans-serif;
-      font-weight: 900;
-    }
+      form {
+        padding: 0;
+        margin: auto 0.5em auto 0.5em;
+        width: max-content;
+        float: left;
+      }
+    </style>
+  </head>
 
-    #fullscreen {
-      float: right;
-      height: 2.5em;
-      aspect-ratio: 1;
-    }
-
-    form {
-      padding: 0;
-      margin: auto 0.5em auto 0.5em;
-      width: max-content;
-      float: left;
-    }
-  </style>
-</head>
-
-<body>
-  <div style="position: relative; height: 1080px; width: 1920px">
-    <dialog id="modal" class="absolute w-[1920px] h-[1080px] flex flex-col justify-center items-center bg-transparent">
-      <!-- MAIN DIALOG CONTAINER -->
-      <div class="flex flex-col w-[95%] h-[95%] bg-black/30 rounded-md text-white p-8 shadow-lg">
-        <div class="flex gap-6 rounded-md text-white">
-          <!-- LEFT: CHARACTER -->
-          <div class="relative flex-[1] flex items-end justify-start h-[550px]">
-            <img src="./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG" id="CharacterImage"
-              class="w-full h-full object-cover object-top pointer-events-none" style="pointer-events: none" />
-          </div>
-
-          <!-- RIGHT: DIALOG + OPTIONS -->
-          <div class="flex-[1.5] flex flex-col gap-4 h-full">
-            <div class="flex items-start gap-2 mt-6">
-              <!-- Bubble -->
-              <div class="relative bg-white text-gray-900 rounded-2xl p-5 shadow-lg">
-                <!-- Name tag -->
-                <div id="CharacterName" class="text-black text-sm py-1">
-                  Not Very Noble Lady
-                </div>
-
-                <p id="CharacterTalk">Dialog text injected here</p>
-
-                <!-- Tail -->
-                <div class="absolute -left-2 top-6 w-4 h-4 bg-white rotate-45"></div>
-              </div>
+  <body>
+    <div style="position: relative; height: 1080px; width: 1920px">
+      <dialog
+        id="modal"
+        style="display: none; /* close modal by default**/"
+        class="absolute w-[1920px] h-[1080px] flex flex-col justify-center items-center bg-transparent"
+      >
+        <!-- MAIN DIALOG CONTAINER -->
+        <div
+          class="flex flex-col w-[95%] h-[95%] bg-black/30 rounded-md text-white p-8 shadow-lg"
+        >
+          <div class="flex gap-6 rounded-md text-white">
+            <!-- LEFT: CHARACTER -->
+            <div
+              class="relative flex-[1] flex items-end justify-start h-[550px]"
+            >
+              <img
+                src="./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"
+                id="CharacterImage"
+                class="w-full h-full object-cover object-top pointer-events-none"
+                style="pointer-events: none"
+              />
             </div>
 
-            <div class="flex justify-end mt-6">
-              <!-- Bubble -->
-              <div class="relative bg-blue-500 text-white rounded-2xl p-5 shadow-lg w-full">
-                <!-- Name tag -->
-                <div class="text-white justify-end w-full text-sm py-1">
-                  Player
+            <!-- RIGHT: DIALOG + OPTIONS -->
+            <div class="flex-[1.5] flex flex-col gap-4 h-full">
+              <div class="flex items-start gap-2 mt-6">
+                <!-- Bubble -->
+                <div
+                  class="relative bg-white text-gray-900 rounded-2xl p-5 shadow-lg"
+                >
+                  <!-- Name tag -->
+                  <div id="CharacterName" class="text-black text-sm py-1">
+                    Not Very Noble Lady
+                  </div>
+
+                  <p id="CharacterTalk">Dialog text injected here</p>
+
+                  <!-- Tail -->
+                  <div
+                    class="absolute -left-2 top-6 w-4 h-4 bg-white rotate-45"
+                  ></div>
                 </div>
-
-                <p>
-                  Hello there gimme all your information did u kill the
-                  king???????
-                </p>
-
-                <!-- Tail -->
-                <div class="absolute -right-2 top-6 w-4 h-4 bg-blue-500 rotate-45"></div>
               </div>
-            </div>
 
-            <!-- Choices -->
+              <div class="flex justify-end mt-6">
+                <!-- Bubble -->
+                <div
+                  class="relative bg-blue-500 text-white rounded-2xl p-5 shadow-lg w-full"
+                >
+                  <!-- Name tag -->
+                  <div class="text-white justify-end w-full text-sm py-1">
+                    Player
+                  </div>
+
+                  <p>
+                    Hello there gimme all your information did u kill the
+                    king???????
+                  </p>
+
+                  <!-- Tail -->
+                  <div
+                    class="absolute -right-2 top-6 w-4 h-4 bg-blue-500 rotate-45"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Choices -->
+            </div>
+          </div>
+          <div id="DialogChoices" class="flex flex-wrap gap-2">
+            <!-- Choice buttons injected here -->
           </div>
         </div>
-        <div id="DialogChoices" class="flex flex-wrap gap-2">
-          <!-- Choice buttons injected here -->
-        </div>
-      </div>
-    </dialog>
+      </dialog>
 
-    <canvas width="1920" height="1080"></canvas>
-  </div>
+      <canvas width="1920" height="1080"></canvas>
+    </div>
 
-  <!-- CONTROLS -->
-  <span id="controls">
-    <!--input type="text" id="text" />
+    <!-- CONTROLS -->
+    <span id="controls">
+      <!--input type="text" id="text" />
     <input type="button" id="to3D" value="3D control" />
     <input type="button" id="to2D" value="2D control" /-->
-    <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" />
-  </span>
-
-</body>
-
+      <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" />
+    </span>
+  </body>
 </html>
