@@ -7,6 +7,7 @@
 
     <!-- font awesome for icons --> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- imports the wasm and sets up the canvas to display webgpu-->
     <script type="module" src="/main.ts"></script>
 
@@ -22,7 +23,18 @@
 </head>
 
 <body>
+    
+    <div style="position: relative; height:1080px;width:1920px" id="modal">
+        <div  style="position:absolute;border: 3px solid yellow; width:1920px; height:1080px;">
+            <div class="flex justify-center items-center border border-green h-full">
+
+
+            </div>
+        </div>
+        
     <canvas width="1920" height="1080"></canvas>
+    </div>
+
     <span id="controls"> 
     <input type="text" id="text">
     <input type="button" id="to3D" value="3D control">
@@ -30,6 +42,7 @@
     <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" >
     <!--canvas width="512" height="512"></canvas-->
     </span> 
+   
 
 
     <script type="module">
