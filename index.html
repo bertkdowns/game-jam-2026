@@ -25,11 +25,26 @@
 <body>
     
     <div style="position: relative; height:1080px;width:1920px" id="modal">
-        <div class="absolute w-[1920px] h-[1080px] flex border border-8 border-red-500 justify-center items-center flex-col">
-            <div  style="border: 5px solid green">
-                yoyoyo
+        <div class="absolute w-[1920px] h-[1080px] flex border justify-center items-center flex-col">
+            
+            <div class="flex flex-col w-[80%] h-[80%] justify-center text-center bg-gray-800 rounded-md text-white p-8 items-center shadow-lg">
+                <!-- Character -->
+                <div>
+                    <img src="assets/sprites/character.png" class="w-48 h-48 mb-4">
+                </div>
+                <div class="w-full h-[40%] bg-black rounded-md p-8 mb-8 gap-3 flex flex-col justify-start items-start shadow-lg">
+                    <span class="w-full text-wrap border-b-2 text-start">Binga Bonga</span>
+                    <span class="w-full text-wrap text-gray-400 text-start">Do you think jim is sus?</span>
+                </div>
+                <div class="flex gap-8 w-full justify-center">
+                    <button class="p-4 bg-black rounded-md w-full">
+                        Dialog Option 1
+                    </button>
+                    <button class="p-4 bg-black rounded-md w-full">
+                        Dialog Option 2
+                    </button>
+                </div>
             </div>
-            how you been my g
         </div>
         
     <canvas width="1920" height="1080"></canvas>
@@ -56,9 +71,12 @@
             Disable2DMouse();
             EnableCanvasLock();
         });
-        document.getElementById("fullscreen").addEventListener("click", (e) => {
-        
-            const el = document.querySelector("canvas");
+        // Override the later canvas-only fullscreen handler so the whole modal (DOM) goes fullscreen
+        const fsBtn = document.getElementById("fullscreen");
+        fsBtn.addEventListener("click", (e) => {
+            // prevent other handlers (the existing one that targets canvas) from running
+            e.stopImmediatePropagation();
+            const el = document.getElementById("modal") || document.documentElement;
             if (el.requestFullscreen) {
                 el.requestFullscreen();
             } else if (el.webkitRequestFullscreen) { /* Safari */
@@ -66,7 +84,8 @@
             } else if (el.msRequestFullscreen) { /* IE11 */
                 el.msRequestFullscreen();
             }
-        });
+        }, true);
+       
         //#endregion
         console.log("added external 'inputs'");
     </script>
