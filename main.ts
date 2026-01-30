@@ -46,7 +46,7 @@ console.log("waiting for assets...");
 // write textures shaders etc into seperate arrays so we can either collect them as an array per type or referance them individually. 
 const [
     [backgroundTexture],
-    [playerTexture, fontTexture, tileTexture, flatColorTexture, skyboxTexture],
+    [playerTexture, fontTexture, tileTexture, flatColorTexture, skyboxTexture, stablemasterTexture, bishopTexture],
     explosionTexture,
     [spriteShader, tileShader, textShader, meshShader, skyboxShader, spriteShaderWithAtlus],
     [quadMesh, textMesh, cubeMesh, suzanne],
@@ -61,6 +61,8 @@ const [
         `/assets/sprites/groundTile.png`,
         `/assets/sprites/flatColor.png`,
         `/assets/sprites/skybox.png`,
+        `/assets/sprites/characterStanding/stablemaster.png`,
+        `/assets/sprites/characterStanding/bishop.png`,
     ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1 / 64 })))
     , loadTextureArray(
         `/assets/sprites/explosion/explosion0000.png`,
@@ -169,6 +171,15 @@ scene.heirachy["sprite1"] = Instantiate(SpriteDependencies, {
     },
 
 });
+scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, {
+    texture: stablemasterTexture,
+    Start() {
+        this.position = [5, 0, 10];
+    },
+    distance: 0.10,
+    Update() {
+    }
+})
 
 const player = window.player = scene.heirachy["player"] = Instantiate(SpriteDependencies, new DemoEntity(), {
     texture: playerTexture,
