@@ -17,8 +17,8 @@ function closeModal() {
 
 class Character {
   story: Story;
-  characterImage
-  constructor(storyStr: str, image: string) {
+  characterImage: string
+  constructor(storyStr: string, image: string) {
     let compiler = new Compiler(storyStr);
     this.characterImage = image
     this.story = compiler.Compile()
@@ -35,8 +35,8 @@ class Character {
     this.setDialogOptions(this.story.currentChoices)
   }
   private setCharacterImage() {
-    let img = document.getElementById("CharacterImage") as HTMLImageElement
-    img.src = this.characterImage
+    // let img = document.getElementById("CharacterImage") as HTMLImageElement
+    // img.src = this.characterImage
   }
 
   private setDialogOptions(choices: Choice[]) {
@@ -71,6 +71,6 @@ class Character {
 
 
 export function testrun() {
-  let character = new Character(inkStory, "assets/sprites/characterPortraits/characters.portraits/noble lady1 .PNG")
+  let character = new Character(inkStory, "assets/sprites/characterPortraits/characters.portraits/noble lady1.PNG")
   character.chat()
 }

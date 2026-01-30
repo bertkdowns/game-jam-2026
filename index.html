@@ -5,17 +5,21 @@
     <title>WebGPU + WASM</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-    <!-- font awesome for icons -->
+    <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     />
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- imports the wasm and sets up the canvas to display webgpu-->
+
+    <!-- WebGPU / WASM entry -->
     <script type="module" src="/main.ts"></script>
 
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+
       body {
         padding: 0;
         margin: auto;
@@ -24,6 +28,7 @@
         font-family: "Outfit";
         font-size: 2.5em;
       }
+
       input {
         display: inline;
         font-size: inherit;
@@ -32,18 +37,45 @@
         border-radius: 1rem;
         font-family: inherit;
       }
+
       canvas {
         box-sizing: content-box;
       }
+
+      #DialogChoices {
+        font-size: 0.6em;
+        overflow-y: auto;
+      }
+
+      #DialogChoices button {
+        padding: 0.5em 0.75em;
+        background-color: black;
+        flex: 1;
+        border-radius: 0.5rem;
+        text-align: left;
+        transition: background 0.15s ease;
+      }
+
+      #DialogChoices button:hover {
+        background-color: #222;
+      }
+
+      #CharacterTalk {
+        font-size: 0.9em;
+        line-height: 1.3;
+      }
+
       .fa-input {
         font-family: "Font Awesome 5 Free", "Helvetica", sans-serif;
         font-weight: 900;
       }
+
       #fullscreen {
         float: right;
         height: 2.5em;
         aspect-ratio: 1;
       }
+
       form {
         padding: 0;
         margin: auto 0.5em auto 0.5em;
@@ -56,59 +88,90 @@
   <body>
     <div style="position: relative; height: 1080px; width: 1920px">
       <dialog
-        class="absolute w-[1920px] h-[1080px] flex border justify-center items-center flex-col bg-transparent"
         id="modal"
+        class="absolute w-[1920px] h-[1080px] flex flex-col justify-center items-center bg-transparent"
       >
+        <!-- MAIN DIALOG CONTAINER -->
         <div
-          class="flex flex-col w-[80%] h-[80%] justify-center text-center bg-pink-800 rounded-md text-white p-8 items-center shadow-lg"
+          class="flex flex-col w-[95%] h-[95%] bg-black/30 rounded-md text-white p-8 shadow-lg"
         >
-          <!-- Character -->
-          <div class="flex">
-            <img
-              src="assets/sprites/character.png"
-              class="w-[480px]"
-              id="CharacterImage"
-            />
+          <div class="flex gap-6 rounded-md text-white">
+            <!-- LEFT: CHARACTER -->
             <div
-              id="DialogChoices"
-              class="flex flex-col gap-2 w-full justify-center"
+              class="relative flex-[1] flex items-end justify-start h-[550px]"
             >
-              <button>Dialog Option 1</button>
-              <button>Dialog Option 2</button>
+              <img
+                src="assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"
+                id="CharacterImage"
+                class="w-full h-full object-cover object-top pointer-events-none"
+                style="pointer-events: none"
+              />
+            </div>
+
+            <!-- RIGHT: DIALOG + OPTIONS -->
+            <div class="flex-[1.5] flex flex-col gap-4 h-full">
+              <div class="flex items-start gap-2 mt-6">
+                <!-- Bubble -->
+                <div
+                  class="relative bg-white text-gray-900 rounded-2xl p-5 shadow-lg"
+                >
+                  <!-- Name tag -->
+                  <div id="CharacterName" class="text-black text-sm py-1">
+                    Not Very Noble Lady
+                  </div>
+
+                  <p id="CharacterTalk">Dialog text injected here</p>
+
+                  <!-- Tail -->
+                  <div
+                    class="absolute -left-2 top-6 w-4 h-4 bg-white rotate-45"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="flex justify-end mt-6">
+                <!-- Bubble -->
+                <div
+                  class="relative bg-blue-500 text-white rounded-2xl p-5 shadow-lg w-full"
+                >
+                  <!-- Name tag -->
+                  <div class="text-white justify-end w-full text-sm py-1">
+                    Player
+                  </div>
+
+                  <p>
+                    Hello there gimme all your information did u kill the
+                    king???????
+                  </p>
+
+                  <!-- Tail -->
+                  <div
+                    class="absolute -right-2 top-6 w-4 h-4 bg-blue-500 rotate-45"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Choices -->
             </div>
           </div>
-          <div
-            id="CharacterTalk"
-            class="w-full h-[40%] bg-black rounded-md p-8 mb-8 gap-3 flex flex-col justify-start items-start shadow-lg text-wrap text-start text-gray-400"
-          >
-            <span
-              >Do you think jim is sus? i don't know what test to put her ebut
-              hte ick brown fox jumps over the lazy doing veryv quickly</span
-            >
+          <div id="DialogChoices" class="flex flex-wrap gap-2">
+            <!-- Choice buttons injected here -->
           </div>
-          <style>
-            #DialogChoices button {
-              padding: 4px 12px;
-              background-color: black;
-              border-radius: 0.5rem;
-              width: 100%;
-              text-align: left;
-            }
-          </style>
         </div>
       </dialog>
 
       <canvas width="1920" height="1080"></canvas>
     </div>
 
+    <!-- CONTROLS -->
     <span id="controls">
       <input type="text" id="text" />
       <input type="button" id="to3D" value="3D control" />
       <input type="button" id="to2D" value="2D control" />
       <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" />
-      <!--canvas width="512" height="512"></canvas-->
     </span>
 
+    <!-- INPUT SCRIPT -->
     <script type="module">
       import {
         Disable2DMouse,
@@ -116,38 +179,31 @@
         EnableCanvasLock,
         DisableCanvasLock,
       } from "./assets/engine_core/input.js";
-      // #region Input Elements
-      document.getElementById("to2D").addEventListener("click", (e) => {
+
+      document.getElementById("to2D").addEventListener("click", () => {
         DisableCanvasLock();
         Enable2DMouse();
       });
-      document.getElementById("to3D").addEventListener("click", (e) => {
+
+      document.getElementById("to3D").addEventListener("click", () => {
         Disable2DMouse();
         EnableCanvasLock();
       });
-      // Override the later canvas-only fullscreen handler so the whole modal (DOM) goes fullscreen
+
       const fsBtn = document.getElementById("fullscreen");
       fsBtn.addEventListener(
         "click",
         (e) => {
-          // prevent other handlers (the existing one that targets canvas) from running
           e.stopImmediatePropagation();
           const el =
             document.getElementById("modal") || document.documentElement;
-          if (el.requestFullscreen) {
-            el.requestFullscreen();
-          } else if (el.webkitRequestFullscreen) {
-            /* Safari */
-            el.webkitRequestFullscreen();
-          } else if (el.msRequestFullscreen) {
-            /* IE11 */
-            el.msRequestFullscreen();
-          }
+          if (el.requestFullscreen) el.requestFullscreen();
+          else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+          else if (el.msRequestFullscreen) el.msRequestFullscreen();
         },
         true,
       );
 
-      //#endregion
       console.log("added external 'inputs'");
     </script>
   </body>
