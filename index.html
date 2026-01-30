@@ -1,100 +1,154 @@
 <!doctype html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <title>WebGPU + WASM </title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">  
+  <head>
+    <meta charset="utf-8" />
+    <title>WebGPU + WASM</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-    <!-- font awesome for icons --> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- font awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- imports the wasm and sets up the canvas to display webgpu-->
     <script type="module" src="/main.ts"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-        body { padding: 0; margin: auto; height: max-content; width: min-content; font-family: "Outfit"; font-size: 2.5em;}
-        input {display: inline; font-size: inherit; padding: 0.5em; margin: 0.5em;  border-radius: 1rem;  font-family: inherit;}
-        canvas {box-sizing: content-box; }
-        .fa-input { font-family: 'Font Awesome 5 Free', 'Helvetica', sans-serif;  font-weight: 900; }
-        #fullscreen {float:right;  height: 2.5em; aspect-ratio : 1;}
-        form {padding: 0; margin: auto 0.5em auto 0.5em ; width: max-content; float: left;}
+      @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+      body {
+        padding: 0;
+        margin: auto;
+        height: max-content;
+        width: min-content;
+        font-family: "Outfit";
+        font-size: 2.5em;
+      }
+      input {
+        display: inline;
+        font-size: inherit;
+        padding: 0.5em;
+        margin: 0.5em;
+        border-radius: 1rem;
+        font-family: inherit;
+      }
+      canvas {
+        box-sizing: content-box;
+      }
+      .fa-input {
+        font-family: "Font Awesome 5 Free", "Helvetica", sans-serif;
+        font-weight: 900;
+      }
+      #fullscreen {
+        float: right;
+        height: 2.5em;
+        aspect-ratio: 1;
+      }
+      form {
+        padding: 0;
+        margin: auto 0.5em auto 0.5em;
+        width: max-content;
+        float: left;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-    
-    <div style="position: relative; height:1080px;width:1920px" >
-        <dialog class="absolute w-[1920px] h-[1080px] flex border justify-center items-center flex-col bg-transparent" id="modal">
-            <div class="flex flex-col w-[80%] h-[80%] justify-center text-center bg-gray-800 rounded-md text-white p-8 items-center shadow-lg">
-                <!-- Character -->
-                <div>
-                    <img src="assets/sprites/character.png" class="w-48 h-48 mb-4" id="CharacterImage">
-                </div>
-                <div id="CharacterTalk" class="w-full h-[40%] bg-black rounded-md p-8 mb-8 gap-3 flex flex-col justify-start items-start shadow-lg text-wrap text-start text-gray-400">
-                    <span>Do you think jim is sus? i don't know what test to put her ebut hte ick brown fox jumps over the lazy doing veryv quickly</span>
-                </div>
-                <div id="DialogChoices" class="flex flex-col gap-2 w-full justify-center">
-                    <button>
-                        Dialog Option 1
-                    </button>
-                    <button>
-                        Dialog Option 2
-                    </button>
-                </div>
-                <style>
-                    #DialogChoices button {
-                        padding: 4px 12px;
-                        background-color: black;
-                        border-radius: 0.5rem;
-                        width: 100%;
-                        text-align: left;
-                    }
-                </style>
+  <body>
+    <div style="position: relative; height: 1080px; width: 1920px">
+      <dialog
+        class="absolute w-[1920px] h-[1080px] flex border justify-center items-center flex-col bg-transparent"
+        id="modal"
+      >
+        <div
+          class="flex flex-col w-[80%] h-[80%] justify-center text-center bg-pink-800 rounded-md text-white p-8 items-center shadow-lg"
+        >
+          <!-- Character -->
+          <div class="flex">
+            <img
+              src="assets/sprites/character.png"
+              class="w-[480px]"
+              id="CharacterImage"
+            />
+            <div
+              id="DialogChoices"
+              class="flex flex-col gap-2 w-full justify-center"
+            >
+              <button>Dialog Option 1</button>
+              <button>Dialog Option 2</button>
             </div>
-        </dialog>
-        
-    <canvas width="1920" height="1080"></canvas>
+          </div>
+          <div
+            id="CharacterTalk"
+            class="w-full h-[40%] bg-black rounded-md p-8 mb-8 gap-3 flex flex-col justify-start items-start shadow-lg text-wrap text-start text-gray-400"
+          >
+            <span
+              >Do you think jim is sus? i don't know what test to put her ebut
+              hte ick brown fox jumps over the lazy doing veryv quickly</span
+            >
+          </div>
+          <style>
+            #DialogChoices button {
+              padding: 4px 12px;
+              background-color: black;
+              border-radius: 0.5rem;
+              width: 100%;
+              text-align: left;
+            }
+          </style>
+        </div>
+      </dialog>
+
+      <canvas width="1920" height="1080"></canvas>
     </div>
 
-    <span id="controls"> 
-    <input type="text" id="text">
-    <input type="button" id="to3D" value="3D control">
-    <input type="button" id="to2D" value="2D control">
-    <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" >
-    <!--canvas width="512" height="512"></canvas-->
-    </span> 
-   
-
+    <span id="controls">
+      <input type="text" id="text" />
+      <input type="button" id="to3D" value="3D control" />
+      <input type="button" id="to2D" value="2D control" />
+      <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" />
+      <!--canvas width="512" height="512"></canvas-->
+    </span>
 
     <script type="module">
-        import {Disable2DMouse, Enable2DMouse, EnableCanvasLock, DisableCanvasLock} from "./assets/engine_core/input.js";
-        // #region Input Elements 
-        document.getElementById("to2D").addEventListener("click", (e) => {
-            DisableCanvasLock();
-            Enable2DMouse();
-        });
-        document.getElementById("to3D").addEventListener("click", (e) => {
-            Disable2DMouse();
-            EnableCanvasLock();
-        });
-        // Override the later canvas-only fullscreen handler so the whole modal (DOM) goes fullscreen
-        const fsBtn = document.getElementById("fullscreen");
-        fsBtn.addEventListener("click", (e) => {
-            // prevent other handlers (the existing one that targets canvas) from running
-            e.stopImmediatePropagation();
-            const el = document.getElementById("modal") || document.documentElement;
-            if (el.requestFullscreen) {
-                el.requestFullscreen();
-            } else if (el.webkitRequestFullscreen) { /* Safari */
-                el.webkitRequestFullscreen();
-            } else if (el.msRequestFullscreen) { /* IE11 */
-                el.msRequestFullscreen();
-            }
-        }, true);
-       
-        //#endregion
-        console.log("added external 'inputs'");
+      import {
+        Disable2DMouse,
+        Enable2DMouse,
+        EnableCanvasLock,
+        DisableCanvasLock,
+      } from "./assets/engine_core/input.js";
+      // #region Input Elements
+      document.getElementById("to2D").addEventListener("click", (e) => {
+        DisableCanvasLock();
+        Enable2DMouse();
+      });
+      document.getElementById("to3D").addEventListener("click", (e) => {
+        Disable2DMouse();
+        EnableCanvasLock();
+      });
+      // Override the later canvas-only fullscreen handler so the whole modal (DOM) goes fullscreen
+      const fsBtn = document.getElementById("fullscreen");
+      fsBtn.addEventListener(
+        "click",
+        (e) => {
+          // prevent other handlers (the existing one that targets canvas) from running
+          e.stopImmediatePropagation();
+          const el =
+            document.getElementById("modal") || document.documentElement;
+          if (el.requestFullscreen) {
+            el.requestFullscreen();
+          } else if (el.webkitRequestFullscreen) {
+            /* Safari */
+            el.webkitRequestFullscreen();
+          } else if (el.msRequestFullscreen) {
+            /* IE11 */
+            el.msRequestFullscreen();
+          }
+        },
+        true,
+      );
+
+      //#endregion
+      console.log("added external 'inputs'");
     </script>
-</body>
+  </body>
 </html>
