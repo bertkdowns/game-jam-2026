@@ -93,9 +93,8 @@
         <div class="flex gap-6 rounded-md text-white">
           <!-- LEFT: CHARACTER -->
           <div class="relative flex-[1] flex items-end justify-start h-[550px]">
-            <img src="./public/assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"
-              id="CharacterImage" class="w-full h-full object-cover object-top pointer-events-none"
-              style="pointer-events: none" />
+            <img src="./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG" id="CharacterImage"
+              class="w-full h-full object-cover object-top pointer-events-none" style="pointer-events: none" />
           </div>
 
           <!-- RIGHT: DIALOG + OPTIONS -->
@@ -153,43 +152,6 @@
     <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" />
   </span>
 
-  <!-- INPUT SCRIPT -->
-  <script type="module">
-    import {
-      Disable2DMouse,
-      Enable2DMouse,
-      EnableCanvasLock,
-      DisableCanvasLock,
-    } from "./src/engine_core/input.js";
-
-
-    document.getElementById("to2D")?.addEventListener("click", () => {
-      DisableCanvasLock();
-      Enable2DMouse();
-    });
-
-    document.getElementById("to3D")?.addEventListener("click", () => {
-      Disable2DMouse();
-      EnableCanvasLock();
-    });
-
-
-    const fsBtn = document.getElementById("fullscreen");
-    fsBtn.addEventListener(
-      "click",
-      (e) => {
-        e.stopImmediatePropagation();
-        const el =
-          document.getElementById("modal") || document.documentElement;
-        if (el.requestFullscreen) el.requestFullscreen();
-        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-        else if (el.msRequestFullscreen) el.msRequestFullscreen();
-      },
-      true,
-    );
-
-    console.log("added external 'inputs'");
-  </script>
 </body>
 
 </html>

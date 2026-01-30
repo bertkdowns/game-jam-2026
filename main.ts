@@ -29,12 +29,12 @@ const scene = window.scene = new Scene();
 // initialises the renderer and camera from the canvas; 
 const canvas = document.querySelector("canvas");
 export const renderer = new Renderer();
-await Promise.all([renderer.initialise(canvas)]);
+await Promise.all([renderer.initialise(canvas)])
 
 const camera = Instantiate(new Camera(), new Transform());
 camera.initialise(canvas);
-window.camera = camera;
 
+window.camera = camera
 // sets the camera position
 camera.position = [0, -1, -10];
 
@@ -53,46 +53,46 @@ const [
     audioClips,
 ] = await Promise.all([ 
     loadImages(
-        `./assets/sprites/ballroom_background.png`,
+        `/assets/sprites/ballroom_background.png`,
     ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1 / 256 })))
     ,loadImages(
-        `./assets/assets/sprites/character.png`,
-        `./assets/assets/sprites/font.png`,
-        `./assets/assets/sprites/groundTile.png`,
-        `./assets/assets/sprites/flatColor.png`,
-        `./assets/assets/sprites/skybox.png`,
+        `/assets/sprites/character.png`,
+        `/assets/sprites/font.png`,
+        `/assets/sprites/groundTile.png`,
+        `/assets/sprites/flatColor.png`,
+        `/assets/sprites/skybox.png`,
     ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1 / 64 })))
     , loadTextureArray(
-        `./assets/sprites/explosion/explosion0000.png`,
-        `./assets/sprites/explosion/explosion0001.png`,
-        `./assets/sprites/explosion/explosion0002.png`,
-        `./assets/sprites/explosion/explosion0003.png`,
-        `./assets/sprites/explosion/explosion0004.png`,
-        `./assets/sprites/explosion/explosion0005.png`,
-        `./assets/sprites/explosion/explosion0006.png`,
-        `./assets/sprites/explosion/explosion0007.png`,
-        `./assets/sprites/explosion/explosion0008.png`,
-        `./assets/sprites/explosion/explosion0009.png`,
-        `./assets/sprites/explosion/explosion0010.png`,
-        `./assets/sprites/explosion/explosion0011.png`,
-        `./assets/sprites/explosion/explosion0012.png`,
-        `./assets/sprites/explosion/empty.png`,
+        `/assets/sprites/explosion/explosion0000.png`,
+        `/assets/sprites/explosion/explosion0001.png`,
+        `/assets/sprites/explosion/explosion0002.png`,
+        `/assets/sprites/explosion/explosion0003.png`,
+        `/assets/sprites/explosion/explosion0004.png`,
+        `/assets/sprites/explosion/explosion0005.png`,
+        `/assets/sprites/explosion/explosion0006.png`,
+        `/assets/sprites/explosion/explosion0007.png`,
+        `/assets/sprites/explosion/explosion0008.png`,
+        `/assets/sprites/explosion/explosion0009.png`,
+        `/assets/sprites/explosion/explosion0010.png`,
+        `/assets/sprites/explosion/explosion0011.png`,
+        `/assets/sprites/explosion/explosion0012.png`,
+        `/assets/sprites/explosion/empty.png`,
     ).then(texture => Object.assign(texture, { pixelScale: 1 / 64 }))
     , loadShaders(
-        `./assets/shader/spriteShader.wgsl`,
-        `./assets/shader/tileShader.wgsl`,
-        `./assets/shader/textShader.wgsl`,
-        `./assets/shader/meshShader.wgsl`,
-        `./assets/shader/skyboxShader.wgsl`,
-        `./assets/shader/spriteShaderWithAtlus.wgsl`,
+        `/assets/shader/spriteShader.wgsl`,
+        `/assets/shader/tileShader.wgsl`,
+        `/assets/shader/textShader.wgsl`,
+        `/assets/shader/meshShader.wgsl`,
+        `/assets/shader/skyboxShader.wgsl`,
+        `/assets/shader/spriteShaderWithAtlus.wgsl`,
     ), loadObjects(
-        `./assets/models/quad.obj`,
-        `./assets/models/textQuad.obj`,
-        `./assets/models/cube.obj`,
-        `./assets/models/suzanne.obj`,
+        `/assets/models/quad.obj`,
+        `/assets/models/textQuad.obj`,
+        `/assets/models/cube.obj`,
+        `/assets/models/suzanne.obj`,
     ), loadAudioClips(
-        `./assets/audio/footstep1.wav`,
-        `./assets/audio/footstep2.wav`,
+        `/assets/audio/footstep1.wav`,
+        `/assets/audio/footstep2.wav`,
     ),
 
 ]);
@@ -366,8 +366,8 @@ function Move2D() {
 Manager.AddUpdateEvents([
     InputUpdate,
     () => Scene.HandleUpdate(scene),
-    /*begin rendering*/
     () => renderer.RenderPasses([{
+        // RENDER PASS
         init: newFrameView,
         drawPass: (pass, gpu) => scene.ForAllObjects(obj => obj?.handlePass?.(pass, gpu, camera)) // draws the scene heirachy 
     }]),
@@ -377,3 +377,33 @@ Manager.AddUpdateEvents([
 Manager.StartUpdateLoop();
 console.log("started gameloop");
 testrun();
+
+
+
+/* INPUT */
+document.getElementById("to2D")?.addEventListener("click", () => {
+      DisableCanvasLock();
+      Enable2DMouse();
+    });
+
+    document.getElementById("to3D")?.addEventListener("click", () => {
+      Disable2DMouse();
+      EnableCanvasLock();
+    });
+
+
+    const fsBtn = document.getElementById("fullscreen");
+    fsBtn.addEventListener(
+      "click",
+      (e) => {
+        e.stopImmediatePropagation();
+        const el =
+          document.getElementById("modal") || document.documentElement;
+        if (el.requestFullscreen) el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        else if (el.msRequestFullscreen) el.msRequestFullscreen();
+      },
+      true,
+    );
+
+    console.log("added external 'inputs'");

@@ -3,6 +3,7 @@ import { AllocateMesh, AllocateTexture, AllocateShaderModule, AllocateTextureArr
 import { audioCtx } from "./audio.js";
 
 
+
 export const loadImages = (...src) => Promise.all(src.map(loadImage));
 export const loadCubeMaps = (...src) => Promise.all(src.map(loadCubeMap));
 export const loadShaders = (...src) => Promise.all(src.map(loadShader));
@@ -10,14 +11,14 @@ export const loadAudioClips = (...src) => Promise.all(src.map(loadAudioClip));
 export const loadObjects = (...src) => Promise.all(src.map(loadObject));
 
 
-export const loadImage = (src) => fetch(src).then(r => r.blob()).then(decodeImage).then(bitmap => AllocateTexture(bitmap));
-export const loadCubeMap = (src) => fetch(src).then(r => r.blob()).then(decodeImage).then(bitmap => AllocateCubeMap(bitmap));
-export const loadShader = (src) => fetch(src).then(r => r.text()).then(decodeShader).then(text => AllocateShaderModule({ label: src, code: text }));
-export const loadAudioClip = (src) => fetch(src).then(r => r.arrayBuffer()).then(decodeAudio).then(buffer => { return { src, buffer } });
-export const loadObject = (src) => fetch(src).then(r => r.text()).then(decodeObject).then(array => AllocateMesh(array));
+export const loadImage = (src) => fetch(src).then(r => r.blob()).then(decodeImage).then(bitmap => AllocateTexture(bitmap)).catch(err=> console.error(err));
+export const loadCubeMap = (src) => fetch(src).then(r => r.blob()).then(decodeImage).then(bitmap => AllocateCubeMap(bitmap)).catch(err=> console.error(err));
+export const loadShader = (src) => fetch(src).then(r => r.text()).then(decodeShader).then(text => AllocateShaderModule({ label: src, code: text })).catch(err=> console.error(err));
+export const loadAudioClip = (src) => fetch(src).then(r => r.arrayBuffer()).then(decodeAudio).then(buffer => { return { src, buffer } }).catch(err=> console.error(err));
+export const loadObject = (src) => fetch(src).then(r => r.text()).then(decodeObject).then(array => AllocateMesh(array)).catch(err=> console.error(err));
 
 
-export const loadTextureArray = (...src) => Promise.all(src.map((src) => fetch(src).then(r => r.blob()).then(decodeImage))).then(bitmaps => AllocateTextureArray(bitmaps));
+export const loadTextureArray = (...src) => Promise.all(src.map((src) => fetch(src).then(r => r.blob()).then(decodeImage))).then(bitmaps => AllocateTextureArray(bitmaps)).catch(err=> console.error(err));
 
 
 
@@ -25,26 +26,41 @@ export const loadTextureArray = (...src) => Promise.all(src.map((src) => fetch(s
 
 /* converts the image from blob to byteArray*/
 async function decodeImage(blob) {
+    
+    try{
+    //return { data: {}, width: 0, height: 0, textureFormat:{ format: 'rgba8unorm', usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST }}; 
     const bmp = await createImageBitmap(blob, { premultiplyAlpha: "none" });
-
+        
     // Draw into a canvas to extract pixel data
+    
     const canvas = new OffscreenCanvas(bmp.width, bmp.height);
+    
     const ctx = canvas.getContext("2d");
+    
     ctx.drawImage(bmp, 0, 0);
+
     const img = ctx.getImageData(0, 0, bmp.width, bmp.height);
 
     const textureFormat = { format: 'rgba8unorm', usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST };
+    return { data: img.data, width: bmp.width, height: bmp.height, textureFormat};
+    } 
+    catch(err){
+        console.error(err, blob);
+        
+
+    }
     // Uint8ClampedArray, 
     //bmp.width by xyuv
-    return { data: img.data, width: bmp.width, height: bmp.height, textureFormat};
+    
 }
 
 async function decodeShader(text) {
     return text;
 }
 
+
 async function decodeAudio(data) {
-    return audioCtx.decodeAudioData(data)
+    //return audioCtx.decodeAudioData(data)
 }
 
 
