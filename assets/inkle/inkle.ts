@@ -6,6 +6,8 @@ import inkStory from './inkstory.ink?raw'
 console.log("Inkle test")
 
 
+
+
 function openModal() {
   let modal = document.querySelector("#modal").style.display = "flex";
 }
@@ -15,13 +17,19 @@ function closeModal() {
 }
 
 
+let compiler = new Compiler(inkStory);
+
+const gameStory = compiler.Compile()
+
+gameStory.BindExternalFunction("closeModal", closeModal);
+//gameStory.ChoosePathString("SecretStory");
+
 class Character {
   story: Story;
   characterImage: string
-  constructor(storyStr: string, image: string) {
-    let compiler = new Compiler(storyStr);
+  constructor(image: string) {
     this.characterImage = image
-    this.story = compiler.Compile()
+
   }
 
   chat() {
@@ -32,7 +40,7 @@ class Character {
   }
   continueStory() {
     this.displayText()
-    this.setDialogOptions(this.story.currentChoices)
+    this.setDialogOptions(gameStory.currentChoices)
   }
   private setCharacterImage() {
     // let img = document.getElementById("CharacterImage") as HTMLImageElement
@@ -47,7 +55,7 @@ class Character {
       let button = document.createElement("button")
       button.innerText = choice.text
       button.onclick = () => {
-        this.story.ChooseChoiceIndex(i)
+        gameStory.ChooseChoiceIndex(i)
         this.continueStory()
       }
       dialogChoicesDiv.appendChild(button)
@@ -55,8 +63,9 @@ class Character {
   }
   private displayText() {
     let characterTalkDiv = document.getElementById("CharacterTalk")
-    while (this.story.canContinue) {
-      characterTalkDiv.innerHTML += `<span>${this.story.Continue()}</span>`
+    characterTalkDiv.innerHTML = ""
+    while (gameStory.canContinue) {
+      characterTalkDiv.innerHTML += `<span>${gameStory.Continue()}</span>`
     }
 
   }
@@ -71,6 +80,6 @@ class Character {
 
 
 export function testrun() {
-  let character = new Character(inkStory, "assets/sprites/characterPortraits/characters.portraits/noble lady1.PNG")
+  let character = new Character("assets/sprites/characterPortraits/characters.portraits/noble lady1.PNG")
   character.chat()
 }
