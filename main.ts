@@ -1,28 +1,27 @@
-import { Instantiate } from "./assets/engine_core/utils.js";
-import { input, InputUpdate, InputLateUpdate } from "./assets/engine_core/input.js"
-import { Time } from "./assets/engine_core/time.js";
-import { Manager } from "./assets/engine_core/manager.js";
-import { Scene } from "./assets/engine_core/scene.js";
-import { audioCtx, Play } from "./assets/engine_core/audio.js";
-import { loadAudioClips, loadImages, loadObjects, loadShaders, loadTextureArray, loadCubeMaps } from "./assets/engine_core/asset_io.js";
-import { Renderer, AllocateUniformBuffer, AllocateInstancedBuffer, newFrameView } from "./assets/engine_core/renderer.js";
+import { Instantiate } from "./src/engine_core/utils.js";
+import { input, InputUpdate, InputLateUpdate } from "./src/engine_core/input.js"
+import { Time } from "./src/engine_core/time.js";
+import { Manager } from "./src/engine_core/manager.js";
+import { Scene } from "./src/engine_core/scene.js";
+import { audioCtx, Play } from "./src/engine_core/audio.js";
+import { loadAudioClips, loadImages, loadObjects, loadShaders, loadTextureArray, loadCubeMaps } from "./src/engine_core/asset_io.js";
+import { Renderer, AllocateUniformBuffer, AllocateInstancedBuffer, newFrameView } from "./src/engine_core/renderer.js";
 
 
-import { Camera } from "./assets/components/camera.js";
-import { SpriteRenderer } from "./assets/components/spriteRenderer.js";
-import { TextRenderer } from "./assets/components/textRenderer.js";
-import { TileRenderer } from "./assets/components/tileRenderer.js";
-import { MeshRenderer } from "./assets/components/meshRenderer.js";
-import { SkyboxRenderer } from "./assets/components/skyboxRenderer.js";
-import { material as HDRmaterial } from "./assets/shader/hdrMaterial.js";
+import { Camera } from "./src/components/camera.js";
+import { SpriteRenderer } from "./src/components/spriteRenderer.js";
+import { TextRenderer } from "./src/components/textRenderer.js";
+import { TileRenderer } from "./src/components/tileRenderer.js";
+import { MeshRenderer } from "./src/components/meshRenderer.js";
+import { SkyboxRenderer } from "./src/components/skyboxRenderer.js";
+import { material as HDRmaterial } from "./src/hdrMaterial.js";
 
 import { InitTextSystem, textboxAt, DrawPage, ClearPage, DrawMap } from "./build/module.js";
-import { DemoEntity } from "./assets/components/StateMachine.js";
-import { Transform } from "./assets/components/transform.js";
+import { DemoEntity } from "./src/components/StateMachine.js";
+import { Transform } from "./src/components/transform.js";
 
-import { } from "./assets/components/multiplayerHost.js";
-import { } from "./assets/components/multiplayerClient.js";
-import {testrun} from "./assets/inkle/inkle.js"
+
+import {testrun} from "./inkle/inkle.js"
 
 // creates an instance of the object to use for the background (window scene allows me to access objects from the console)
 const scene = window.scene = new Scene();
@@ -40,55 +39,60 @@ window.camera = camera;
 camera.position = [0, -1, -10];
 
 
+
+
 // load in the assets 
 console.log("waiting for assets...");
 // write textures shaders etc into seperate arrays so we can either collect them as an array per type or referance them individually. 
 const [
-    [playerTexture, fontTexture, tileTexture, backgroundTexture, flatColorTexture, skyboxTexture],
+    [backgroundTexture],
+    [playerTexture, fontTexture, tileTexture, flatColorTexture, skyboxTexture],
     explosionTexture,
     [spriteShader, tileShader, textShader, meshShader, skyboxShader, spriteShaderWithAtlus],
     [quadMesh, textMesh, cubeMesh, suzanne],
     audioClips,
-] = await Promise.all([
+] = await Promise.all([ 
     loadImages(
-        "./assets/sprites/character.png",
-        "./assets/sprites/font.png",
-        "./assets/sprites/groundTile.png",
-        "./assets/sprites/background.png",
-        "./assets/sprites/flatColor.png",
-        "./assets/sprites/skybox.png",
+        `./assets/sprites/ballroom_background.png`,
+    ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1 / 256 })))
+    ,loadImages(
+        `./assets/assets/sprites/character.png`,
+        `./assets/assets/sprites/font.png`,
+        `./assets/assets/sprites/groundTile.png`,
+        `./assets/assets/sprites/flatColor.png`,
+        `./assets/assets/sprites/skybox.png`,
     ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1 / 64 })))
     , loadTextureArray(
-        "./assets/sprites/explosion/explosion0000.png",
-        "./assets/sprites/explosion/explosion0001.png",
-        "./assets/sprites/explosion/explosion0002.png",
-        "./assets/sprites/explosion/explosion0003.png",
-        "./assets/sprites/explosion/explosion0004.png",
-        "./assets/sprites/explosion/explosion0005.png",
-        "./assets/sprites/explosion/explosion0006.png",
-        "./assets/sprites/explosion/explosion0007.png",
-        "./assets/sprites/explosion/explosion0008.png",
-        "./assets/sprites/explosion/explosion0009.png",
-        "./assets/sprites/explosion/explosion0010.png",
-        "./assets/sprites/explosion/explosion0011.png",
-        "./assets/sprites/explosion/explosion0012.png",
-        "./assets/sprites/explosion/empty.png",
+        `./assets/sprites/explosion/explosion0000.png`,
+        `./assets/sprites/explosion/explosion0001.png`,
+        `./assets/sprites/explosion/explosion0002.png`,
+        `./assets/sprites/explosion/explosion0003.png`,
+        `./assets/sprites/explosion/explosion0004.png`,
+        `./assets/sprites/explosion/explosion0005.png`,
+        `./assets/sprites/explosion/explosion0006.png`,
+        `./assets/sprites/explosion/explosion0007.png`,
+        `./assets/sprites/explosion/explosion0008.png`,
+        `./assets/sprites/explosion/explosion0009.png`,
+        `./assets/sprites/explosion/explosion0010.png`,
+        `./assets/sprites/explosion/explosion0011.png`,
+        `./assets/sprites/explosion/explosion0012.png`,
+        `./assets/sprites/explosion/empty.png`,
     ).then(texture => Object.assign(texture, { pixelScale: 1 / 64 }))
     , loadShaders(
-        "./assets/shader/spriteShader.wgsl",
-        "./assets/shader/tileShader.wgsl",
-        "./assets/shader/textShader.wgsl",
-        "./assets/shader/meshShader.wgsl",
-        "./assets/shader/skyboxShader.wgsl",
-        "./assets/shader/spriteShaderWithAtlus.wgsl",
+        `./assets/shader/spriteShader.wgsl`,
+        `./assets/shader/tileShader.wgsl`,
+        `./assets/shader/textShader.wgsl`,
+        `./assets/shader/meshShader.wgsl`,
+        `./assets/shader/skyboxShader.wgsl`,
+        `./assets/shader/spriteShaderWithAtlus.wgsl`,
     ), loadObjects(
-        "./assets/models/quad.obj",
-        "./assets/models/textQuad.obj",
-        "./assets/models/cube.obj",
-        "./assets/models/suzanne.obj",
+        `./assets/models/quad.obj`,
+        `./assets/models/textQuad.obj`,
+        `./assets/models/cube.obj`,
+        `./assets/models/suzanne.obj`,
     ), loadAudioClips(
-        "./assets/audio/footstep1.wav",
-        "./assets/audio/footstep2.wav",
+        `./assets/audio/footstep1.wav`,
+        `./assets/audio/footstep2.wav`,
     ),
 
 ]);
@@ -180,30 +184,6 @@ const player = window.player = scene.heirachy["player"] = Instantiate(SpriteDepe
 
 
 
-// #region 3D SCENE 
-const cube = window.cube = scene.heirachy["cube"] = Instantiate(MeshDependacies, {
-    vertexBuffer: suzanne,
-    texture: flatColorTexture,
-    Start() {
-        this.position = [0, -1, -6];
-        this.scale = [0.4, 0.4, 0.4];
-    },
-    Update() {
-        this.rotation = [Date.now() / 50 % 360, 0, 0];
-        this.position.x = Math.sin(Date.now() / 1000) * 0.2;
-    }
-});
-const plane = window.plane = scene.heirachy["plane"] = Instantiate(MeshDependacies, {
-    vertexBuffer: cubeMesh,
-    texture: backgroundTexture,
-    Start() {
-        this.position = [1, -11, -20];
-        this.rotation = [0, 0, 0];
-        this.scale = [20, 1, 20];
-    }
-});
-//#endregion */
-
 
 
 
@@ -293,7 +273,7 @@ const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transf
         textboxAt(0, -10, "this is a test");
         textboxAt(0, -20, "the more lines the better");
         const el = document.getElementById("text");
-        textboxAt(0, -40, el.value);
+        if(el) textboxAt(0, -40, el.value);
         textboxAt(0, -50, `mouse x:${input.mouseX.toPrecision(3)} y${input.mouseY.toPrecision(3)}`);
 
         // completes page draw

@@ -8,9 +8,11 @@
   "main": "main.ts",
   "scripts": {
     "start": "npx serve .",
+    "start:dist": "npx serve ./dist",
     "dev": "vite",
     "build:app": "vite build",
     "preview": "vite preview",
+    "build:standalone": "npm run build && npx vite build",
     "build": " asc --config asconfig.json --target release -o build/module.wasm && node ./postbuild.js",
     "restart": "npm run build && npm run start",
     "asbuild": "npm run asbuild:debug && npm run asbuild:release",
@@ -22,7 +24,8 @@
     "assemblyscript": "^0.28.9",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
-    "vite": "^5.2.0",
+    "vite": "^5.4.21",
+    "vite-plugin-static-copy": "^3.2.0",
     "webpack": "^5.104.1",
     "webpack-cli": "^6.0.1"
   },

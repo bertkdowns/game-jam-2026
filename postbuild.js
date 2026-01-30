@@ -4,7 +4,7 @@ const file = "./build/module.js";
 let content = fs.readFileSync(file, "utf8");
 
 // 1. Prepend your import line
-content = `import { imports } from "../assets/extern.js";\n` + content;
+content = `import { imports } from "../src/extern.js";\n` + content;
 
 // 2. Change function signature
 content = content.replace(

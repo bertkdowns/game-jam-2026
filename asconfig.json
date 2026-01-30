@@ -1,9 +1,9 @@
 {
   "entries": [
-    "./assets/scripts/main.ts",
-    "./assets/scripts/textRenderer.ts",
-    "./assets/scripts/tileRenderer.ts",
-    "./assets/scripts/utils.ts"
+    "./src/main.ts",
+    "./src/textRenderer.ts",
+    "./src/tileRenderer.ts",
+    "./src/utils.ts"
   ],
   "targets": {
     "debug": {
