@@ -12,6 +12,7 @@ export enum CHARACTERS {
   GENERAL = "General",
   MAYOR = "Mayor",
   TUTORIAL_CHARACTER = "TutorialCharacter",
+  KING = "King",
 }
 
 export const CHARACTERS_PIC = {
@@ -34,6 +35,8 @@ export const CHARACTERS_PIC = {
     "./assets/sprites/characterPortraits/characters.portraits/general.PNG",
   [CHARACTERS.MAYOR]:
     "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG",
+  [CHARACTERS.KING]:
+    "./assets/sprites/characterPortraits/characters.portraits/tutorial-knightd.PNG",
   [CHARACTERS.TUTORIAL_CHARACTER]:
     "./assets/sprites/characterPortraits/characters.portraits/tutorial-knight.PNG",
 };

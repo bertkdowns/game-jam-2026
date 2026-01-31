@@ -151,7 +151,7 @@ export class Game {
     console.log("started gameloop");
 
     // Initialize with tutorial scene
-    this.setupTutorialScene();
+    this.setupMainScene();
     // testrun(); // Commented out so modal starts closed
   }
 

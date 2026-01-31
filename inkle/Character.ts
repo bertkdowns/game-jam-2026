@@ -15,6 +15,7 @@ export class Character {
 
   characterImage: string;
   name: string;
+  accused: boolean = false;
   constructor(character: CHARACTERS) {
     this.characterImage = CHARACTERS_PIC[character];
     this.name = character;
@@ -36,7 +37,7 @@ export class Character {
   }
 }
 
-const characters: { [key: string]: Character } = {
+export const characters: { [key: string]: Character } = {
   HeadEngineer: new Character(CHARACTERS.HEAD_ENGINEER),
   StableMaster: new Character(CHARACTERS.STABLEMASTER),
   HeadChef: new Character(CHARACTERS.HEADCHEF),

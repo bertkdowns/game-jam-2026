@@ -1,4 +1,4 @@
-import { characters } from "./characters.js";
+import { characters } from "./Character.js";
 
 export function renderAccusations() {
   document.getElementById("AccusationModal").style.display = "block";
