@@ -21,7 +21,7 @@ import { DemoEntity } from "./src/components/StateMachine.js";
 import { Transform } from "./src/components/transform.js";
 
 
-import { testrun, switchCharacter, VISISING_BARON, STABLEMASTER } from "./inkle/inkle.js"
+import { testrun, switchCharacter, VISISING_BARON, STABLEMASTER, HEADCHEF, HEAD_ENGINEER, JESTER, BISHOP, STEWARD, MAYOR, GENERAL } from "./inkle/inkle.js"
 
 // creates an instance of the object to use for the background (window scene allows me to access objects from the console)
 const scene = window.scene = new Scene();
@@ -178,7 +178,7 @@ scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, interactablePer
     texture: placeholderTexture, 
     characterProfile : VISISING_BARON,
     Start() {
-        this.position = [10,0, 0];
+        this.position = [10,5, 0];
     },
     Update(){
         this.CheckPosition(); 
@@ -192,7 +192,7 @@ scene.heirachy["stablemaster2"] = Instantiate(SpriteDependencies, interactablePe
     texture: placeholderTexture,  
     characterProfile : STABLEMASTER,
     Start() {
-        this.position = [10,10, 0];
+        this.position = [10,-1, 0];
     },
     Update(){
         this.CheckPosition(); 
@@ -201,8 +201,109 @@ scene.heirachy["stablemaster2"] = Instantiate(SpriteDependencies, interactablePe
     }
 })
 
+scene.heirachy["stablemaster3"] = Instantiate(SpriteDependencies, interactablePerson, { 
+    texture: placeholderTexture,  
+    characterProfile : HEADCHEF,
+    Start() {
+        this.position = [10,-7, 0];
+    },
+    Update(){
+        this.CheckPosition(); 
 
+        
+    }
+})
 
+scene.heirachy["stablemaster4"] = Instantiate(SpriteDependencies, interactablePerson, { 
+    texture: placeholderTexture,  
+    characterProfile : HEAD_ENGINEER,
+    Start() {
+        this.position = [5,8, 0];
+    },
+    Update(){
+        this.CheckPosition(); 
+
+        
+    }
+})
+
+scene.heirachy["stablemaster5"] = Instantiate(SpriteDependencies, interactablePerson, { 
+    texture: placeholderTexture,  
+    characterProfile : JESTER,
+    Start() {
+        this.position = [-5,8, 0];
+    },
+    Update(){
+        this.CheckPosition(); 
+
+        
+    }
+})
+
+scene.heirachy["stablemaster6"] = Instantiate(SpriteDependencies, interactablePerson, { 
+    texture: placeholderTexture,  
+    characterProfile : BISHOP,
+    Start() {
+        this.position = [-10,5, 0];
+    },
+    Update(){
+        this.CheckPosition(); 
+
+        
+    }
+})
+
+scene.heirachy["stablemaster7"] = Instantiate(SpriteDependencies, interactablePerson, { 
+    texture: placeholderTexture,  
+    characterProfile : STEWARD,
+    Start() {
+        this.position = [-10,-1, 0];
+    },
+    Update(){
+        this.CheckPosition(); 
+
+        
+    }
+})
+
+scene.heirachy["stablemaster8"] = Instantiate(SpriteDependencies, interactablePerson, { 
+    texture: placeholderTexture,  
+    characterProfile : MAYOR,
+    Start() {
+        this.position = [-10,-7, 0];
+    },
+    Update(){
+        this.CheckPosition(); 
+
+        
+    }
+})
+
+scene.heirachy["stablemaster9"] = Instantiate(SpriteDependencies, interactablePerson, { 
+    texture: placeholderTexture,  
+    characterProfile : GENERAL,
+    Start() {
+        this.position = [1,-7, 0];
+    },
+    Update(){
+        this.CheckPosition(); 
+
+        
+    }
+})
+
+scene.heirachy["stablemaster10"] = Instantiate(SpriteDependencies, interactablePerson, { 
+    texture: placeholderTexture,  
+    characterProfile : GENERAL,
+    Start() {
+        this.position = [1,0, 0];
+    },
+    Update(){
+        this.CheckPosition(); 
+
+        
+    }
+})
 
 
 
