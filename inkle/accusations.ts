@@ -62,10 +62,10 @@ export function renderResults() {
   `
   const badddies = [
     characters[CHARACTERS.STABLEMASTER],
-    characters[CHARACTERS.HEAD_ENGINEER],
     characters[CHARACTERS.JESTER],
   ]
   const gooddies = [
+    characters[CHARACTERS.HEAD_ENGINEER],
     characters[CHARACTERS.HEADCHEF],
     characters[CHARACTERS.VISITING_BARON],
     characters[CHARACTERS.JUDGE],
