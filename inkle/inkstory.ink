@@ -72,7 +72,6 @@ Choose a character:
  + [Steward] {switchCharacter("Steward")} -> Steward
  + [HeadChef] {switchCharacter("HeadChef")}-> HeadChef
  + [Tutorial] -> Tutorial
- + [GuessThePeople] -> GuessThePeople
 
 
 -> CharacterSelection

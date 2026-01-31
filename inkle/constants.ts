@@ -1,27 +1,39 @@
-// Character name constants used throughout the game
-export const HEAD_ENGINEER = "HeadEngineer";
-export const STABLEMASTER = "StableMaster";
-export const HEADCHEF = "HeadChef";
-export const VISISING_BARON = "VisitingBaron";
-export const JESTER = "Jester";
-export const JUDGE = "Judge";
-export const BISHOP = "Bishop";
-export const STEWARD = "Steward";
-export const GENERAL = "General";
-export const MAYOR = "Mayor";
-
 export const TUTORIAL_CHARACTER = "TutorialCharacter";
 
-export const CHARACTERS = {
-  [HEAD_ENGINEER]: HEAD_ENGINEER,
-  [STABLEMASTER]: STABLEMASTER,
-  [HEADCHEF]: HEADCHEF,
-  [VISISING_BARON]: VISISING_BARON,
-  [JESTER]: JESTER,
-  [JUDGE]: JUDGE,
-  [BISHOP]: BISHOP,
-  [STEWARD]: STEWARD,
-  [GENERAL]: GENERAL,
-  [MAYOR]: MAYOR,
-  [TUTORIAL_CHARACTER]: TUTORIAL_CHARACTER,
+export enum CHARACTERS {
+  HEAD_ENGINEER = "HeadEngineer",
+  STABLEMASTER = "StableMaster",
+  HEADCHEF = "HeadChef",
+  VISISING_BARON = "VisitingBaron",
+  JESTER = "Jester",
+  JUDGE = "Judge",
+  BISHOP = "Bishop",
+  STEWARD = "Steward",
+  GENERAL = "General",
+  MAYOR = "Mayor",
+  TUTORIAL_CHARACTER = "TutorialCharacter",
+}
+
+export const CHARACTERS_PIC = {
+  [CHARACTERS.HEAD_ENGINEER]:
+    "./assets/sprites/characterPortraits/characters.portraits/general.PNG",
+  [CHARACTERS.STABLEMASTER]:
+    "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG",
+  [CHARACTERS.HEADCHEF]:
+    "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG",
+  [CHARACTERS.VISISING_BARON]: CHARACTERS.VISISING_BARON,
+  [CHARACTERS.JESTER]:
+    "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG",
+  [CHARACTERS.JUDGE]:
+    "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG",
+  [CHARACTERS.BISHOP]:
+    "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG",
+  [CHARACTERS.STEWARD]:
+    "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG",
+  [CHARACTERS.GENERAL]:
+    "./assets/sprites/characterPortraits/characters.portraits/general.PNG",
+  [CHARACTERS.MAYOR]:
+    "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG",
+  [CHARACTERS.TUTORIAL_CHARACTER]:
+    "./assets/sprites/characterPortraits/characters.portraits/tutorial-knightd.PNG",
 };
