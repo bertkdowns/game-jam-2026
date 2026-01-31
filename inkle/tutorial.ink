@@ -4,38 +4,77 @@ EXTERNAL switchToMainGame()
 
 == Start
 
-Hello! Welcome to the tutorial.
 
-This is where you'll learn how to play the game.
++ [<Walk up to the gate>]
+ Hey, good to see you again! you're a detective, aren't you?
+- 
 
-* [Continue] -> TutorialPart1
 
-== TutorialPart1
++ [Yep!]
++ [What's up?]
+- 
 
-In this game, you'll be exploring a masked ball and talking to various characters.
+Ah, finally someone I can trust! 
 
-You can move around using WASD or arrow keys, and interact with characters by approaching them.
+I was sleeping in the tavern yesterday evening after being on night watch. And I was just waking up and I heard these hushed voices in the other room. 
 
-* [Got it!] -> TutorialPart2
-* [Tell me more] -> TutorialDetails
++ [...]
++ [oh, interesting!]
+  Interesting Indeed! Especially for that time of night.
+ - 
+ 
+ And then I heard someone say, "And that's how we'll finally get rid of him. He's been on the throne too long anyways."
+ 
+ + [Did you see who they were?]
+ + [What did you do?]
+ -
+ 
+ I went outside immediately, but as soon as they heard the door creak they went back out and mixed with everyone else. No chance I could have tracked them down. 
+ 
+ + [You think they're trying to kill the king?]
+   That's what I'm worried about.
+ + [Oh, that's not good!]
+  I think they might try to kill the king.
+  
+-
 
-== TutorialDetails
+He's hosting a masked dance tonight, which is a perfect cover, anything could happen.
 
-The goal is to uncover secrets and solve mysteries by talking to different characters.
++ [Could you tell him to cancel it?]
+ And make him look like a laughing stock and a scaredy cat? He'd probably rather die!
++ [Better be on the alert!]
+  You bet!
+  
+  - 
 
-Each character has their own story and information to share.
+Since they don't know you, could you go to the dance and scout out who's who?
 
-Pay attention to what they say - clues might be hidden in their conversations!
++ [Okay, I'll do that.]
++ [Nah, I don't want to risk it. I'll do something else.]
+ 
+- 
 
-* [I understand] -> TutorialPart2
+Thank you so much! I'll tell the king you're coming. 
 
-== TutorialPart2
++[No problem!]
+- 
+Get to know everyone's names and stories, and when you think you know who the assasins are, tell the king. If you're a friend of mine he'll trust you absolutely and kill them on the spot! 
 
-When you're ready, you can start the main game.
++ [I better make sure I find the right people then!]
 
-Good luck!
+Yep, you'll only get one shot! Keep track of everyone's names, occupations, and anything that seems suspicious. Then go talk to the king!
+
++ [Sounds good!]
+-
+<Use WASD to move around and chat to people.>
+
 
 * [Start Main Game] 
   ~ closeModal()
   ~ switchToMainGame()
   -> END
+
+
+
+
+
