@@ -21,7 +21,7 @@ import { DemoEntity } from "./src/components/StateMachine.js";
 import { Transform } from "./src/components/transform.js";
 
 
-import { testrun, switchCharacter, VISISING_BARON, STABLEMASTER, HEADCHEF, HEAD_ENGINEER, JESTER, BISHOP, STEWARD, MAYOR, GENERAL } from "./inkle/inkle.js"
+import { testrun, modal, switchCharacter, VISISING_BARON, STABLEMASTER, HEADCHEF, HEAD_ENGINEER, JESTER, BISHOP, STEWARD, MAYOR, GENERAL } from "./inkle/inkle.js"
 
 // creates an instance of the object to use for the background (window scene allows me to access objects from the console)
 const scene = window.scene = new Scene();
@@ -35,10 +35,10 @@ const camera = Instantiate(new Camera(), new Transform());
 camera.initialise(canvas);
 
 window.camera = camera
-// sets the camera position
+// sets the camera position 
 camera.position = [0, -1, -15];
 
-
+console.log(modal );
 
 
 // load in the assets 
@@ -144,167 +144,166 @@ const background = window.background = scene.heirachy["background"] = Instantiat
 
 
 const interactablePerson = {
-    interactionRadius : 3,
-    hasTalked :false, 
-    
+    interactionRadius: 3,
+    hasTalked: false,
+
     CheckPosition() {
         // 核心：计算玩家到NPC的距离
         const player = window.player;
         const dx = this.position[0] - player.position[0];
         const dy = this.position[1] - player.position[1];
-        const distance = Math.sqrt(dx*dx + dy*dy);
-        
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
         // 🔑 靠近 + 按E键 → 触发对话
+
         if (distance < this.interactionRadius && input.KeyE && !this.hasTalked) {
-            player.isFrozen = true;
             console.log("触发马夫对话！");
             switchCharacter(this.characterProfile);  // ← 直接调用你的 Ink 函数
 
             this.hasTalked = true;  // 防止1帧内多次触发
         }
-        
+
         // 离开交互范围 → 重置状态（可以再聊）
         if (distance > this.interactionRadius * 1.5) {
-            player.isFrozen = false;
             this.hasTalked = false;
         }
-        
+
         // 可选：视觉提示（靠近时放大/变色）
-        if(this.hasTalked){
+        if (this.hasTalked) {
             const scale = 1 + (1 - distance / this.interactionRadius) * 0.2;
             this.scale = [scale, scale];
         }
     }
 }
 
-scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, interactablePerson, { 
-    texture: placeholderTexture, 
-    characterProfile : VISISING_BARON,
+scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, interactablePerson, {
+    texture: placeholderTexture,
+    characterProfile: VISISING_BARON,
     Start() {
-        this.position = [10,5, 0];
+        this.position = [10, 5, 0];
     },
-    Update(){
-        this.CheckPosition(); 
+    Update() {
+        this.CheckPosition();
 
-        
+
     }
 })
 
 
-scene.heirachy["stablemaster2"] = Instantiate(SpriteDependencies, interactablePerson, { 
-    texture: placeholderTexture,  
-    characterProfile : STABLEMASTER,
+scene.heirachy["stablemaster2"] = Instantiate(SpriteDependencies, interactablePerson, {
+    texture: placeholderTexture,
+    characterProfile: STABLEMASTER,
     Start() {
-        this.position = [10,-1, 0];
+        this.position = [10, -1, 0];
     },
-    Update(){
-        this.CheckPosition(); 
+    Update() {
+        this.CheckPosition();
 
-        
+
     }
 })
 
-scene.heirachy["stablemaster3"] = Instantiate(SpriteDependencies, interactablePerson, { 
-    texture: placeholderTexture,  
-    characterProfile : HEADCHEF,
+scene.heirachy["stablemaster3"] = Instantiate(SpriteDependencies, interactablePerson, {
+    texture: placeholderTexture,
+    characterProfile: HEADCHEF,
     Start() {
-        this.position = [10,-7, 0];
+        this.position = [10, -7, 0];
     },
-    Update(){
-        this.CheckPosition(); 
+    Update() {
+        this.CheckPosition();
 
-        
+
     }
 })
 
-scene.heirachy["stablemaster4"] = Instantiate(SpriteDependencies, interactablePerson, { 
-    texture: placeholderTexture,  
-    characterProfile : HEAD_ENGINEER,
+scene.heirachy["stablemaster4"] = Instantiate(SpriteDependencies, interactablePerson, {
+    texture: placeholderTexture,
+    characterProfile: HEAD_ENGINEER,
     Start() {
-        this.position = [5,8, 0];
+        this.position = [5, 8, 0];
     },
-    Update(){
-        this.CheckPosition(); 
+    Update() {
+        this.CheckPosition();
 
-        
+
     }
 })
 
-scene.heirachy["stablemaster5"] = Instantiate(SpriteDependencies, interactablePerson, { 
-    texture: placeholderTexture,  
-    characterProfile : JESTER,
+scene.heirachy["stablemaster5"] = Instantiate(SpriteDependencies, interactablePerson, {
+    texture: placeholderTexture,
+    characterProfile: JESTER,
     Start() {
-        this.position = [-5,8, 0];
+        this.position = [-5, 8, 0];
     },
-    Update(){
-        this.CheckPosition(); 
+    Update() {
+        this.CheckPosition();
 
-        
+
     }
 })
 
-scene.heirachy["stablemaster6"] = Instantiate(SpriteDependencies, interactablePerson, { 
-    texture: placeholderTexture,  
-    characterProfile : BISHOP,
+scene.heirachy["stablemaster6"] = Instantiate(SpriteDependencies, interactablePerson, {
+    texture: placeholderTexture,
+    characterProfile: BISHOP,
     Start() {
-        this.position = [-10,5, 0];
+        this.position = [-10, 5, 0];
     },
-    Update(){
-        this.CheckPosition(); 
+    Update() {
+        this.CheckPosition();
 
-        
+
     }
 })
 
-scene.heirachy["stablemaster7"] = Instantiate(SpriteDependencies, interactablePerson, { 
-    texture: placeholderTexture,  
-    characterProfile : STEWARD,
+scene.heirachy["stablemaster7"] = Instantiate(SpriteDependencies, interactablePerson, {
+    texture: placeholderTexture,
+    characterProfile: STEWARD,
     Start() {
-        this.position = [-10,-1, 0];
+        this.position = [-10, -1, 0];
     },
-    Update(){
-        this.CheckPosition(); 
+    Update() {
+        this.CheckPosition();
 
-        
+
     }
 })
 
-scene.heirachy["stablemaster8"] = Instantiate(SpriteDependencies, interactablePerson, { 
-    texture: placeholderTexture,  
-    characterProfile : MAYOR,
+scene.heirachy["stablemaster8"] = Instantiate(SpriteDependencies, interactablePerson, {
+    texture: placeholderTexture,
+    characterProfile: MAYOR,
     Start() {
-        this.position = [-10,-7, 0];
+        this.position = [-10, -7, 0];
     },
-    Update(){
-        this.CheckPosition(); 
+    Update() {
+        this.CheckPosition();
 
-        
+
     }
 })
 
-scene.heirachy["stablemaster9"] = Instantiate(SpriteDependencies, interactablePerson, { 
-    texture: placeholderTexture,  
-    characterProfile : GENERAL,
+scene.heirachy["stablemaster9"] = Instantiate(SpriteDependencies, interactablePerson, {
+    texture: placeholderTexture,
+    characterProfile: GENERAL,
     Start() {
-        this.position = [1,-7, 0];
+        this.position = [1, -7, 0];
     },
-    Update(){
-        this.CheckPosition(); 
+    Update() {
+        this.CheckPosition();
 
-        
+
     }
 })
 
-scene.heirachy["stablemaster10"] = Instantiate(SpriteDependencies, interactablePerson, { 
-    texture: placeholderTexture,  
-    characterProfile : GENERAL,
+scene.heirachy["stablemaster10"] = Instantiate(SpriteDependencies, interactablePerson, {
+    texture: placeholderTexture,
+    characterProfile: GENERAL,
     Start() {
-        this.position = [1,0, 0];
+        this.position = [1, 0, 0];
     },
-    Update(){
-        this.CheckPosition(); 
+    Update() {
+        this.CheckPosition();
 
-        
+
     }
 })
 
@@ -315,11 +314,16 @@ scene.heirachy["stablemaster10"] = Instantiate(SpriteDependencies, interactableP
 
 
 const player = window.player = scene.heirachy["player"] = Instantiate(SpriteDependencies, new DemoEntity(), {
-    texture: playerTexture,isFrozen: false,
+    texture: playerTexture, isFrozen: false,
+    Start() {
+        this.state = 0;
+    },
     Update() {
-        (window.using3D) ? Move3D() : Move2D();
-        this.position = [x, y];
-        this.skillSystem.call("onEvent");
+
+        this.position += Move2D(this);
+        UpdateCamera(this.position.x, this.position.y);
+
+        this.stateSystem.call("onEvent");
     },
 });
 
@@ -434,7 +438,7 @@ const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transf
 
 
 // INPUT/MOVEMENT CONTROL FOR SPRITE 2
-var x = 0, y = -1, xv = 0, yv = 0, zv = 0;
+var xv = 0, yv = 0, zv = 0;
 const cameraMouseSensitivity = 1 / 20;
 const cameraControllerSensitivity = 1 * 3;
 
@@ -446,9 +450,9 @@ const MAX_Y = 12.5
 
 // MOVE 2D 
 // MOVE 2D
-function Move2D() {
-
-     if (player.isFrozen) {
+function Move2D(entity) {
+    if (modal.stateName == "open") {
+       
         xv = 0;
         yv = 0;
         return;
@@ -466,6 +470,7 @@ function Move2D() {
     xv *= 0.8;
     yv *= 0.8;
 
+    const [x,y] = [...entity.position]
     // Predict next position
     let nextX = x + xv;
     let nextY = y + yv;
@@ -487,10 +492,11 @@ function Move2D() {
         nextY = y; // stay in place
     }
 
-    // Update player position
-    x = nextX;
-    y = nextY;
+    entity.position = [nextX, nextY];
 
+}
+function UpdateCamera(x,y) {
+    
     // Background boundaries for camera
     const BG_WIDTH = 0.5;   // Half-width of the background
     const BG_HEIGHT = 7.3; // Half-height of the background
@@ -509,13 +515,13 @@ function Move2D() {
     camera.position.x += (targetCamX - camera.position.x) * 0.05;
     camera.position.y += (targetCamY - camera.position.y) * 0.05;
 
-
 }
+
 
 // Obstacles
 const obstacles = [
-    { x:10, y: 12, width: 13, height: 8 }, // Center (x, y), width, height
-    { x:-9, y: 12, width: 13, height: 8 },
+    { x: 10, y: 12, width: 13, height: 8 }, // Center (x, y), width, height
+    { x: -9, y: 12, width: 13, height: 8 },
 ];
 
 // Collision check

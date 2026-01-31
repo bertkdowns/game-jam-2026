@@ -5,43 +5,50 @@ import { StateSystem,State, StateList } from '../src/components/StateMachine.js'
 
 
 
-export const ModalState = new StateSystem(this);
+
+
 
 
 class Modal {
-   skillSystem = new StateSystem(this);
+    constructor (){
+      this.skillSystem = new StateSystem(this);
+      this.state = 0; 
+    }
+   skillSystem;
 
     // setter for state allows some transformation before updating the state
     set state(newState) { this.skillSystem.set(newState) };
     get state() { return this.skillSystem.currentState };
+    get stateName() { return this.skillSystem.stateName };
 
   static STATES = new StateList({
-        inModal: new State("inModal", {
-            onStart: () => { console.log(`switching to idle`) },
-            onExit: () => { console.log(`finishing idle`) },
-            onEvent: e => e.whileIdle(e),
+        open: new State("open", {
+            onStart: this.showModal, 
         }),
-        outOfModal: new State("outOfModal", {
-            onStart: e => e.onJump(e),
-            onExit: () => { console.log("end of jump"); },
+        close: new State("close", {
+            onStart: this.hideModal, 
         }),
-
-        
     });
+
+    static showModal(){
+      document.querySelector("#modal").style.display = "flex";
+    }
+    static hideModal(){
+      document.querySelector("#modal").style.display = "none";
+    }
 }
+export const modal = new Modal(); 
+
 
 console.log("Inkle test")
 
 
 
-
-
 export function openModal() {
-  let modal = document.querySelector("#modal").style.display = "flex";
+  modal.state = "open"; 
 }
-
 export function closeModal() {
-  let modal = document.querySelector("#modal").style.display = "none";
+  modal.state = "close"
 }
 
 
@@ -156,6 +163,7 @@ gameStory.BindExternalFunction("switchCharacter", switchCharacter);
 
 
 export function testrun() {
+  modal.state = 0; 
   character.chat()
   gameStory.ChoosePathString("CharacterSelection")
   continueStory()
