@@ -259,6 +259,7 @@ class MouseKeyboardDevice {
         ArrowDown: 0,
         ArrowLeft: 0,
         ArrowRight: 0,
+        KeyE:0, 
     }
     _mouseX = 0;
     _mouseY = 0;
@@ -274,6 +275,7 @@ class MouseKeyboardDevice {
             mouseY: () => this._mouseY,
         },
         buttons: {
+           KeyE: ()=> this.pressed.KeyE, 
         }
     }
 }

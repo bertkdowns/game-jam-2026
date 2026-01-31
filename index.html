@@ -13,19 +13,19 @@
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-
   <!-- WebGPU / WASM entry -->
   <script type="module" src="./main.ts"></script>
 
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap");
 
     body {
       padding: 0;
       margin: auto;
       height: max-content;
       width: min-content;
-      font-family: "Outfit";
+      font-family: "Coming Soon";
       font-size: 2.5em;
     }
 
@@ -49,15 +49,17 @@
 
     #DialogChoices button {
       padding: 0.5em 0.75em;
-      background-color: black;
+      /*background-color: black;*/
       flex: 1;
       border-radius: 0.5rem;
       text-align: left;
       transition: background 0.15s ease;
+      background-color: white;
+      min-height: '40px'
     }
 
     #DialogChoices button:hover {
-      background-color: #222;
+      background-color: #afacac;
     }
 
     #CharacterTalk {
@@ -72,7 +74,7 @@
 
     #fullscreen {
       float: right;
-      height: 2.5em;
+      [] height: 2.5em;
       aspect-ratio: 1;
     }
 
@@ -87,24 +89,29 @@
 
 <body>
   <div style="position: relative; height: 1080px; width: 1920px">
-    <dialog id="modal" class="absolute w-[1920px] h-[1080px] flex flex-col justify-center items-center bg-transparent">
+    <dialog id="modal" style="display: none; /* close modal by default**/"
+      class="absolute w-[1920px] h-[1080px] flex flex-col justify-center items-center bg-transparent">
       <!-- MAIN DIALOG CONTAINER -->
-      <div class="flex flex-col w-[95%] h-[95%] bg-black/30 rounded-md text-white p-8 shadow-lg">
-        <div class="flex gap-6 rounded-md text-white">
+      <div class="flex flex-col w-[100%] h-[100%] bg-black/30 rounded-md text-black p-8 shadow-lg">
+        <div class="flex flex-1 gap-6 rounded-md text-white">
           <!-- LEFT: CHARACTER -->
-          <div class="relative flex-[1] flex items-end justify-start h-[550px]">
+          <div class="  h-[800px] w-[968px] overflow-hidden">
+
             <img src="./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG" id="CharacterImage"
-              class="w-full h-full object-cover object-top pointer-events-none" style="pointer-events: none" />
+              class="relative items-end justify-start  object-cover  w-full pointer-events-none"
+              style="pointer-events: none;" />
           </div>
 
+
+
           <!-- RIGHT: DIALOG + OPTIONS -->
-          <div class="flex-[1.5] flex flex-col gap-4 h-full">
+          <div class="flex flex-col gap-4">
             <div class="flex items-start gap-2 mt-6">
               <!-- Bubble -->
               <div class="relative bg-white text-gray-900 rounded-2xl p-5 shadow-lg">
                 <!-- Name tag -->
                 <div id="CharacterName" class="text-black text-sm py-1">
-                  Not Very Noble Lady
+                  <!--Not Very Noble Lady-->
                 </div>
 
                 <p id="CharacterTalk">Dialog text injected here</p>
@@ -115,27 +122,31 @@
             </div>
 
             <div class="flex justify-end mt-6">
-              <!-- Bubble -->
-              <div class="relative bg-blue-500 text-white rounded-2xl p-5 shadow-lg w-full">
-                <!-- Name tag -->
-                <div class="text-white justify-end w-full text-sm py-1">
-                  Player
-                </div>
+              <!-- Bubble Player
+                <div
+                  class="relative bg-blue-500 text-white rounded-2xl p-5 shadow-lg w-full"
+                >
+                  Name tag
+                  <div class="text-white justify-end w-full text-sm py-1">
+                    Player
+                  </div>
 
-                <p>
-                  Hello there gimme all your information did u kill the
-                  king???????
-                </p>
+                  <p>
+                    Hello there gimme all your information did u kill the
+                    king???????
+                  </p>
 
-                <!-- Tail -->
-                <div class="absolute -right-2 top-6 w-4 h-4 bg-blue-500 rotate-45"></div>
-              </div>
+                  Tail
+                  <div
+                    class="absolute -right-2 top-6 w-4 h-4 bg-blue-500 rotate-45"
+                  ></div>
+                </div>-->
             </div>
 
             <!-- Choices -->
           </div>
         </div>
-        <div id="DialogChoices" class="flex flex-wrap gap-2">
+        <div id="DialogChoices" class="flex flex-1 grid grid-cols-2 gap-2 min-h-[300px]">
           <!-- Choice buttons injected here -->
         </div>
       </div>
@@ -155,7 +166,6 @@
       <button class="audio-button" data-index="1">Background</button>
     </div>
   </span>
-
 </body>
 
 </html>
