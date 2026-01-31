@@ -37,6 +37,7 @@ import { setupAudioSystem } from "./AudioSystem";
 import { testrun } from "../inkle";
 import { GameScene, SCENE_CONFIGS } from "./Types/scenes";
 import { switchScene as switchInkScene } from "../inkle/StoryManager";
+import { renderAccusations } from "../inkle/accusations";
 import type {
   PlayerEntity,
   BackgroundEntity,
@@ -208,6 +209,7 @@ export class Game {
 
   // Setup ending scene
   setupEndingScene() {
+
     this.currentScene = GameScene.Ending;
     switchInkScene(GameScene.Ending);
 
@@ -232,6 +234,7 @@ export class Game {
 
     // You can add ending-specific entities here
     // For example: credits, final scene elements, etc.
+    renderAccusations(); // Render the accusations before switching to ending
   }
 
   // Switch to a different scene

@@ -1,6 +1,7 @@
 import { characters } from "./Character.js";
 
 export function renderAccusations() {
+  document.getElementById("modal").style.display = "none";
   document.getElementById("AccusationModal").style.display = "block";
   let accusationsDiv = document.getElementById("Accusations");
   accusationsDiv.innerHTML = "";
