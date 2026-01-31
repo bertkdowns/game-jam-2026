@@ -38,5 +38,5 @@ export const CHARACTERS_PIC = {
   [CHARACTERS.KING]:
     "./assets/sprites/characterPortraits/characters.portraits/tutorial-knightd.PNG",
   [CHARACTERS.TUTORIAL_CHARACTER]:
-    "./assets/sprites/characterPortraits/characters.portraits/tutorial-knightd.PNG",
+    "./assets/sprites/characterPortraits/characters.portraits/tutorial-knight.PNG",
 };
