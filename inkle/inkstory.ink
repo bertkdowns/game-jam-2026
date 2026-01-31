@@ -4,7 +4,7 @@ EXTERNAL switchCharacter(characterName)
 
 Hello!
 
-* [Begin]-> 
+* [Begin]-> CharacterSelection
 
 // Character Names
 CONST VISITING_BARON_NAME = "Alex"
@@ -72,7 +72,6 @@ Choose a character:
  + [Steward] {switchCharacter("Steward")} -> Steward
  + [HeadChef] {switchCharacter("HeadChef")}-> HeadChef
  + [Tutorial] -> Tutorial
- + [GuessThePeople] -> GuessThePeople
 
 
 -> CharacterSelection

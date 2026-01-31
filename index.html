@@ -1,83 +1,99 @@
 <!doctype html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>WebGPU + WASM</title>
 
-<head>
-  <meta charset="utf-8" />
-  <title>WebGPU + WASM</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link rel="stylesheet" href="index.css" />
 
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  <link rel="stylesheet" href="index.css">
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- WebGPU / WASM entry -->
+    <script type="module" src="./main.ts"></script>
+  </head>
 
-  <!-- WebGPU / WASM entry -->
-  <script type="module" src="./main.ts"></script>
-</head>
-
-<body>
-  <!-- GAME -->
-  <div style="height: 1080px; width: 1920px">
-
-    <!-- INTERACTION MODAL -->
-    <dialog id="modal" style="display: none; /* close modal by default**/"
-      class="absolute w-[1920px] h-[1080px] flex flex-col justify-center items-center bg-transparent">
-
-      <!-- MAIN DIALOG CONTAINER -->
-      <div class="flex flex-col w-[100%] h-[100%] bg-black/30 rounded-md text-black p-8 shadow-lg">
-
-        <!-- TOP SECTION: NPC PICTURE + DIALOG -->
-        <div class="flex w-full gap-6 rounded-md text-white">
-          <!-- LEFT: NPC PICTURE -->
-          <div class="h-[700px] w-[968px] overflow-hidden">
-
-            <img src="#" id="CharacterImage"
-              class="relative items-end justify-start  object-cover  w-full pointer-events-none"
-              style="pointer-events: none;" />
-          </div>
-
-          <!-- RIGHT: DIALOG -->
-          <div class="h-full w-[50%] flex flex-col items-end justify-end gap-4">
-            <!-- Scrollable conversation container -->
-            <div id="ConversationContainer"
-              class="flex flex-col gap-4 w-full overflow-y-auto overflow-x-hidden flex-1 pb-2"
-              style="max-height: 600px; justify-content: flex-end;">
-              <!-- Dialog bubbles will be dynamically added here -->
+  <body>
+    <!-- GAME -->
+    <div style="height: 1080px; width: 1920px">
+      <!-- INTERACTION MODAL -->
+      <dialog
+        id="modal"
+        style="display: none; /* close modal by default**/"
+        class="absolute w-[1920px] h-[1080px] flex flex-col justify-center items-center bg-transparent"
+      >
+        <!-- MAIN DIALOG CONTAINER -->
+        <div
+          class="flex flex-col w-[100%] h-[100%] bg-black/30 rounded-md text-black p-8 shadow-lg"
+        >
+          <!-- TOP SECTION: NPC PICTURE + DIALOG -->
+          <div class="flex w-full gap-6 rounded-md text-white">
+            <!-- LEFT: NPC PICTURE -->
+            <div class="h-[700px] w-[968px] overflow-hidden">
+              <img
+                src="#"
+                id="CharacterImage"
+                class="relative items-end justify-start object-cover w-full pointer-events-none"
+                style="pointer-events: none"
+              />
             </div>
 
-            <!-- Choices -->
+            <!-- RIGHT: DIALOG -->
+            <div
+              class="h-full w-[50%] flex flex-col items-end justify-end gap-4"
+            >
+              <!-- Scrollable conversation container -->
+              <div
+                id="ConversationContainer"
+                class="flex flex-col gap-4 w-full overflow-y-auto overflow-x-hidden flex-1 pb-2"
+                style="max-height: 600px; justify-content: flex-end"
+              >
+                <!-- Dialog bubbles will be dynamically added here -->
+              </div>
+
+              <!-- Choices -->
+            </div>
+          </div>
+
+          <!-- BOTTOM SECTION: DIALOG CHOICE BUTTONS -->
+          <div id="DialogChoices" class="flex flex-1 grid grid-cols-2 gap-2">
+            <!-- Choice buttons injected here -->
           </div>
         </div>
+      </dialog>
 
-        <!-- BOTTOM SECTION: DIALOG CHOICE BUTTONS -->
-        <div id="DialogChoices" class="flex flex-1 grid grid-cols-2 gap-2">
-          <!-- Choice buttons injected here -->
-        </div>
+      <!-- GAME CANVAS -->
+      <canvas width="1920" height="1080"></canvas>
+    </div>
+
+    <!-- CONTROLS OVERLAY-->
+    <div id="controls">
+      <div class="top-controls">
+        <input
+          type="button"
+          id="fullscreen"
+          class="fa-input"
+          value="&#xf065;"
+        />
+        <button id="mute-button" class="fa-input" aria-label="Mute/Unmute">
+          &#xf028;
+        </button>
       </div>
-    </dialog>
-
-    <!-- GAME CANVAS -->
-    <canvas width="1920" height="1080"></canvas>
-  </div>
-
-  <!-- CONTROLS OVERLAY-->
-  <div id="controls">
-    <div class="top-controls">
-      <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" />
-      <button id="mute-button" class="fa-input" aria-label="Mute/Unmute">&#xf028;</button>
+      <div class="audio-controls">
+        <button class="audio-button" data-index="0">Aquatic Pulsations</button>
+        <button class="audio-button" data-index="1">Background</button>
+        <button class="audio-button" data-index="2">Borderlands</button>
+      </div>
     </div>
-    <div class="audio-controls">
-      <button class="audio-button" data-index="0">Aquatic Pulsations</button>
-      <button class="audio-button" data-index="1">Background</button>
-      <button class="audio-button" data-index="2">Borderlands</button>
-    </div>
-  </div>
 
-  <!-- INTERACT PROMPT -->
-  <div id="interact-prompt">Press E to interact</div>
-</body>
-
+    <!-- INTERACT PROMPT -->
+    <div id="interact-prompt">Press E to interact</div>
+  </body>
 </html>
