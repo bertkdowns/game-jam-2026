@@ -72,20 +72,17 @@
       <dialog
         id="AccusationModal"
         style="display: none; /* close modal by default**/"
-        class="absolute w-[1920px] h-[1080px] flex flex-col justify-center items-center bg-transparent"
+        class="absolute w-[1920px] h-[1080px] flex flex-col justify-center items-center bg-gray-800 p-20"
       >
         <h2 class="text-white text-3xl mb-4">Select Accusations</h2>
-        <div
-          id="Accusations"
-          class="grid grid-cols-2"
-          style="display: none"
-        ></div>
+
         <button
           id="submitAccusations"
           class="mt-4 p-2 bg-blue-500 text-white rounded"
         >
           Submit Accusations
         </button>
+        <div id="Accusations" class="grid grid-cols-2"></div>
       </dialog>
 
       <!-- GAME CANVAS -->
