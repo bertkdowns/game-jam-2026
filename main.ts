@@ -1,12 +1,27 @@
 import { Instantiate } from "./src/engine_core/utils.js";
-import { input, InputUpdate, InputLateUpdate } from "./src/engine_core/input.js"
+import {
+  input,
+  InputUpdate,
+  InputLateUpdate,
+} from "./src/engine_core/input.js";
 import { Time } from "./src/engine_core/time.js";
 import { Manager } from "./src/engine_core/manager.js";
 import { Scene } from "./src/engine_core/scene.js";
 import { audioCtx, Play } from "./src/engine_core/audio.js";
-import { loadAudioClips, loadImages, loadObjects, loadShaders, loadTextureArray, loadCubeMaps } from "./src/engine_core/asset_io.js";
-import { Renderer, AllocateUniformBuffer, AllocateInstancedBuffer, newFrameView } from "./src/engine_core/renderer.js";
-
+import {
+  loadAudioClips,
+  loadImages,
+  loadObjects,
+  loadShaders,
+  loadTextureArray,
+  loadCubeMaps,
+} from "./src/engine_core/asset_io.js";
+import {
+  Renderer,
+  AllocateUniformBuffer,
+  AllocateInstancedBuffer,
+  newFrameView,
+} from "./src/engine_core/renderer.js";
 
 import { Camera } from "./src/components/camera.js";
 import { SpriteRenderer } from "./src/components/spriteRenderer.js";
@@ -16,24 +31,48 @@ import { MeshRenderer } from "./src/components/meshRenderer.js";
 import { SkyboxRenderer } from "./src/components/skyboxRenderer.js";
 import { material as HDRmaterial } from "./src/hdrMaterial.js";
 
-import { InitTextSystem, textboxAt, DrawPage, ClearPage, DrawMap } from "./build/module.js";
+import {
+  InitTextSystem,
+  textboxAt,
+  DrawPage,
+  ClearPage,
+  DrawMap,
+} from "./build/module.js";
 import { DemoEntity } from "./src/components/StateMachine.js";
 import { Transform } from "./src/components/transform.js";
 
+<<<<<<< HEAD
 
 import { testrun, modal, switchCharacter, VISISING_BARON, STABLEMASTER, HEADCHEF, HEAD_ENGINEER, JESTER, BISHOP, STEWARD, MAYOR, GENERAL } from "./inkle/inkle.js"
+=======
+import {
+  testrun,
+  switchCharacter,
+  VISISING_BARON,
+  STABLEMASTER,
+  HEADCHEF,
+  HEAD_ENGINEER,
+  JESTER,
+  BISHOP,
+  STEWARD,
+  MAYOR,
+  GENERAL,
+} from "./inkle/inkle.js";
+import { MultiTrackCrossfader } from "./audio/Crossfader.js";
+>>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
 
 // creates an instance of the object to use for the background (window scene allows me to access objects from the console)
-const scene = window.scene = new Scene();
+const scene = (window.scene = new Scene());
 
-// initialises the renderer and camera from the canvas; 
+// initialises the renderer and camera from the canvas;
 const canvas = document.querySelector("canvas");
 export const renderer = new Renderer();
-await Promise.all([renderer.initialise(canvas)])
+await Promise.all([renderer.initialise(canvas)]);
 
 const camera = Instantiate(new Camera(), new Transform());
 camera.initialise(canvas);
 
+<<<<<<< HEAD
 window.camera = camera
 // sets the camera position 
 camera.position = [0, -1, -15];
@@ -42,108 +81,137 @@ console.log(modal );
 
 
 // load in the assets 
-console.log("waiting for assets...");
-// write textures shaders etc into seperate arrays so we can either collect them as an array per type or referance them individually. 
-const [
-    [backgroundTexture, placeholderTexture],
-    [playerTexture, fontTexture, tileTexture, flatColorTexture, skyboxTexture, stablemasterTexture, bishopTexture],
-    explosionTexture,
-    [spriteShader, tileShader, textShader, meshShader, skyboxShader, spriteShaderWithAtlus],
-    [quadMesh, textMesh, cubeMesh, suzanne],
-    audioClips,
-] = await Promise.all([
-    loadImages(
-        `/assets/sprites/ballroom_background.png`,
-        `/assets/sprites/characterPortraits/placeholder guy.png`,
-    ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1 / 256 })))
-    , loadImages(
-        `/assets/sprites/character.png`,
-        `/assets/sprites/font.png`,
-        `/assets/sprites/groundTile.png`,
-        `/assets/sprites/flatColor.png`,
-        `/assets/sprites/skybox.png`,
-        `/assets/sprites/characterStanding/stablemaster.png`,
-        `/assets/sprites/characterStanding/bishop.png`,
-    ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1 / 64 })))
-    , loadTextureArray(
-        `/assets/sprites/explosion/explosion0000.png`,
-        `/assets/sprites/explosion/explosion0001.png`,
-        `/assets/sprites/explosion/explosion0002.png`,
-        `/assets/sprites/explosion/explosion0003.png`,
-        `/assets/sprites/explosion/explosion0004.png`,
-        `/assets/sprites/explosion/explosion0005.png`,
-        `/assets/sprites/explosion/explosion0006.png`,
-        `/assets/sprites/explosion/explosion0007.png`,
-        `/assets/sprites/explosion/explosion0008.png`,
-        `/assets/sprites/explosion/explosion0009.png`,
-        `/assets/sprites/explosion/explosion0010.png`,
-        `/assets/sprites/explosion/explosion0011.png`,
-        `/assets/sprites/explosion/explosion0012.png`,
-        `/assets/sprites/explosion/empty.png`,
-    ).then(texture => Object.assign(texture, { pixelScale: 1 / 64 }))
-    , loadShaders(
-        `/assets/shader/spriteShader.wgsl`,
-        `/assets/shader/tileShader.wgsl`,
-        `/assets/shader/textShader.wgsl`,
-        `/assets/shader/meshShader.wgsl`,
-        `/assets/shader/skyboxShader.wgsl`,
-        `/assets/shader/spriteShaderWithAtlus.wgsl`,
-    ), loadObjects(
-        `/assets/models/quad.obj`,
-        `/assets/models/textQuad.obj`,
-        `/assets/models/cube.obj`,
-        `/assets/models/suzanne.obj`,
-    ), loadAudioClips(
-        `/assets/audio/footstep1.wav`,
-        `/assets/audio/footstep2.wav`,
-    ),
+=======
+window.camera = camera;
+// sets the camera position
+camera.position = [0, -1, -15];
 
+// load in the assets
+>>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
+console.log("waiting for assets...");
+// write textures shaders etc into seperate arrays so we can either collect them as an array per type or referance them individually.
+const [
+  [backgroundTexture, placeholderTexture],
+  [
+    playerTexture,
+    fontTexture,
+    tileTexture,
+    flatColorTexture,
+    skyboxTexture,
+    stablemasterTexture,
+    bishopTexture,
+  ],
+  explosionTexture,
+  [
+    spriteShader,
+    tileShader,
+    textShader,
+    meshShader,
+    skyboxShader,
+    spriteShaderWithAtlus,
+  ],
+  [quadMesh, textMesh, cubeMesh, suzanne],
+  audioClips,
+] = await Promise.all([
+  loadImages(
+    `/assets/sprites/ballroom_background.png`,
+    `/assets/sprites/characterPortraits/placeholder guy.png`
+  ).then((textures) =>
+    textures.map((texture) => Object.assign(texture, { pixelScale: 1 / 256 }))
+  ),
+  loadImages(
+    `/assets/sprites/character.png`,
+    `/assets/sprites/font.png`,
+    `/assets/sprites/groundTile.png`,
+    `/assets/sprites/flatColor.png`,
+    `/assets/sprites/skybox.png`,
+    `/assets/sprites/characterStanding/stablemaster.png`,
+    `/assets/sprites/characterStanding/bishop.png`
+  ).then((textures) =>
+    textures.map((texture) => Object.assign(texture, { pixelScale: 1 / 64 }))
+  ),
+  loadTextureArray(
+    `/assets/sprites/explosion/explosion0000.png`,
+    `/assets/sprites/explosion/explosion0001.png`,
+    `/assets/sprites/explosion/explosion0002.png`,
+    `/assets/sprites/explosion/explosion0003.png`,
+    `/assets/sprites/explosion/explosion0004.png`,
+    `/assets/sprites/explosion/explosion0005.png`,
+    `/assets/sprites/explosion/explosion0006.png`,
+    `/assets/sprites/explosion/explosion0007.png`,
+    `/assets/sprites/explosion/explosion0008.png`,
+    `/assets/sprites/explosion/explosion0009.png`,
+    `/assets/sprites/explosion/explosion0010.png`,
+    `/assets/sprites/explosion/explosion0011.png`,
+    `/assets/sprites/explosion/explosion0012.png`,
+    `/assets/sprites/explosion/empty.png`
+  ).then((texture) => Object.assign(texture, { pixelScale: 1 / 64 })),
+  loadShaders(
+    `/assets/shader/spriteShader.wgsl`,
+    `/assets/shader/tileShader.wgsl`,
+    `/assets/shader/textShader.wgsl`,
+    `/assets/shader/meshShader.wgsl`,
+    `/assets/shader/skyboxShader.wgsl`,
+    `/assets/shader/spriteShaderWithAtlus.wgsl`
+  ),
+  loadObjects(
+    `/assets/models/quad.obj`,
+    `/assets/models/textQuad.obj`,
+    `/assets/models/cube.obj`,
+    `/assets/models/suzanne.obj`
+  ),
+  loadAudioClips(`/assets/audio/footstep1.wav`, `/assets/audio/footstep2.wav`),
 ]);
 
 console.log("loaded assets");
 
-
-
-
-// abstracted out the dependancies for sprites. 
+// abstracted out the dependancies for sprites.
 // (can be passed in directly to the instantiate function)
-export const SpriteDependencies = () => ([
-    new SpriteRenderer(),
-    new Transform(),
-    {
-        cameraMatrixBuffer: AllocateUniformBuffer(208),
-        vertexBuffer: quadMesh,
-        shaderModule: spriteShader,
-    }
-]);
+export const SpriteDependencies = () => [
+  new SpriteRenderer(),
+  new Transform(),
+  {
+    cameraMatrixBuffer: AllocateUniformBuffer(208),
+    vertexBuffer: quadMesh,
+    shaderModule: spriteShader,
+  },
+];
 // abstracted out dependancies for meshes.
-export const MeshDependacies = () => ([MeshRenderer, new Transform(), {
+export const MeshDependacies = () => [
+  MeshRenderer,
+  new Transform(),
+  {
     cameraMatrixBuffer: AllocateUniformBuffer(3 * 64),
     shaderModule: meshShader,
-}
-]);
+  },
+];
 window.playerTexture = playerTexture;
 
-
-
 // 3d skybox behind everything.
-const skybox = scene.heirachy["skybox"] = Instantiate(SkyboxRenderer, new Transform(), {
+const skybox = (scene.heirachy["skybox"] = Instantiate(
+  SkyboxRenderer,
+  new Transform(),
+  {
     vertexBuffer: cubeMesh,
     cameraMatrixBuffer: AllocateUniformBuffer(2 * 64),
     shaderModule: skyboxShader,
     texture: skyboxTexture,
-});
+  }
+));
 
-// creates seperate instances of the object, order follows sorting order, higher is further back.  
-const background = window.background = scene.heirachy["background"] = Instantiate(SpriteDependencies, {
-    texture: backgroundTexture,
-    Start() {
+// creates seperate instances of the object, order follows sorting order, higher is further back.
+const background =
+  (window.background =
+  scene.heirachy["background"] =
+    Instantiate(SpriteDependencies, {
+      texture: backgroundTexture,
+      Start() {
         this.position = [0, 0, 0];
-    },
-});
-
+      },
+    }));
 
 const interactablePerson = {
+<<<<<<< HEAD
     interactionRadius: 3,
     hasTalked: false,
 
@@ -173,9 +241,28 @@ const interactablePerson = {
             const scale = 1 + (1 - distance / this.interactionRadius) * 0.2;
             this.scale = [scale, scale];
         }
-    }
-}
+=======
+  interactionRadius: 3,
+  hasTalked: false,
 
+  CheckPosition() {
+    // 核心：计算玩家到NPC的距离
+    const player = window.player;
+    const dx = this.position[0] - player.position[0];
+    const dy = this.position[1] - player.position[1];
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    // 🔑 靠近 + 按E键 → 触发对话
+    if (distance < this.interactionRadius && input.KeyE && !this.hasTalked) {
+      player.isFrozen = true;
+      console.log("触发马夫对话！");
+      switchCharacter(this.characterProfile); // ← 直接调用你的 Ink 函数
+
+      this.hasTalked = true; // 防止1帧内多次触发
+>>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
+    }
+
+<<<<<<< HEAD
 scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, interactablePerson, {
     texture: placeholderTexture,
     characterProfile: VISISING_BARON,
@@ -326,17 +413,189 @@ const player = window.player = scene.heirachy["player"] = Instantiate(SpriteDepe
         this.stateSystem.call("onEvent");
     },
 });
+=======
+    // 离开交互范围 → 重置状态（可以再聊）
+    if (distance > this.interactionRadius * 1.5) {
+      player.isFrozen = false;
+      this.hasTalked = false;
+    }
 
+    // 可选：视觉提示（靠近时放大/变色）
+    if (this.hasTalked) {
+      const scale = 1 + (1 - distance / this.interactionRadius) * 0.2;
+      this.scale = [scale, scale];
+    }
+  },
+};
 
+scene.heirachy["stablemaster"] = Instantiate(
+  SpriteDependencies,
+  interactablePerson,
+  {
+    texture: placeholderTexture,
+    characterProfile: VISISING_BARON,
+    Start() {
+      this.position = [10, 5, 0];
+    },
+    Update() {
+      this.CheckPosition();
+    },
+  }
+);
 
+scene.heirachy["stablemaster2"] = Instantiate(
+  SpriteDependencies,
+  interactablePerson,
+  {
+    texture: placeholderTexture,
+    characterProfile: STABLEMASTER,
+    Start() {
+      this.position = [10, -1, 0];
+    },
+    Update() {
+      this.CheckPosition();
+    },
+  }
+);
 
+scene.heirachy["stablemaster3"] = Instantiate(
+  SpriteDependencies,
+  interactablePerson,
+  {
+    texture: placeholderTexture,
+    characterProfile: HEADCHEF,
+    Start() {
+      this.position = [10, -7, 0];
+    },
+    Update() {
+      this.CheckPosition();
+    },
+  }
+);
 
+scene.heirachy["stablemaster4"] = Instantiate(
+  SpriteDependencies,
+  interactablePerson,
+  {
+    texture: placeholderTexture,
+    characterProfile: HEAD_ENGINEER,
+    Start() {
+      this.position = [5, 8, 0];
+    },
+    Update() {
+      this.CheckPosition();
+    },
+  }
+);
 
+scene.heirachy["stablemaster5"] = Instantiate(
+  SpriteDependencies,
+  interactablePerson,
+  {
+    texture: placeholderTexture,
+    characterProfile: JESTER,
+    Start() {
+      this.position = [-5, 8, 0];
+    },
+    Update() {
+      this.CheckPosition();
+    },
+  }
+);
 
+scene.heirachy["stablemaster6"] = Instantiate(
+  SpriteDependencies,
+  interactablePerson,
+  {
+    texture: placeholderTexture,
+    characterProfile: BISHOP,
+    Start() {
+      this.position = [-10, 5, 0];
+    },
+    Update() {
+      this.CheckPosition();
+    },
+  }
+);
 
+scene.heirachy["stablemaster7"] = Instantiate(
+  SpriteDependencies,
+  interactablePerson,
+  {
+    texture: placeholderTexture,
+    characterProfile: STEWARD,
+    Start() {
+      this.position = [-10, -1, 0];
+    },
+    Update() {
+      this.CheckPosition();
+    },
+  }
+);
 
-// since we are assigning a new material (since its using a texture array, instead of single texture, need to assign it first to replace the existing texture) 
-const explosion = scene.heirachy["explosion"] = Instantiate(SpriteDependencies, {
+scene.heirachy["stablemaster8"] = Instantiate(
+  SpriteDependencies,
+  interactablePerson,
+  {
+    texture: placeholderTexture,
+    characterProfile: MAYOR,
+    Start() {
+      this.position = [-10, -7, 0];
+    },
+    Update() {
+      this.CheckPosition();
+    },
+  }
+);
+
+scene.heirachy["stablemaster9"] = Instantiate(
+  SpriteDependencies,
+  interactablePerson,
+  {
+    texture: placeholderTexture,
+    characterProfile: GENERAL,
+    Start() {
+      this.position = [1, -7, 0];
+    },
+    Update() {
+      this.CheckPosition();
+    },
+  }
+);
+
+scene.heirachy["stablemaster10"] = Instantiate(
+  SpriteDependencies,
+  interactablePerson,
+  {
+    texture: placeholderTexture,
+    characterProfile: GENERAL,
+    Start() {
+      this.position = [1, 0, 0];
+    },
+    Update() {
+      this.CheckPosition();
+    },
+  }
+);
+
+const player =
+  (window.player =
+  scene.heirachy["player"] =
+    Instantiate(SpriteDependencies, new DemoEntity(), {
+      texture: playerTexture,
+      isFrozen: false,
+      Update() {
+        window.using3D ? Move3D() : Move2D();
+        this.position = [x, y];
+        this.skillSystem.call("onEvent");
+      },
+    }));
+>>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
+
+// since we are assigning a new material (since its using a texture array, instead of single texture, need to assign it first to replace the existing texture)
+const explosion = (scene.heirachy["explosion"] = Instantiate(
+  SpriteDependencies,
+  {
     shaderModule: spriteShaderWithAtlus,
     material: HDRmaterial,
     texture: explosionTexture,
@@ -344,46 +603,52 @@ const explosion = scene.heirachy["explosion"] = Instantiate(SpriteDependencies, 
     startTime: Date.now() / 1000,
 
     Start() {
-        canvas.addEventListener("mousedown", (e) => {
-            console.log("updating Explosiion position");
-            // CALULATE ANIMATION START TIME
-            const currentTime = Date.now() / 1000;
-            explosion.startTime = currentTime;
+      canvas.addEventListener("mousedown", (e) => {
+        console.log("updating Explosiion position");
+        // CALULATE ANIMATION START TIME
+        const currentTime = Date.now() / 1000;
+        explosion.startTime = currentTime;
 
-            // POSITION AT CURSOR POSITION ON THE Z PLANE
-            const x = document.pointerLockElement ? 0 : input.mouseX;
-            const y = document.pointerLockElement ? 0 : input.mouseY;
-            const ray = camera.screenPositionToRay(x, y);
-            const hit = camera.rayPlaneZ0(ray);
-            console.log(ray, hit);
+        // POSITION AT CURSOR POSITION ON THE Z PLANE
+        const x = document.pointerLockElement ? 0 : input.mouseX;
+        const y = document.pointerLockElement ? 0 : input.mouseY;
+        const ray = camera.screenPositionToRay(x, y);
+        const hit = camera.rayPlaneZ0(ray);
+        console.log(ray, hit);
 
-            this.position = hit;
+        this.position = hit;
 
-            // PLAY AUDIO CLIP 
-            console.log("playing clip");
-            const clip = Math.floor(Math.random() * 2);
-            const volume = 0.9 + (Math.random() * 0.1);
-            const pitch = 0.7 + (Math.random() * 0.3);
+        // PLAY AUDIO CLIP
+        console.log("playing clip");
+        const clip = Math.floor(Math.random() * 2);
+        const volume = 0.9 + Math.random() * 0.1;
+        const pitch = 0.7 + Math.random() * 0.3;
 
-            Play(audioClips[clip], { delay: 0, offset: 0, volume, pitch });
-        });
+        Play(audioClips[clip], { delay: 0, offset: 0, volume, pitch });
+      });
     },
 
     Update() {
-        const currentTime = Time.getCurrentTime();
-        const animStartTime = this.startTime || currentTime;
-        const timePerFrame = 1 / 12;
-        const currentFrame = Math.min(Math.floor((currentTime - animStartTime) / timePerFrame), explosionTexture.layers - 1);
+      const currentTime = Time.getCurrentTime();
+      const animStartTime = this.startTime || currentTime;
+      const timePerFrame = 1 / 12;
+      const currentFrame = Math.min(
+        Math.floor((currentTime - animStartTime) / timePerFrame),
+        explosionTexture.layers - 1
+      );
 
-        //console.log(currentFrame, `started ${currentTime - animStartTime} seconds ago`, (currentTime - animStartTime) * timePerFrame); 
+      //console.log(currentFrame, `started ${currentTime - animStartTime} seconds ago`, (currentTime - animStartTime) * timePerFrame);
 
-        this.textureIndex = currentFrame;
-        //console.log(this); 
-    }
-});
+      this.textureIndex = currentFrame;
+      //console.log(this);
+    },
+  }
+));
 
-
-const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transform(), {
+const textObj = (scene.heirachy["textObj"] = Instantiate(
+  TextRenderer,
+  new Transform(),
+  {
     vertexBuffer: textMesh,
     cameraMatrixBuffer: AllocateUniformBuffer(88),
     transformBuffer: AllocateInstancedBuffer(256, 1000, 255),
@@ -396,60 +661,67 @@ const textObj = scene.heirachy["textObj"] = Instantiate(TextRenderer, new Transf
     timeLastUpdate: 0,
 
     Start() {
-        InitTextSystem();
+      InitTextSystem();
     },
     Update() {
-        // Layout For a page
-        ClearPage();
+      // Layout For a page
+      ClearPage();
 
-        screenLeft = -camera.aspect * (0.5 / camera.pixelScale);
-        screenTop = (0.5 / camera.pixelScale);
+      screenLeft = -camera.aspect * (0.5 / camera.pixelScale);
+      screenTop = 0.5 / camera.pixelScale;
 
+      // updates fps for
+      const roundedTime = Time.getCurrentTime().toFixed(1);
+      if (this.timeLastUpdate != roundedTime) {
+        this.timeLastUpdate = roundedTime;
+        this.lastFPS = 1 / Time.deltaTime;
+      }
 
-        // updates fps for
-        const roundedTime = Time.getCurrentTime().toFixed(1);
-        if (this.timeLastUpdate != roundedTime) {
-            this.timeLastUpdate = roundedTime;
-            this.lastFPS = 1 / Time.deltaTime;
-        }
+      textboxAt(
+        screenLeft + 2,
+        screenTop - 8,
+        `fps ${this.lastFPS.toFixed(1)}`
+      );
+      textboxAt(Math.sin(Date.now() / 1000) * 20, 10, "wooo!!");
+      textboxAt(0, 0, "hello world");
 
+      textboxAt(0, -10, "this is a test");
+      textboxAt(0, -20, "the more lines the better");
+      const el = document.getElementById("text");
+      if (el) textboxAt(0, -40, el.value);
+      textboxAt(
+        0,
+        -50,
+        `mouse x:${input.mouseX.toPrecision(3)} y${input.mouseY.toPrecision(3)}`
+      );
 
-        textboxAt(screenLeft + 2, screenTop - 8, `fps ${(this.lastFPS).toFixed(1)}`);
-        textboxAt(Math.sin(Date.now() / 1000) * 20, 10, "wooo!!");
-        textboxAt(0, 0, "hello world");
-
-        textboxAt(0, -10, "this is a test");
-        textboxAt(0, -20, "the more lines the better");
-        const el = document.getElementById("text");
-        if (el) textboxAt(0, -40, el.value);
-        textboxAt(0, -50, `mouse x:${input.mouseX.toPrecision(3)} y${input.mouseY.toPrecision(3)}`);
-
-        // completes page draw
-        textObj.textLayout = DrawPage();
-    }
-});
-
-
-
-
-
-
-
-
+      // completes page draw
+      textObj.textLayout = DrawPage();
+    },
+  }
+));
 
 // INPUT/MOVEMENT CONTROL FOR SPRITE 2
+<<<<<<< HEAD
 var xv = 0, yv = 0, zv = 0;
+=======
+var x = 0,
+  y = -1,
+  xv = 0,
+  yv = 0,
+  zv = 0;
+>>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
 const cameraMouseSensitivity = 1 / 20;
 const cameraControllerSensitivity = 1 * 3;
 
+const MIN_X = -15;
+const MAX_X = 15;
+const MIN_Y = -15;
+const MAX_Y = 12.5;
 
-const MIN_X = -15
-const MAX_X = 15
-const MIN_Y = -15
-const MAX_Y = 12.5
-
-// MOVE 2D 
 // MOVE 2D
+// MOVE 2D
+<<<<<<< HEAD
 function Move2D(entity) {
     if (modal.stateName == "open") {
        
@@ -457,41 +729,60 @@ function Move2D(entity) {
         yv = 0;
         return;
     }
+=======
+function Move2D() {
+  if (player.isFrozen) {
+    xv = 0;
+    yv = 0;
+    return;
+  }
 
-    const speed = 2;
-    var dx = input.moveHorizontal;
-    var dy = -input.moveVertical;
+  const speed = 2;
+  var dx = input.moveHorizontal;
+  var dy = -input.moveVertical;
+>>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
 
-    // Apply velocity
-    xv += dx * speed * Time.deltaTime;
-    yv += dy * speed * Time.deltaTime;
+  // Apply velocity
+  xv += dx * speed * Time.deltaTime;
+  yv += dy * speed * Time.deltaTime;
 
-    // Apply friction
-    xv *= 0.8;
-    yv *= 0.8;
+  // Apply friction
+  xv *= 0.8;
+  yv *= 0.8;
 
+  // Predict next position
+  let nextX = x + xv;
+  let nextY = y + yv;
+
+<<<<<<< HEAD
     const [x,y] = [...entity.position]
     // Predict next position
     let nextX = x + xv;
     let nextY = y + yv;
+=======
+  // Clamp within world bounds
+  nextX = Math.min(Math.max(nextX, MIN_X), MAX_X);
+  nextY = Math.min(Math.max(nextY, MIN_Y), MAX_Y);
+>>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
 
-    // Clamp within world bounds
-    nextX = Math.min(Math.max(nextX, MIN_X), MAX_X);
-    nextY = Math.min(Math.max(nextY, MIN_Y), MAX_Y);
+  // Check collisions with obstacles
+  if (checkCollision(nextX, y)) {
+    // Hit obstacle in X direction, stop movement in X
+    xv = 0;
+    nextX = x; // stay in place
+  }
 
-    // Check collisions with obstacles
-    if (checkCollision(nextX, y)) {
-        // Hit obstacle in X direction, stop movement in X
-        xv = 0;
-        nextX = x; // stay in place
-    }
+  if (checkCollision(x, nextY)) {
+    // Hit obstacle in Y direction, stop movement in Y
+    yv = 0;
+    nextY = y; // stay in place
+  }
 
-    if (checkCollision(x, nextY)) {
-        // Hit obstacle in Y direction, stop movement in Y
-        yv = 0;
-        nextY = y; // stay in place
-    }
+  // Update player position
+  x = nextX;
+  y = nextY;
 
+<<<<<<< HEAD
     entity.position = [nextX, nextY];
 
 }
@@ -515,81 +806,118 @@ function UpdateCamera(x,y) {
     camera.position.x += (targetCamX - camera.position.x) * 0.05;
     camera.position.y += (targetCamY - camera.position.y) * 0.05;
 
+=======
+  // Background boundaries for camera
+  const BG_WIDTH = 0.5; // Half-width of the background
+  const BG_HEIGHT = 7.3; // Half-height of the background
+
+  // Calculate target camera position (usually follows the player)
+  let targetCamX = x;
+  let targetCamY = y;
+
+  // Stop the camera at background edges
+  if (targetCamX > BG_WIDTH) targetCamX = BG_WIDTH;
+  if (targetCamX < -BG_WIDTH) targetCamX = -BG_WIDTH;
+  if (targetCamY > BG_HEIGHT) targetCamY = BG_HEIGHT;
+  if (targetCamY < -BG_HEIGHT) targetCamY = -BG_HEIGHT;
+
+  // Smoothly follow the target position
+  camera.position.x += (targetCamX - camera.position.x) * 0.05;
+  camera.position.y += (targetCamY - camera.position.y) * 0.05;
+>>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
 }
 
 
 // Obstacles
 const obstacles = [
+<<<<<<< HEAD
     { x: 10, y: 12, width: 13, height: 8 }, // Center (x, y), width, height
     { x: -9, y: 12, width: 13, height: 8 },
+=======
+  { x: 10, y: 12, width: 13, height: 8 }, // Center (x, y), width, height
+  { x: -9, y: 12, width: 13, height: 8 },
+>>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
 ];
 
 // Collision check
 function checkCollision(px, py) {
-    for (const obs of obstacles) {
-        const left = obs.x - obs.width / 2;
-        const right = obs.x + obs.width / 2;
-        const top = obs.y + obs.height / 2;
-        const bottom = obs.y - obs.height / 2;
+  for (const obs of obstacles) {
+    const left = obs.x - obs.width / 2;
+    const right = obs.x + obs.width / 2;
+    const top = obs.y + obs.height / 2;
+    const bottom = obs.y - obs.height / 2;
 
-        if (px >= left && px <= right && py >= bottom && py <= top) {
-            return true; // Collision detected
-        }
+    if (px >= left && px <= right && py >= bottom && py <= top) {
+      return true; // Collision detected
     }
-    return false;
+  }
+  return false;
 }
 
-
-
-
-
-
-
-
-
-
-//-- sets up the game update order (all functions are once per frame) -- 
+//-- sets up the game update order (all functions are once per frame) --
 Manager.AddUpdateEvents([
-    InputUpdate,
-    () => Scene.HandleUpdate(scene),
-    () => renderer.RenderPasses([{
+  InputUpdate,
+  () => Scene.HandleUpdate(scene),
+  () =>
+    renderer.RenderPasses([
+      {
         // RENDER PASS
         init: newFrameView,
-        drawPass: (pass, gpu) => scene.ForAllObjects(obj => obj?.handlePass?.(pass, gpu, camera)) // draws the scene heirachy 
-    }]),
-    InputLateUpdate
+        drawPass: (pass, gpu) =>
+          scene.ForAllObjects((obj) => obj?.handlePass?.(pass, gpu, camera)), // draws the scene heirachy
+      },
+    ]),
+  InputLateUpdate,
 ]);
 // starts the game loop
 Manager.StartUpdateLoop();
 console.log("started gameloop");
 testrun();
 
-
-
 /* INPUT */
 document.getElementById("to2D")?.addEventListener("click", () => {
-    DisableCanvasLock();
-    Enable2DMouse();
+  DisableCanvasLock();
+  Enable2DMouse();
 });
 
 document.getElementById("to3D")?.addEventListener("click", () => {
-    Disable2DMouse();
-    EnableCanvasLock();
+  Disable2DMouse();
+  EnableCanvasLock();
 });
-
 
 const fsBtn = document.getElementById("fullscreen");
 fsBtn.addEventListener(
-    "click",
-    (e) => {
-        e.stopImmediatePropagation();
-        const el =
-            document.getElementById("modal") || document.documentElement;
-        if (el.requestFullscreen) el.requestFullscreen();
-        else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-        else if (el.msRequestFullscreen) el.msRequestFullscreen();
-    },
-    true,
+  "click",
+  (e) => {
+    e.stopImmediatePropagation();
+    const el = document.getElementById("modal") || document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.msRequestFullscreen) el.msRequestFullscreen();
+  },
+  true
 );
 
 console.log("added external 'inputs'");
+
+// AUDIO SYSTEM
+// Init the audio system
+const mixer = new MultiTrackCrossfader(
+  [
+    "/assets/audio/music/AquaticPulsations.wav",
+    "/assets/audio/music/Background.wav",
+    "/assets/audio/music/Borderlands.wav",
+  ],
+  { loop: true, defaultFadeSec: 1.5 }
+);
+
+await mixer.load();
+
+const audioButtons = document.querySelectorAll(".audio-button");
+audioButtons.forEach((button, index) => {
+  button.addEventListener("click", () => {
+    mixer.play();
+    console.log(`Fading to ${index}`);
+    mixer.fadeTo(index, 5);
+  });
+});
