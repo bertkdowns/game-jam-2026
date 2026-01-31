@@ -176,7 +176,7 @@ export class Game {
     // Show tutorial background
     if (this.background) {
       this.background.texture = tutorialTexture;
-      this.background.scale = [1, 1, 1];
+      this.background.scale = [1.1, 1.1, 1];
     }
     // Keep skybox visible for tutorial
     if (this.skybox) {
