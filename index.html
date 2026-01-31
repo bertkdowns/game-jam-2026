@@ -84,6 +84,15 @@
       width: max-content;
       float: left;
     }
+
+    .audio-button {
+      padding: 0.5em 0.75em;
+      border-radius: 0.5rem;
+      text-align: left;
+      transition: background 0.15s ease;
+      background-color: white;
+      min-height: '40px'
+    }
   </style>
 </head>
 
@@ -146,7 +155,7 @@
             <!-- Choices -->
           </div>
         </div>
-        <div id="DialogChoices" class="flex flex-1 grid grid-cols-2 gap-2 min-h-[300px]">
+        <div id="DialogChoices" class="flex flex-1 grid grid-cols-2 gap-2">
           <!-- Choice buttons injected here -->
         </div>
       </div>
@@ -161,9 +170,10 @@
     <input type="button" id="to3D" value="3D control" />
     <input type="button" id="to2D" value="2D control" /-->
     <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" />
-    <div class="flex gap-2">
+    <div audio class="flex gap-2">
       <button class="audio-button" data-index="0">Aquatic Pulsations</button>
       <button class="audio-button" data-index="1">Background</button>
+      <button class="audio-button" data-index="2">Borderlands</button>
     </div>
   </span>
 </body>
