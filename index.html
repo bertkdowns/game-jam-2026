@@ -40,6 +40,9 @@
 
     canvas {
       box-sizing: content-box;
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
     #DialogChoices {
@@ -72,26 +75,102 @@
       font-weight: 900;
     }
 
-    #fullscreen {
-      float: right;
-      [] height: 2.5em;
-      aspect-ratio: 1;
+    #controls {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
     }
 
-    form {
-      padding: 0;
-      margin: auto 0.5em auto 0.5em;
-      width: max-content;
-      float: left;
+    .top-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    #fullscreen {
+      height: 1.8em;
+      width: 1.8em;
+      aspect-ratio: 1;
+      cursor: pointer;
+      font-size: 0.9em;
+      border-radius: 0.4rem;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.15s ease;
+    }
+
+    #fullscreen:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    #mute-button {
+      height: 1.8em;
+      width: 1.8em;
+      aspect-ratio: 1;
+      cursor: pointer;
+      font-size: 0.9em;
+      border-radius: 0.4rem;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.15s ease;
+    }
+
+    #mute-button:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    .audio-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
     }
 
     .audio-button {
-      padding: 0.5em 0.75em;
-      border-radius: 0.5rem;
+      padding: 0.3em 0.5em;
+      border-radius: 0.4rem;
       text-align: left;
       transition: background 0.15s ease;
-      background-color: white;
-      min-height: '40px'
+      background-color: rgba(255, 255, 255, 0.9);
+      border: none;
+      cursor: pointer;
+      font-size: 0.5em;
+      white-space: nowrap;
+    }
+
+    .audio-button:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    #interact-prompt {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 0.5em 1em;
+      border-radius: 0.5rem;
+      font-size: 0.6em;
+      display: none;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    #interact-prompt.show {
+      display: block;
     }
   </style>
 </head>
@@ -102,19 +181,16 @@
       class="absolute w-[1920px] h-[1080px] flex flex-col justify-center items-center bg-transparent">
       <!-- MAIN DIALOG CONTAINER -->
       <div class="flex flex-col w-[100%] h-[100%] bg-black/30 rounded-md text-black p-8 shadow-lg">
-        <div class="flex flex-1 gap-6 rounded-md text-white">
+        <div class="flex w-full gap-6 rounded-md text-white">
           <!-- LEFT: CHARACTER -->
-          <div class="  h-[800px] w-[968px] overflow-hidden">
+          <div class="h-[700px] w-[968px] overflow-hidden">
 
             <img src="./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG" id="CharacterImage"
               class="relative items-end justify-start  object-cover  w-full pointer-events-none"
               style="pointer-events: none;" />
           </div>
-
-
-
           <!-- RIGHT: DIALOG + OPTIONS -->
-          <div class="flex flex-col gap-4">
+          <div class="h-full max-w-[50%] flex flex-col items-end justify-end gap-4">
             <div class="flex items-start gap-2 mt-6">
               <!-- Bubble -->
               <div class="relative bg-white text-gray-900 rounded-2xl p-5 shadow-lg">
@@ -165,17 +241,20 @@
   </div>
 
   <!-- CONTROLS -->
-  <span id="controls">
-    <!--input type="text" id="text" />
-    <input type="button" id="to3D" value="3D control" />
-    <input type="button" id="to2D" value="2D control" /-->
-    <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" />
-    <div audio class="flex gap-2">
+  <div id="controls">
+    <div class="top-controls">
+      <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" />
+      <button id="mute-button" class="fa-input" aria-label="Mute/Unmute">&#xf028;</button>
+    </div>
+    <div class="audio-controls">
       <button class="audio-button" data-index="0">Aquatic Pulsations</button>
       <button class="audio-button" data-index="1">Background</button>
       <button class="audio-button" data-index="2">Borderlands</button>
     </div>
-  </span>
+  </div>
+
+  <!-- INTERACT PROMPT -->
+  <div id="interact-prompt">Press E to interact</div>
 </body>
 
 </html>

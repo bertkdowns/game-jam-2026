@@ -40,7 +40,7 @@ Switch Character {characterName}
 
 == CharacterSelection
 
-Choose a character:
+Choose a character: Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:
 
  + [VisitingBaron] {switchCharacter("VisitingBaron")}  -> VisitingBaron
  + [StableMaster] {switchCharacter("StableMaster")} -> StableMaster
