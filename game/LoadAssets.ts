@@ -55,7 +55,9 @@ export async function loadAllAssets() {
       `/assets/sprites/ballroom_background.png`,
       `/assets/sprites/characterPortraits/placeholder guy.png`
     ).then((textures) =>
-      textures.map((texture) => Object.assign(texture, { pixelScale: 1 / 256 }))
+      textures.map((texture: any) =>
+        Object.assign(texture, { pixelScale: 1 / 256 })
+      )
     ),
     loadImages(
       `/assets/sprites/character.png`,
@@ -66,7 +68,9 @@ export async function loadAllAssets() {
       `/assets/sprites/characterStanding/stablemaster.png`,
       `/assets/sprites/characterStanding/bishop.png`
     ).then((textures) =>
-      textures.map((texture) => Object.assign(texture, { pixelScale: 1 / 64 }))
+      textures.map((texture: any) =>
+        Object.assign(texture, { pixelScale: 1 / 64 })
+      )
     ),
     loadTextureArray(
       `/assets/sprites/explosion/explosion0000.png`,
@@ -83,7 +87,7 @@ export async function loadAllAssets() {
       `/assets/sprites/explosion/explosion0011.png`,
       `/assets/sprites/explosion/explosion0012.png`,
       `/assets/sprites/explosion/empty.png`
-    ).then((texture) => Object.assign(texture, { pixelScale: 1 / 64 })),
+    ).then((texture: any) => Object.assign(texture, { pixelScale: 1 / 64 })),
     loadShaders(
       `/assets/shader/spriteShader.wgsl`,
       `/assets/shader/tileShader.wgsl`,

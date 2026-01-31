@@ -2,10 +2,79 @@ import { Story, Compiler } from "inkjs/compiler/Compiler";
 import { Choice } from "inkjs/engine/Choice";
 // @ts-ignore
 import inkStory from "./inkstory.ink?raw";
+// @ts-ignore
+import tutorialStory from "./tutorial.ink?raw";
+// @ts-ignore
+import endingStory from "./ending.ink?raw";
 import { closeModal } from "./Modal.js";
+import { GameScene, SCENE_CONFIGS } from "../game/Types/scenes.js";
+import { Game } from "../game/Game.js";
 
-let compiler = new Compiler(inkStory);
-const gameStory = compiler.Compile();
+// Store stories for each scene
+const stories: Map<GameScene, Story> = new Map();
+let currentScene: GameScene = GameScene.Tutorial;
+let currentStory: Story;
+
+// Initialize all stories
+function initializeStories() {
+  try {
+    // Main story
+    const mainCompiler = new Compiler(inkStory);
+    const mainStory = mainCompiler.Compile();
+    mainStory.BindExternalFunction("closeModal", closeModal);
+    mainStory.BindExternalFunction("nextScene", () => {
+      Game.getInstance().switchToScene(GameScene.Ending);
+    })
+    stories.set(GameScene.Main, mainStory);
+
+    // Tutorial story
+    const tutorialCompiler = new Compiler(tutorialStory);
+    const tutorialStoryInstance = tutorialCompiler.Compile();
+    tutorialStoryInstance.BindExternalFunction("closeModal", closeModal);
+    stories.set(GameScene.Tutorial, tutorialStoryInstance);
+
+    // Ending story
+    const endingCompiler = new Compiler(endingStory);
+    const endingStoryInstance = endingCompiler.Compile();
+    endingStoryInstance.BindExternalFunction("closeModal", closeModal);
+    stories.set(GameScene.Ending, endingStoryInstance);
+
+    // Set current story to tutorial (will be switched by Game.init())
+    currentStory = tutorialStoryInstance;
+  } catch (error) {
+    console.error("Error initializing stories:", error);
+    throw error;
+  }
+}
+
+// Initialize stories on module load
+initializeStories();
+
+// Switch to a different scene's story
+export function switchScene(scene: GameScene, startKnot?: string) {
+  const story = stories.get(scene);
+  if (!story) {
+    console.error(`Story not found for scene: ${scene}`);
+    return;
+  }
+
+  currentScene = scene;
+  currentStory = story;
+
+  // Clear conversation history when switching scenes
+  clearText();
+
+  // Start at the specified knot or use the scene's default
+  const config = SCENE_CONFIGS[scene];
+  const knotToStart = startKnot || config.startKnot;
+  if (knotToStart) {
+    try {
+      story.ChoosePathString(knotToStart);
+    } catch (e) {
+      console.warn(`Could not start at knot "${knotToStart}":`, e);
+    }
+  }
+}
 
 // Conversation history
 interface DialogMessage {
@@ -20,19 +89,23 @@ let currentCharacterName: string = "";
 let isAnimating = false;
 let currentAnimationInterval: NodeJS.Timeout | null = null;
 
-// Bind external functions - these will be set up after Character module loads
-gameStory.BindExternalFunction("closeModal", closeModal);
-
 // This will be called from index.ts after all modules are loaded
 export function bindExternalFunctions(
-  switchCharacterFn: (name: string) => void
+  switchCharacterFn: (name: string) => void,
+  switchToMainGameFn?: () => void
 ) {
-  gameStory.BindExternalFunction("switchCharacter", switchCharacterFn);
+  // Bind to all stories
+  stories.forEach((story) => {
+    story.BindExternalFunction("switchCharacter", switchCharacterFn);
+    if (switchToMainGameFn) {
+      story.BindExternalFunction("switchToMainGame", switchToMainGameFn);
+    }
+  });
 }
 
 export async function continueStory() {
   await displayText();
-  setDialogOptions(gameStory.currentChoices);
+  setDialogOptions(currentStory.currentChoices);
 }
 
 function setDialogOptions(choices: Choice[]) {
@@ -76,7 +149,7 @@ function setDialogOptions(choices: Choice[]) {
 
       // Add player's choice to conversation history
       addPlayerDialog(choice.text);
-      gameStory.ChooseChoiceIndex(i);
+      currentStory.ChooseChoiceIndex(i);
       await continueStory();
     };
     dialogChoicesDiv.appendChild(button);
@@ -91,8 +164,8 @@ async function displayText() {
 
   // Collect all text first
   const textSegments: string[] = [];
-  while (gameStory.canContinue) {
-    textSegments.push(gameStory.Continue());
+  while (currentStory.canContinue) {
+    textSegments.push(currentStory.Continue());
   }
 
   // Combine all segments into one text
@@ -180,27 +253,26 @@ function renderConversation() {
 
 function createDialogBubble(message: DialogMessage): HTMLElement {
   const isCharacter = message.type === "character";
+
   const bubbleContainer = document.createElement("div");
-  bubbleContainer.className = `flex ${
-    isCharacter ? "items-start justify-start" : "items-end justify-end"
-  } gap-2 w-full`;
+  bubbleContainer.className = `flex ${isCharacter ? "items-start justify-start" : "items-end justify-end"
+    } gap-2 w-full`;
 
   const bubble = document.createElement("div");
-  bubble.className = `relative rounded-2xl p-5 shadow-lg max-w-[80%] dialog-bubble ${
-    isCharacter
-      ? "bg-white text-gray-900 dialog-bubble-character"
-      : "bg-blue-500 text-white dialog-bubble-player"
-  }`;
-
-  // Name tag
-  if (isCharacter && message.characterName) {
-    const nameTag = document.createElement("div");
-    nameTag.className = `text-sm py-1 ${
-      isCharacter ? "text-black" : "text-white"
+  bubble.className = `relative rounded-2xl p-5 shadow-lg max-w-[80%] dialog-bubble ${isCharacter
+    ? "bg-white text-gray-900 dialog-bubble-character"
+    : "bg-blue-500 text-white dialog-bubble-player"
     }`;
-    nameTag.textContent = message.characterName;
-    bubble.appendChild(nameTag);
-  }
+
+  // Name tag - hidden cause we aren't suppsoed to know it
+  // if (isCharacter && message.characterName) {
+  //   const nameTag = document.createElement("div");
+  //   nameTag.className = `text-sm py-1 ${
+  //     isCharacter ? "text-black" : "text-white"
+  //   }`;
+  //   nameTag.textContent = message.characterName;
+  //   bubble.appendChild(nameTag);
+  // }
 
   // Text content
   const textElement = document.createElement("p");
@@ -213,9 +285,8 @@ function createDialogBubble(message: DialogMessage): HTMLElement {
 
   // Tail
   const tail = document.createElement("div");
-  tail.className = `absolute w-4 h-4 rotate-45 ${
-    isCharacter ? "-left-2 top-6 bg-white" : "-right-2 top-6 bg-blue-500"
-  }`;
+  tail.className = `absolute w-4 h-4 rotate-45 ${isCharacter ? "-left-2 top-6 bg-white" : "-right-2 top-6 bg-blue-500"
+    }`;
   bubble.appendChild(tail);
 
   bubbleContainer.appendChild(bubble);
@@ -284,5 +355,9 @@ export function setCharacterName(name: string) {
 }
 
 export function getGameStory(): Story {
-  return gameStory;
+  return currentStory;
+}
+
+export function getCurrentScene(): GameScene {
+  return currentScene;
 }

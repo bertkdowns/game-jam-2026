@@ -3,7 +3,13 @@
 
 export { modal, openModal, closeModal } from "./Modal.js";
 export { switchCharacter } from "./Character.js";
-export { continueStory, clearText, getGameStory } from "./StoryManager.js";
+export {
+  continueStory,
+  clearText,
+  getGameStory,
+  switchScene,
+  getCurrentScene,
+} from "./StoryManager.js";
 export * from "./constants.js";
 
 import { modal } from "./Modal.js";
@@ -13,18 +19,23 @@ import {
   continueStory,
   bindExternalFunctions,
 } from "./StoryManager.js";
-import { HEAD_ENGINEER } from "./constants.js";
+import { CHARACTERS, CHARACTERS_PIC } from "./constants.js";
+import { GameScene } from "../game/Types/scenes.js";
+import { Game } from "../game/Game.js";
+
+// Function to switch to main game scene
+function switchToMainGame() {
+  const game = Game.getInstance();
+  game.switchToScene(GameScene.Main);
+}
 
 // Initialize external function bindings
-bindExternalFunctions(switchCharacter);
+bindExternalFunctions(switchCharacter, switchToMainGame);
 
 // Test function for initializing the dialogue system
 export function testrun() {
   modal.state = "close";
-  const character = new Character(
-    HEAD_ENGINEER,
-    "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"
-  );
+  const character = new Character(CHARACTERS.HEAD_ENGINEER);
   character.chat();
   const gameStory = getGameStory();
   gameStory.ChoosePathString("CharacterSelection");

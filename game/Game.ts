@@ -26,10 +26,18 @@ import {
   createTextObj,
 } from "./Entities";
 import { createPlayer } from "./Player";
-import { createStableMasters } from "./StableMasters";
+import {
+  createStableMasters,
+  createTutorialCharacters,
+  createEndingCharacters,
+  removeAllCharacters,
+} from "./StableMasters";
 import { setupInputHandlers } from "./InputHandlers";
 import { setupAudioSystem } from "./AudioSystem";
 import { testrun } from "../inkle";
+import { GameScene, SCENE_CONFIGS } from "./Types/scenes";
+import { switchScene as switchInkScene } from "../inkle/StoryManager";
+import { renderAccusations } from "../inkle/accusations";
 import type {
   PlayerEntity,
   BackgroundEntity,
@@ -49,6 +57,7 @@ interface Assets {
 export class Game {
   static instance: Game;
   assets: Assets;
+  currentScene: GameScene = GameScene.Main;
 
   canvas = document.querySelector("canvas") as HTMLCanvasElement;
   camera = Instantiate(new Camera(), new Transform()) as CameraType;
@@ -112,7 +121,7 @@ export class Game {
       this
     );
     this.player = createPlayer(playerTexture, this);
-    createStableMasters(this);
+    // Don't create characters here - they'll be created per scene
 
     // Set up input handlers
     setupInputHandlers();
@@ -141,6 +150,107 @@ export class Game {
     // Start the game loop
     Manager.StartUpdateLoop();
     console.log("started gameloop");
+
+    // Initialize with tutorial scene
+    this.setupEndingScene();
     // testrun(); // Commented out so modal starts closed
+  }
+
+  // Setup main game scene (ballroom)
+  setupMainScene() {
+    this.currentScene = GameScene.Main;
+    switchInkScene(GameScene.Main);
+
+    // Remove characters from previous scene
+    removeAllCharacters(this);
+
+    // Show main game background
+    if (this.background) {
+      this.background.scale = [1, 1, 1];
+    }
+    if (this.skybox) {
+      this.skybox.scale = [1, 1, 1];
+    }
+    if (this.player) {
+      this.player.scale = [1, 1, 1];
+    }
+
+    // Create all main game characters
+    createStableMasters(this);
+  }
+
+  // Setup tutorial scene
+  setupTutorialScene() {
+    this.currentScene = GameScene.Tutorial;
+    switchInkScene(GameScene.Tutorial);
+
+    // Remove characters from previous scene
+    removeAllCharacters(this);
+
+    // Hide main game background
+    if (this.background) {
+      this.background.scale = [0, 0, 1];
+    }
+    // Keep skybox visible for tutorial
+    if (this.skybox) {
+      this.skybox.scale = [1, 1, 1];
+    }
+    // Show player in tutorial
+    if (this.player) {
+      this.player.scale = [1, 1, 1];
+    }
+
+    // Create only tutorial-specific characters
+    createTutorialCharacters(this);
+
+    // You can add tutorial-specific entities here
+    // For example: tutorial markers, instructions, etc.
+  }
+
+  // Setup ending scene
+  setupEndingScene() {
+
+    this.currentScene = GameScene.Ending;
+    switchInkScene(GameScene.Ending);
+
+    // Remove characters from previous scene
+    removeAllCharacters(this);
+
+    // Hide main game background
+    if (this.background) {
+      this.background.scale = [0, 0, 1];
+    }
+    // Keep skybox visible for ending
+    if (this.skybox) {
+      this.skybox.scale = [1, 1, 1];
+    }
+    // Hide player in ending
+    if (this.player) {
+      this.player.scale = [0, 0, 1];
+    }
+
+    // Create only ending-specific characters
+    createEndingCharacters(this);
+
+    // You can add ending-specific entities here
+    // For example: credits, final scene elements, etc.
+    renderAccusations(); // Render the accusations before switching to ending
+  }
+
+  // Switch to a different scene
+  switchToScene(scene: GameScene) {
+    switch (scene) {
+      case GameScene.Tutorial:
+        this.setupTutorialScene();
+        break;
+      case GameScene.Main:
+        this.setupMainScene();
+        break;
+      case GameScene.Ending:
+        this.setupEndingScene();
+        break;
+      default:
+        console.warn(`Unknown scene: ${scene}`);
+    }
   }
 }

@@ -1,13 +1,15 @@
 // EXTERNAL exitGame()
 EXTERNAL closeModal()
 EXTERNAL switchCharacter(characterName)
+EXTERNAL nextScene()
+
 
 Hello!
 
-* [Begin]-> 
+* [Begin]-> CharacterSelection
 
 // Character Names
-CONST VISITING_BARON_NAME = "Alex"
+CONST VISITING_BARRON_NAME = "Alex"
 CONST STABLEMASTER_NAME = "Russo"
 CONST MAYOR_NAME = "Vinnie"
 CONST JESTER_NAME = "Jordan"
@@ -19,7 +21,7 @@ CONST STEWARD_NAME = "Casey"
 CONST CHEF_NAME = "Taylor"
 
 // Character mask descriptions
-CONST VISITING_BARON_MASK = "domino mask"
+CONST VISITING_BARRON_MASK = "domino mask"
 CONST STABLEMASTER_MASK = "domino mask"
 CONST MAYOR_MASK = "plague mask"
 CONST JESTER_MASK = "plague mask"
@@ -35,12 +37,9 @@ CONST CHEF_MASK = "split face mask"
 == function closeModal()==
 Close Modal
 ~ return 
-
-
-
-== function exitGame()  ==
-Exit Game
-~ return
+== function nextScene()==
+Close Modal
+~ return 
 
 
 
@@ -57,10 +56,11 @@ Switch Character {characterName}
 == CharacterSelection
 
 // comment this out for debugging
-{closeModal()}
+//{closeModal()}
 
-Choose a character: Choose a character:
- + [VisitingBaron] {switchCharacter("VisitingBaron")}  -> VisitingBaron
+Choose a character:
+
+ + [VisitingBarron] {switchCharacter("VisitingBarron")}  -> VisitingBarron
  + [StableMaster] {switchCharacter("StableMaster")} -> StableMaster
  + [Mayor] {switchCharacter("Mayor")} -> Mayor
  + [Jester] {switchCharacter("Jester")} -> Jester
@@ -70,47 +70,33 @@ Choose a character: Choose a character:
  + [HeadEngineer] {switchCharacter("HeadEngineer")} -> HeadEngineer
  + [Steward] {switchCharacter("Steward")} -> Steward
  + [HeadChef] {switchCharacter("HeadChef")}-> HeadChef
- + [Tutorial] -> Tutorial
- + [GuessThePeople] -> GuessThePeople
+ + [King] {switchCharacter("King")}-> King
 
 
-== GuessThePeople
 
-So, you think you know who the assasins are?
+== King
+
+So, you know who's the assasin right?
+
++ Yep
+  -> NextScene
++ Not yet
 
 -> CharacterSelection
-= ChoosePerson
 
-VAR VISITINGBARONGUILTY = false
-VAR STABLEMASTERGUILTY = false
-VAR MAYORGUILTY = false
-VAR JESTERGUILTY = false
-VAR GENERALGUILTY = false
-VAR JUDGEGUILTY = false
-VAR BISHOPGUILTY = false
-VAR STEWARDGUILTY = false
-VAR ENGINEERGUILTY = false
-VAR CHEFGUILTY = false
+=NextScene
 
-{ VISITINGBARONGUILTY :
- + [The Visiting Baron is not guilty!] 
-    ~VISITINGBARONGUILTY = false
-    -> ChoosePerson
- - else:
-  + [The Visiting Baron is guilty!] 
-      ~ VISITINGBARONGUILTY = true 
-      -> ChoosePerson
-}
-+ Someone else
-- 
+ ~ nextScene()
+
+-> CharacterSelection
 
 
-
+-> CharacterSelection
 -> END
 
 
 
-== VisitingBaron
+== VisitingBarron
 
 Hello!
 
@@ -226,7 +212,7 @@ Good Evening to you! This is such a wonderful night, I absolutely looove your fi
 
 = WhosWho
 
-+ [Who's that guy in the {VISITING_BARON_MASK}?]
++ [Who's that guy in the {VISITING_BARRON_MASK}?]
    Actually, you got me there, I don't actually know who that person is! I'll have to go talk to them later on.
 + [Who's in the {BISHOP_MASK}?]
    Oh, that's {BISHOP_NAME}, you can just tell immediately. Of course, I saw them making that mask one time when I visited them too, so I guess it's a bit easier for me.
@@ -276,7 +262,7 @@ So what do you think of the coustumes tonight?
 +[I see someone has a similar outfit to you!]
  Yeah that chatty mayor got the same outfit as me! Really wish they didn't choose a {MAYOR_MASK}. Quite rude!
 + [Those domino people look cool]
-  Ah, that's {VISITING_BARON_NAME} and {STABLEMASTER_NAME} in those matching ones. Don't think they coordinated it either!
+  Ah, that's {VISITING_BARRON_NAME} and {STABLEMASTER_NAME} in those matching ones. Don't think they coordinated it either!
 + Good chat!
   -> SeeYa
 -
@@ -589,7 +575,7 @@ Hello!
   ++ [Oh, that's not good.]
     Yeah, it could be dangerous in the wrong hands. Ask around to see if anyone's been in the kitchen, will you?
 + [Cool to see such a great turnout!]
-  Yeah, even the visiting baron {VISITING_BARON_NAME} came. He seems to really like my food!
+  Yeah, even the visiting Barron {VISITING_BARRON_NAME} came. He seems to really like my food!
  
 + [See ya!]
  -> CharacterSelection
@@ -627,88 +613,6 @@ Hello!
 
 
 - -> FINISH_TALKING
-
-
-
-== Tutorial
-
-+ [<Walk up to the gate>]
- Hey, good to see you again! you're a detective, aren't you?
-- 
-
-
-+ [Yep!]
-+ [What's up?]
-- 
-
-Ah, finally someone I can trust! 
-
-I was sleeping in the tavern yesterday evening after being on night watch. And I was just waking up and I heard these hushed voices in the other room. 
-
-+ [...]
-+ [oh, interesting!]
-  Interesting Indeed! Especially for that time of night.
- - 
- 
- And then I heard someone say, "And that's how we'll finally get rid of him. He's been on the throne too long anyways."
- 
- + [Did you see who they were?]
- + [What did you do?]
- -
- 
- I went outside immediately, but as soon as they heard the door creak they went back out and mixed with everyone else. No chance I could have tracked them down. 
- 
- + [You think they're trying to kill the king?]
-   That's what I'm worried about.
- + [Oh, that's not good!]
-  I think they might try to kill the king.
-  
--
-
-He's hosting a masked dance tonight, which is a perfect cover, anything could happen.
-
-+ [Could you tell him to cancel it?]
- And make him look like a laughing stock and a scaredy cat? He'd probably rather die!
-+ [Better be on the alert!]
-  You bet!
-  
-  - 
-
-Since they don't know you, could you go to the dance and scout out who's who?
-
-+ [Okay, I'll do that.]
-+ [Nah, I don't want to risk it. I'll do something else.]
- -> LeaveGame
- 
-- 
-
-Thank you so much! I'll tell the king you're coming. 
-
-+[No problem!]
-- 
-Get to know everyone's names and stories, and when you think you know who the assasins are, tell the king. If you're a friend of mine he'll trust you absolutely and kill them on the spot! 
-
-+ [I better make sure I find the right people then!]
-
-Yep, you'll only get one shot! Keep track of everyone's names, occupations, and anything that seems suspicious. Then go talk to the king!
-
-+ [Sounds good!]
--
-<Use WASD to move around and chat to people.>
-
-
-+ [Okay.]
-- 
-
--> CharacterSelection
-
-
-== LeaveGame
-
-{exitGame()}
-
--> CharacterSelection
-
 
 
 == SecretStory
