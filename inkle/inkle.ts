@@ -80,9 +80,35 @@ function clearText() {
   characterTalkDiv.innerHTML = ""
 }
 
+const HEAD_ENGINEER = "HeadEngineer"
+const STABLEMASTER = "StableMaster"
+const CHEF = "Chef"
+const VISISING_BARON = "VisitingBaron"
+const JESTER = "Jester"
+const JUDGE = "Judge"
+const BISHOP = "Bishop"
+const STEWARD = "Steward"
+const GENERAL = "General"
+const MAYOR = "Mayor"
+
 
 let character = new Character("HeadEngineer", "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG")
+const characters: { [key: string]: Character } = {
+  "HeadEngineer": character,
+  "StableMaster": new Character(STABLEMASTER, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+  "Chef": new Character(CHEF, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+  "VisitingBaron": new Character(VISISING_BARON, "./assets/sprites/characterPortraits/characters.portraits/barron.PNG"),
+  "Jester": new Character(JESTER, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+  "Judge": new Character(JUDGE, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+  "Bishop": new Character(BISHOP, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+  "Steward": new Character(STEWARD, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+  "General": new Character(GENERAL, "./assets/sprites/characterPortraits/characters.portraits/General.PNG"),
+  "Mayor": new Character(MAYOR, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
 
+
+
+
+}
 export function testrun() {
   character.chat()
   gameStory.ChoosePathString("CharacterSelection")

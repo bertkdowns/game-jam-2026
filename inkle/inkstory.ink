@@ -29,6 +29,8 @@ CONST CHEF_MASK = "split face mask"
 
 EXTERNAL closeModal()
 
+EXTERNAL SwitchCharacter(characterName)
+
 == function closeModal()==
 Close Modal
 ~ return 
@@ -127,25 +129,21 @@ This is such a cool party isn't it?
 
 == Mayor
 
-Good Evening to you! This is such a wonderful night, I absolutely looove your fit! Oh, I'm so happy that this is hosted tonight, the king is so amazing to do this, just what I wanted! And the mask theme? Perfect! Being a bit of a celebrity I hate the attention you know? Always people wanting to talk, but ah, what can you do? Part of the job am I right?
-
 -> MQ
-
-+ [How's your day?]
- -> HowDay
-  
 
 = MQ
+Good Evening to you! This is such a wonderful night, I absolutely looove your fit! Oh, I'm so happy that this is hosted tonight, the king is so amazing to do this, just what I wanted! And the mask theme? Perfect! Being a bit of a celebrity I hate the attention you know? Always people wanting to talk, but ah, what can you do? Part of the job am I right?
 
++ [How's your day?]
+ My day was amazing! And what a way to end the night! It's been so cool getting to see everyone dressed up. -> HowDay
++ [Bye]
 
-
-
-- 
--> MQ
+-> CharacterSelection
+  
 
 = HowDay
 
-My day was amazing! And what a way to end the night! It's been so cool getting to see everyone dressed up.
+
 
 + [Oh, you know who's who then?]
    Yeah, but i'm not gonna tell you, that's part of the suprise!
@@ -160,8 +158,11 @@ My day was amazing! And what a way to end the night! It's been so cool getting t
    ++ [Don't tell me, it'll ruin the suprise!]
      Don't worry, I won't! -> MQ
 + [What did you get up to today?]
-  ++ Oh had a meeting with {GENERAL_NAME} The meeting went on for so long you know? I was probably there for hours and hours and hours? And {GENERAL_NAME} barely even said anything the whole time. I don't know what took so long for us to get across. I wanted to get to the party but it just wouldn't end, we had so much to talk about! I guess being the general they're always worried about stuff.
-
+  Oh had a meeting with {GENERAL_NAME}. The meeting went on for so long you know? I was probably there for hours and hours and hours? And {GENERAL_NAME} barely even said anything the whole time. I don't know what took so long for us to get across. I wanted to get to the party but it just wouldn't end, we had so much to talk about! I guess being the general they're always worried about stuff.
+  ++ [Very cool.]
+      -> HowDay
++ [Bye!]
+  -> CharacterSelection
 - 
 -> MQ
 
@@ -195,8 +196,17 @@ Hey hey hey!
 
 Hello kiddo! 
 
-Haven't seen you around these parts. Got my eye on you.
++ [Enjoying the party?]
+ Just observing mostly.
+ ++ [Looking for anything in particular?]
+   Haven't seen you around these parts. Got my eye on you.
+ ++ [Observing is a good thing to do these days.]
+   Yeah, I'm a bit worried in this kind of environment where everyone is masked. The king isn't as protected as normal.
+ - 
 
+
++ [Bye!]
+ See ya.
 
 
 -> CharacterSelection
