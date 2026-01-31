@@ -21,7 +21,7 @@ import { DemoEntity } from "./src/components/StateMachine.js";
 import { Transform } from "./src/components/transform.js";
 
 
-import { testrun } from "./inkle/inkle.js"
+import { testrun, switchCharacter } from "./inkle/inkle.js"
 
 // creates an instance of the object to use for the background (window scene allows me to access objects from the console)
 const scene = window.scene = new Scene();
@@ -36,7 +36,7 @@ camera.initialise(canvas);
 
 window.camera = camera
 // sets the camera position
-camera.position = [0, -1, -10];
+camera.position = [0, -1, -15];
 
 
 
@@ -45,7 +45,7 @@ camera.position = [0, -1, -10];
 console.log("waiting for assets...");
 // write textures shaders etc into seperate arrays so we can either collect them as an array per type or referance them individually. 
 const [
-    [backgroundTexture],
+    [backgroundTexture, placeholderTexture],
     [playerTexture, fontTexture, tileTexture, flatColorTexture, skyboxTexture, stablemasterTexture, bishopTexture],
     explosionTexture,
     [spriteShader, tileShader, textShader, meshShader, skyboxShader, spriteShaderWithAtlus],
@@ -54,6 +54,7 @@ const [
 ] = await Promise.all([
     loadImages(
         `/assets/sprites/ballroom_background.png`,
+        `/assets/sprites/characterPortraits/placeholder guy.png`,
     ).then(textures => textures.map(texture => Object.assign(texture, { pixelScale: 1 / 256 })))
     , loadImages(
         `/assets/sprites/character.png`,
@@ -144,42 +145,49 @@ const background = window.background = scene.heirachy["background"] = Instantiat
 
 
 
-scene.heirachy["ground"] = Instantiate(TileRenderer, quadMesh, new Transform(), {
-    transformBuffer: AllocateInstancedBuffer(8, (100 * 100)),
-    cameraMatrixBuffer: AllocateUniformBuffer(208),
-    tileLayout: DrawMap(0),
-    vertexBuffer: quadMesh,
-    shaderModule: tileShader,
-    texture: tileTexture,
-
-    Update() {
-        this.tileLayout = DrawMap(Date.now() / 1000);
-    }
-});
 
 
-scene.heirachy["sprite1"] = Instantiate(SpriteDependencies, {
-    texture: playerTexture,
-    Start() {
-        this.position = [0, 0, 10];
 
-    },
-    distance: 0.2,
-    Update() {
-},
 
-});
 scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, {
-    texture: stablemasterTexture,
+    texture: placeholderTexture,
+    interactionRadius : 3,
+    hasTalked :false, 
     Start() {
-        this.position = [5, 0, 10];
+        this.position = [5, 0, 0];
     },
-    distance: 0.10,
+    
     Update() {
-        const rotation = Time.lastTime * 5;
-        this.position = [Math.sin(rotation) * this.distance, Math.cos(rotation) * this.distance, 0];
+        // 核心：计算玩家到NPC的距离
+        const player = window.player;
+        const dx = this.position[0] - player.position[0];
+        const dy = this.position[1] - player.position[1];
+        const distance = Math.sqrt(dx*dx + dy*dy);
+        
+        // 🔑 靠近 + 按E键 → 触发对话
+        if (distance < this.interactionRadius && input.KeyE && !this.hasTalked) {
+            console.log("触发马夫对话！");
+            switchCharacter("StableMaster");  // ← 直接调用你的 Ink 函数
+            this.hasTalked = true;  // 防止1帧内多次触发
+        }
+        
+        // 离开交互范围 → 重置状态（可以再聊）
+        if (distance > this.interactionRadius * 1.5) {
+            this.hasTalked = false;
+        }
+        
+        // 可选：视觉提示（靠近时放大/变色）
+        if(this.hasTalked){
+            const scale = 1 + (1 - distance / this.interactionRadius) * 0.2;
+            this.scale = [scale, scale];
+        }
     }
 })
+
+
+
+
+
 
 const player = window.player = scene.heirachy["player"] = Instantiate(SpriteDependencies, new DemoEntity(), {
     texture: playerTexture,
@@ -353,30 +361,54 @@ const MIN_Y = -15
 const MAX_Y = 12.5
 
 // MOVE 2D 
+// MOVE 2D
 function Move2D() {
     const speed = 2;
     var dx = input.moveHorizontal;
     var dy = -input.moveVertical;
 
+    // Apply velocity
     xv += dx * speed * Time.deltaTime;
     yv += dy * speed * Time.deltaTime;
 
+    // Apply friction
     xv *= 0.8;
     yv *= 0.8;
 
-    x += xv;
-    y += yv;
-    x = Math.min(Math.max(x, MIN_X), MAX_X);
-    y = Math.min(Math.max(y, MIN_Y), MAX_Y);
+    // Predict next position
+    let nextX = x + xv;
+    let nextY = y + yv;
 
-    const BG_WIDTH = 5.7;   // Half-width of the background
-    const BG_HEIGHT = 10.2; // Half-height of the background
+    // Clamp within world bounds
+    nextX = Math.min(Math.max(nextX, MIN_X), MAX_X);
+    nextY = Math.min(Math.max(nextY, MIN_Y), MAX_Y);
 
-    // Calculate the target camera position (usually follows the player)
+    // Check collisions with obstacles
+    if (checkCollision(nextX, y)) {
+        // Hit obstacle in X direction, stop movement in X
+        xv = 0;
+        nextX = x; // stay in place
+    }
+
+    if (checkCollision(x, nextY)) {
+        // Hit obstacle in Y direction, stop movement in Y
+        yv = 0;
+        nextY = y; // stay in place
+    }
+
+    // Update player position
+    x = nextX;
+    y = nextY;
+
+    // Background boundaries for camera
+    const BG_WIDTH = 0.5;   // Half-width of the background
+    const BG_HEIGHT = 7.3; // Half-height of the background
+
+    // Calculate target camera position (usually follows the player)
     let targetCamX = x;
     let targetCamY = y;
 
-    // Stop the camera if the player is near the background boundary
+    // Stop the camera at background edges
     if (targetCamX > BG_WIDTH) targetCamX = BG_WIDTH;
     if (targetCamX < -BG_WIDTH) targetCamX = -BG_WIDTH;
     if (targetCamY > BG_HEIGHT) targetCamY = BG_HEIGHT;
@@ -385,9 +417,30 @@ function Move2D() {
     // Smoothly follow the target position
     camera.position.x += (targetCamX - camera.position.x) * 0.05;
     camera.position.y += (targetCamY - camera.position.y) * 0.05;
-
-
 }
+
+// Obstacles
+const obstacles = [
+    { x:10, y: 12, width: 13, height: 8 }, // Center (x, y), width, height
+    { x:-9, y: 12, width: 13, height: 8 },
+];
+
+// Collision check
+function checkCollision(px, py) {
+    for (const obs of obstacles) {
+        const left = obs.x - obs.width / 2;
+        const right = obs.x + obs.width / 2;
+        const top = obs.y + obs.height / 2;
+        const bottom = obs.y - obs.height / 2;
+
+        if (px >= left && px <= right && py >= bottom && py <= top) {
+            return true; // Collision detected
+        }
+    }
+    return false;
+}
+
+
 
 
 
