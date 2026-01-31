@@ -36,7 +36,7 @@ export const CHARACTERS_PIC = {
   [CHARACTERS.MAYOR]:
     "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG",
   [CHARACTERS.KING]:
-    "./assets/sprites/characterPortraits/characters.portraits/tutorial-knightd.PNG",
+    "./assets/sprites/characterPortraits/characters.portraits/king.PNG",
   [CHARACTERS.TUTORIAL_CHARACTER]:
     "./assets/sprites/characterPortraits/characters.portraits/tutorial-knight.PNG",
 };
