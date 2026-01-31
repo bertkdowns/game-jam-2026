@@ -195,3 +195,17 @@
     #interact-prompt.show {
       display: block;
     }
+
+    @keyframes characterBreathing {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+    }
+
+    #CharacterImage {
+      animation: characterBreathing 3s ease-in-out infinite;
+      transform-origin: center bottom;
+    }
