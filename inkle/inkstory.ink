@@ -1,4 +1,6 @@
+Hello!
 
+* [Begin]-> CharacterSelection
 
 // Character Names
 CONST VISITING_BARON_NAME = "Alex"
@@ -25,7 +27,13 @@ CONST STEWARD_MASK = "fancy green mask"
 CONST CHEF_MASK = "split face mask"
 
 
-=== CharacterSelection ====
+EXTERNAL closeModal()
+
+== function closeModal()==
+Close Modal
+~ return 
+
+== CharacterSelection
 
 Choose a character:
 
@@ -52,9 +60,32 @@ This is such a cool party isn't it?
 + [Not really my scene, but glad you like it]
   You might fit in better back home, they're all pretty boring there.
 
-- Anyway...
+-
+-> MainQs
 
-+ Bye!
+= MainQs
+
++ [Wait, so you're visiting?]
+  Yeah, just got here a couple weeks back, but gotta head home soon. Gonna miss this place.
+  
++ [What do you think of everyone's costumes?]
+  Super cool, very creative. I wish people did parties like this where i'm from. I think it's funny that the Jordan doesn't look at all like a Jester with that mask on!
+   ++ [Oh, so you know Jordan?]
+        Yeah, don't know many people here but he's with the kings court so i've had a good chat with him. Super nice guy, sooo funny!
+   ++ [I don't know who Jordan is, could you introduce me?]
+        Nah, that's the point of a masked party man!
++ [What's the best thing about the party?]
+   Oh the foood is sooo good! Taylor is such a good cook, I totally wish we had someone like that cooking food at home for us. I would kill for it!
++ [Anyways, see you around!]
+   Bye!
+   ++ [Exit]
+     -> CharacterSelection
+   
+- 
+
+-> MainQs
+
+
 
 -> CharacterSelection
 
@@ -105,9 +136,10 @@ Yo wassup?
 Bonjour!
 - ~ closeModal()
 
+
 -> CharacterSelection
 
-=== HeadEngineer ===
+== HeadEngineer
 
 Once upon a time...
 
@@ -120,7 +152,6 @@ Once upon a time...
 
 -> CharacterSelection
 
-EXTERNAL closeModal()
 
 Do you even know what's going on?
 
