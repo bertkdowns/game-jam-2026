@@ -41,10 +41,8 @@ import {
 import { DemoEntity } from "./src/components/StateMachine.js";
 import { Transform } from "./src/components/transform.js";
 
-<<<<<<< HEAD
 
 import { testrun, modal, switchCharacter, VISISING_BARON, STABLEMASTER, HEADCHEF, HEAD_ENGINEER, JESTER, BISHOP, STEWARD, MAYOR, GENERAL } from "./inkle/inkle.js"
-=======
 import {
   testrun,
   switchCharacter,
@@ -59,7 +57,7 @@ import {
   GENERAL,
 } from "./inkle/inkle.js";
 import { MultiTrackCrossfader } from "./audio/Crossfader.js";
->>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
+
 
 // creates an instance of the object to use for the background (window scene allows me to access objects from the console)
 const scene = (window.scene = new Scene());
@@ -72,22 +70,14 @@ await Promise.all([renderer.initialise(canvas)]);
 const camera = Instantiate(new Camera(), new Transform());
 camera.initialise(canvas);
 
-<<<<<<< HEAD
+
 window.camera = camera
 // sets the camera position 
 camera.position = [0, -1, -15];
 
-console.log(modal );
-
-
-// load in the assets 
-=======
-window.camera = camera;
-// sets the camera position
-camera.position = [0, -1, -15];
+console.log(modal);
 
 // load in the assets
->>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
 console.log("waiting for assets...");
 // write textures shaders etc into seperate arrays so we can either collect them as an array per type or referance them individually.
 const [
@@ -202,7 +192,7 @@ const skybox = (scene.heirachy["skybox"] = Instantiate(
 // creates seperate instances of the object, order follows sorting order, higher is further back.
 const background =
   (window.background =
-  scene.heirachy["background"] =
+    scene.heirachy["background"] =
     Instantiate(SpriteDependencies, {
       texture: backgroundTexture,
       Start() {
@@ -211,37 +201,6 @@ const background =
     }));
 
 const interactablePerson = {
-<<<<<<< HEAD
-    interactionRadius: 3,
-    hasTalked: false,
-
-    CheckPosition() {
-        // 核心：计算玩家到NPC的距离
-        const player = window.player;
-        const dx = this.position[0] - player.position[0];
-        const dy = this.position[1] - player.position[1];
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        // 🔑 靠近 + 按E键 → 触发对话
-
-        if (distance < this.interactionRadius && input.KeyE && !this.hasTalked) {
-            console.log("触发马夫对话！");
-            switchCharacter(this.characterProfile);  // ← 直接调用你的 Ink 函数
-
-            this.hasTalked = true;  // 防止1帧内多次触发
-        }
-
-        // 离开交互范围 → 重置状态（可以再聊）
-        if (distance > this.interactionRadius * 1.5) {
-            this.hasTalked = false;
-        }
-
-        // 可选：视觉提示（靠近时放大/变色）
-        if (this.hasTalked) {
-            const scale = 1 + (1 - distance / this.interactionRadius) * 0.2;
-            this.scale = [scale, scale];
-        }
-=======
   interactionRadius: 3,
   hasTalked: false,
 
@@ -253,145 +212,160 @@ const interactablePerson = {
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     // 🔑 靠近 + 按E键 → 触发对话
+
     if (distance < this.interactionRadius && input.KeyE && !this.hasTalked) {
-      player.isFrozen = true;
       console.log("触发马夫对话！");
-      switchCharacter(this.characterProfile); // ← 直接调用你的 Ink 函数
+      switchCharacter(this.characterProfile);  // ← 直接调用你的 Ink 函数
 
-      this.hasTalked = true; // 防止1帧内多次触发
->>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
+      this.hasTalked = true;  // 防止1帧内多次触发
     }
 
-<<<<<<< HEAD
+    // 离开交互范围 → 重置状态（可以再聊）
+    if (distance > this.interactionRadius * 1.5) {
+      this.hasTalked = false;
+    }
+
+    // 可选：视觉提示（靠近时放大/变色）
+    if (this.hasTalked) {
+      const scale = 1 + (1 - distance / this.interactionRadius) * 0.2;
+      this.scale = [scale, scale];
+    }
+  }
+}
+
+
+
+
+
 scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, interactablePerson, {
-    texture: placeholderTexture,
-    characterProfile: VISISING_BARON,
-    Start() {
-        this.position = [10, 5, 0];
-    },
-    Update() {
-        this.CheckPosition();
+  texture: placeholderTexture,
+  characterProfile: VISISING_BARON,
+  Start() {
+    this.position = [10, 5, 0];
+  },
+  Update() {
+    this.CheckPosition();
 
 
-    }
+  }
 })
 
 
 scene.heirachy["stablemaster2"] = Instantiate(SpriteDependencies, interactablePerson, {
-    texture: placeholderTexture,
-    characterProfile: STABLEMASTER,
-    Start() {
-        this.position = [10, -1, 0];
-    },
-    Update() {
-        this.CheckPosition();
+  texture: placeholderTexture,
+  characterProfile: STABLEMASTER,
+  Start() {
+    this.position = [10, -1, 0];
+  },
+  Update() {
+    this.CheckPosition();
 
 
-    }
+  }
 })
 
 scene.heirachy["stablemaster3"] = Instantiate(SpriteDependencies, interactablePerson, {
-    texture: placeholderTexture,
-    characterProfile: HEADCHEF,
-    Start() {
-        this.position = [10, -7, 0];
-    },
-    Update() {
-        this.CheckPosition();
+  texture: placeholderTexture,
+  characterProfile: HEADCHEF,
+  Start() {
+    this.position = [10, -7, 0];
+  },
+  Update() {
+    this.CheckPosition();
 
 
-    }
+  }
 })
 
 scene.heirachy["stablemaster4"] = Instantiate(SpriteDependencies, interactablePerson, {
-    texture: placeholderTexture,
-    characterProfile: HEAD_ENGINEER,
-    Start() {
-        this.position = [5, 8, 0];
-    },
-    Update() {
-        this.CheckPosition();
+  texture: placeholderTexture,
+  characterProfile: HEAD_ENGINEER,
+  Start() {
+    this.position = [5, 8, 0];
+  },
+  Update() {
+    this.CheckPosition();
 
 
-    }
+  }
 })
 
 scene.heirachy["stablemaster5"] = Instantiate(SpriteDependencies, interactablePerson, {
-    texture: placeholderTexture,
-    characterProfile: JESTER,
-    Start() {
-        this.position = [-5, 8, 0];
-    },
-    Update() {
-        this.CheckPosition();
+  texture: placeholderTexture,
+  characterProfile: JESTER,
+  Start() {
+    this.position = [-5, 8, 0];
+  },
+  Update() {
+    this.CheckPosition();
 
 
-    }
+  }
 })
 
 scene.heirachy["stablemaster6"] = Instantiate(SpriteDependencies, interactablePerson, {
-    texture: placeholderTexture,
-    characterProfile: BISHOP,
-    Start() {
-        this.position = [-10, 5, 0];
-    },
-    Update() {
-        this.CheckPosition();
+  texture: placeholderTexture,
+  characterProfile: BISHOP,
+  Start() {
+    this.position = [-10, 5, 0];
+  },
+  Update() {
+    this.CheckPosition();
 
 
-    }
+  }
 })
 
 scene.heirachy["stablemaster7"] = Instantiate(SpriteDependencies, interactablePerson, {
-    texture: placeholderTexture,
-    characterProfile: STEWARD,
-    Start() {
-        this.position = [-10, -1, 0];
-    },
-    Update() {
-        this.CheckPosition();
+  texture: placeholderTexture,
+  characterProfile: STEWARD,
+  Start() {
+    this.position = [-10, -1, 0];
+  },
+  Update() {
+    this.CheckPosition();
 
 
-    }
+  }
 })
 
 scene.heirachy["stablemaster8"] = Instantiate(SpriteDependencies, interactablePerson, {
-    texture: placeholderTexture,
-    characterProfile: MAYOR,
-    Start() {
-        this.position = [-10, -7, 0];
-    },
-    Update() {
-        this.CheckPosition();
+  texture: placeholderTexture,
+  characterProfile: MAYOR,
+  Start() {
+    this.position = [-10, -7, 0];
+  },
+  Update() {
+    this.CheckPosition();
 
 
-    }
+  }
 })
 
 scene.heirachy["stablemaster9"] = Instantiate(SpriteDependencies, interactablePerson, {
-    texture: placeholderTexture,
-    characterProfile: GENERAL,
-    Start() {
-        this.position = [1, -7, 0];
-    },
-    Update() {
-        this.CheckPosition();
+  texture: placeholderTexture,
+  characterProfile: GENERAL,
+  Start() {
+    this.position = [1, -7, 0];
+  },
+  Update() {
+    this.CheckPosition();
 
 
-    }
+  }
 })
 
 scene.heirachy["stablemaster10"] = Instantiate(SpriteDependencies, interactablePerson, {
-    texture: placeholderTexture,
-    characterProfile: GENERAL,
-    Start() {
-        this.position = [1, 0, 0];
-    },
-    Update() {
-        this.CheckPosition();
+  texture: placeholderTexture,
+  characterProfile: GENERAL,
+  Start() {
+    this.position = [1, 0, 0];
+  },
+  Update() {
+    this.CheckPosition();
 
 
-    }
+  }
 })
 
 
@@ -401,32 +375,18 @@ scene.heirachy["stablemaster10"] = Instantiate(SpriteDependencies, interactableP
 
 
 const player = window.player = scene.heirachy["player"] = Instantiate(SpriteDependencies, new DemoEntity(), {
-    texture: playerTexture, isFrozen: false,
-    Start() {
-        this.state = 0;
-    },
-    Update() {
-
-        this.position += Move2D(this);
-        UpdateCamera(this.position.x, this.position.y);
-
-        this.stateSystem.call("onEvent");
-    },
-});
-=======
-    // 离开交互范围 → 重置状态（可以再聊）
-    if (distance > this.interactionRadius * 1.5) {
-      player.isFrozen = false;
-      this.hasTalked = false;
-    }
-
-    // 可选：视觉提示（靠近时放大/变色）
-    if (this.hasTalked) {
-      const scale = 1 + (1 - distance / this.interactionRadius) * 0.2;
-      this.scale = [scale, scale];
-    }
+  texture: playerTexture, isFrozen: false,
+  Start() {
+    this.state = 0;
   },
-};
+  Update() {
+
+    this.position += Move2D(this);
+    UpdateCamera(this.position.x, this.position.y);
+
+    this.stateSystem.call("onEvent");
+  },
+});
 
 scene.heirachy["stablemaster"] = Instantiate(
   SpriteDependencies,
@@ -578,19 +538,6 @@ scene.heirachy["stablemaster10"] = Instantiate(
   }
 );
 
-const player =
-  (window.player =
-  scene.heirachy["player"] =
-    Instantiate(SpriteDependencies, new DemoEntity(), {
-      texture: playerTexture,
-      isFrozen: false,
-      Update() {
-        window.using3D ? Move3D() : Move2D();
-        this.position = [x, y];
-        this.skillSystem.call("onEvent");
-      },
-    }));
->>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
 
 // since we are assigning a new material (since its using a texture array, instead of single texture, need to assign it first to replace the existing texture)
 const explosion = (scene.heirachy["explosion"] = Instantiate(
@@ -702,15 +649,8 @@ const textObj = (scene.heirachy["textObj"] = Instantiate(
 ));
 
 // INPUT/MOVEMENT CONTROL FOR SPRITE 2
-<<<<<<< HEAD
+
 var xv = 0, yv = 0, zv = 0;
-=======
-var x = 0,
-  y = -1,
-  xv = 0,
-  yv = 0,
-  zv = 0;
->>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
 const cameraMouseSensitivity = 1 / 20;
 const cameraControllerSensitivity = 1 * 3;
 
@@ -721,26 +661,17 @@ const MAX_Y = 12.5;
 
 // MOVE 2D
 // MOVE 2D
-<<<<<<< HEAD
 function Move2D(entity) {
-    if (modal.stateName == "open") {
-       
-        xv = 0;
-        yv = 0;
-        return;
-    }
-=======
-function Move2D() {
-  if (player.isFrozen) {
+  if (modal.stateName == "open") {
+
     xv = 0;
     yv = 0;
     return;
   }
-
+  
   const speed = 2;
   var dx = input.moveHorizontal;
   var dy = -input.moveVertical;
->>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
 
   // Apply velocity
   xv += dx * speed * Time.deltaTime;
@@ -750,20 +681,14 @@ function Move2D() {
   xv *= 0.8;
   yv *= 0.8;
 
+  const [x, y] = [...entity.position]
   // Predict next position
   let nextX = x + xv;
   let nextY = y + yv;
 
-<<<<<<< HEAD
-    const [x,y] = [...entity.position]
-    // Predict next position
-    let nextX = x + xv;
-    let nextY = y + yv;
-=======
   // Clamp within world bounds
   nextX = Math.min(Math.max(nextX, MIN_X), MAX_X);
   nextY = Math.min(Math.max(nextY, MIN_Y), MAX_Y);
->>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
 
   // Check collisions with obstacles
   if (checkCollision(nextX, y)) {
@@ -778,37 +703,13 @@ function Move2D() {
     nextY = y; // stay in place
   }
 
-  // Update player position
-  x = nextX;
-  y = nextY;
-
-<<<<<<< HEAD
-    entity.position = [nextX, nextY];
+  entity.position = [nextX, nextY];
 
 }
-function UpdateCamera(x,y) {
-    
-    // Background boundaries for camera
-    const BG_WIDTH = 0.5;   // Half-width of the background
-    const BG_HEIGHT = 7.3; // Half-height of the background
+function UpdateCamera(x, y) {
 
-    // Calculate target camera position (usually follows the player)
-    let targetCamX = x;
-    let targetCamY = y;
-
-    // Stop the camera at background edges
-    if (targetCamX > BG_WIDTH) targetCamX = BG_WIDTH;
-    if (targetCamX < -BG_WIDTH) targetCamX = -BG_WIDTH;
-    if (targetCamY > BG_HEIGHT) targetCamY = BG_HEIGHT;
-    if (targetCamY < -BG_HEIGHT) targetCamY = -BG_HEIGHT;
-
-    // Smoothly follow the target position
-    camera.position.x += (targetCamX - camera.position.x) * 0.05;
-    camera.position.y += (targetCamY - camera.position.y) * 0.05;
-
-=======
   // Background boundaries for camera
-  const BG_WIDTH = 0.5; // Half-width of the background
+  const BG_WIDTH = 0.5;   // Half-width of the background
   const BG_HEIGHT = 7.3; // Half-height of the background
 
   // Calculate target camera position (usually follows the player)
@@ -824,19 +725,14 @@ function UpdateCamera(x,y) {
   // Smoothly follow the target position
   camera.position.x += (targetCamX - camera.position.x) * 0.05;
   camera.position.y += (targetCamY - camera.position.y) * 0.05;
->>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
+
 }
 
 
 // Obstacles
 const obstacles = [
-<<<<<<< HEAD
-    { x: 10, y: 12, width: 13, height: 8 }, // Center (x, y), width, height
-    { x: -9, y: 12, width: 13, height: 8 },
-=======
   { x: 10, y: 12, width: 13, height: 8 }, // Center (x, y), width, height
   { x: -9, y: 12, width: 13, height: 8 },
->>>>>>> df82f6d7e111fe6ca8619d94e191250d48d366cb
 ];
 
 // Collision check
