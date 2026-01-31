@@ -28,27 +28,30 @@ CONST CHEF_MASK = "split face mask"
 
 
 EXTERNAL closeModal()
-
-EXTERNAL SwitchCharacter(characterName)
-
 == function closeModal()==
 Close Modal
 ~ return 
+
+EXTERNAL switchCharacter(characterName)
+== function switchCharacter(characterName)==
+Switch Character {characterName}
+~ return
+
 
 == CharacterSelection
 
 Choose a character:
 
- + [VisitingBaron] -> VisitingBaron
- + [StableMaster] -> StableMaster
- + [Mayor] -> Mayor
- + [Jester] -> Jester
- + [General] -> General
- + [Judge] -> Judge
- + [Bishop] -> Bishop
- + [HeadEngineer] -> HeadEngineer
- + [Steward] -> Steward
- + [HeadChef] -> HeadChef
+ + [VisitingBaron] {switchCharacter("VisitingBaron")}  -> VisitingBaron
+ + [StableMaster] {switchCharacter("StableMaster")} -> StableMaster
+ + [Mayor] {switchCharacter("Mayor")} -> Mayor
+ + [Jester] {switchCharacter("Jester")} -> Jester
+ + [General] {switchCharacter("General")} -> General
+ + [Judge] {switchCharacter("Judge")} -> Judge
+ + [Bishop] {switchCharacter("Bishop")} -> Bishop
+ + [HeadEngineer] {switchCharacter("HeadEngineer")} -> HeadEngineer
+ + [Steward] {switchCharacter("Steward")} -> Steward
+ + [HeadChef] {switchCharacter("HeadChef")}-> HeadChef
 
 
 == VisitingBaron
@@ -201,7 +204,14 @@ Hello kiddo!
  ++ [Looking for anything in particular?]
    Haven't seen you around these parts. Got my eye on you.
  ++ [Observing is a good thing to do these days.]
-   Yeah, I'm a bit worried in this kind of environment where everyone is masked. The king isn't as protected as normal.
+   Yeah, I'm a bit worried in this kind of environment where everyone is masked. The king isn't as protected as normal. I'm on high alert.
++ [Many people you know here?]
+ Not really. That's what I'm worried about. Anything could happen.
+ ++ Why so worried?
+   Part of the job more than anything else.
+ ++ [Surely you know some people.]
+   Oh, I know morgan over there. He's a good guy, gets in a bit of a mood sometimes. But it's tough work being an engineer.
+ 
  - 
 
 
