@@ -156,13 +156,16 @@ const interactablePerson = {
         
         // 🔑 靠近 + 按E键 → 触发对话
         if (distance < this.interactionRadius && input.KeyE && !this.hasTalked) {
+            player.isFrozen = true;
             console.log("触发马夫对话！");
             switchCharacter(this.characterProfile);  // ← 直接调用你的 Ink 函数
+
             this.hasTalked = true;  // 防止1帧内多次触发
         }
         
         // 离开交互范围 → 重置状态（可以再聊）
         if (distance > this.interactionRadius * 1.5) {
+            player.isFrozen = false;
             this.hasTalked = false;
         }
         
@@ -312,7 +315,7 @@ scene.heirachy["stablemaster10"] = Instantiate(SpriteDependencies, interactableP
 
 
 const player = window.player = scene.heirachy["player"] = Instantiate(SpriteDependencies, new DemoEntity(), {
-    texture: playerTexture,
+    texture: playerTexture,isFrozen: false,
     Update() {
         (window.using3D) ? Move3D() : Move2D();
         this.position = [x, y];
@@ -435,47 +438,6 @@ var x = 0, y = -1, xv = 0, yv = 0, zv = 0;
 const cameraMouseSensitivity = 1 / 20;
 const cameraControllerSensitivity = 1 * 3;
 
-function Move3D() {
-
-    var dx = input.moveHorizontal;
-    var dz = -input.moveVertical; // look axis is inverted (same for all controllers, so ive made the mouse and keyboard act the same)
-    //console.log(dx, dz, deltaTime);
-
-    // sets the players speed. 
-    const speed = 5;
-    xv += dx * speed * Time.deltaTime;
-    zv += dz * speed * Time.deltaTime;
-
-    // adds drag
-    xv *= 0.8;
-    zv *= 0.8;
-
-    // allows mouse and controller look
-    HandleCameraRotation();
-
-    // moves relitive to camera direction
-    const sin = Math.sin(camera.rotation.x * Math.PI / 180);
-    const cos = Math.cos(camera.rotation.x * Math.PI / 180);
-
-    //console.warn(sin, cos,xv, zv);
-
-    camera.position.x += sin * zv + cos * xv;
-    camera.position.z += cos * zv - sin * xv;
-
-}
-function HandleCameraRotation() {
-    // controller look rotation 
-    camera.rotation.x += input.lookHorizontal * cameraControllerSensitivity;
-    camera.rotation.y += input.lookVertical * cameraControllerSensitivity;
-    // mouse look rotation
-    camera.rotation.x += input.mouseX * cameraMouseSensitivity;
-    camera.rotation.y += input.mouseY * cameraMouseSensitivity;
-
-    // clamps camera look rotation so you cant get upside down
-    if (Math.abs(camera.rotation.y) > 90)
-        camera.rotation.y = Math.sign(camera.rotation.y) * 90;
-}
-
 
 const MIN_X = -15
 const MAX_X = 15
@@ -485,6 +447,13 @@ const MAX_Y = 12.5
 // MOVE 2D 
 // MOVE 2D
 function Move2D() {
+
+     if (player.isFrozen) {
+        xv = 0;
+        yv = 0;
+        return;
+    }
+
     const speed = 2;
     var dx = input.moveHorizontal;
     var dy = -input.moveVertical;
@@ -539,6 +508,8 @@ function Move2D() {
     // Smoothly follow the target position
     camera.position.x += (targetCamX - camera.position.x) * 0.05;
     camera.position.y += (targetCamY - camera.position.y) * 0.05;
+
+
 }
 
 // Obstacles
