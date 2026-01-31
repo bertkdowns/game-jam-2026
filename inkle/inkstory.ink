@@ -9,7 +9,7 @@ Hello!
 * [Begin]-> CharacterSelection
 
 // Character Names
-CONST VISITING_BARRON_NAME = "Alex"
+CONST VISITING_BARON_NAME = "Alex"
 CONST STABLEMASTER_NAME = "Russo"
 CONST MAYOR_NAME = "Vinnie"
 CONST JESTER_NAME = "Jordan"
@@ -21,7 +21,7 @@ CONST STEWARD_NAME = "Casey"
 CONST CHEF_NAME = "Taylor"
 
 // Character mask descriptions
-CONST VISITING_BARRON_MASK = "domino mask"
+CONST VISITING_BARON_MASK = "domino mask"
 CONST STABLEMASTER_MASK = "domino mask"
 CONST MAYOR_MASK = "plague mask"
 CONST JESTER_MASK = "plague mask"
@@ -60,7 +60,7 @@ Switch Character {characterName}
 
 Choose a character:
 
- + [VisitingBarron] {switchCharacter("VisitingBarron")}  -> VisitingBarron
+ + [VisitingBaron] {switchCharacter("VisitingBaron")}  -> VisitingBaron
  + [StableMaster] {switchCharacter("StableMaster")} -> StableMaster
  + [Mayor] {switchCharacter("Mayor")} -> Mayor
  + [Jester] {switchCharacter("Jester")} -> Jester
@@ -96,7 +96,7 @@ So, you know who's the assasin right?
 
 
 
-== VisitingBarron
+== VisitingBaron
 
 Hello!
 
@@ -212,7 +212,7 @@ Good Evening to you! This is such a wonderful night, I absolutely looove your fi
 
 = WhosWho
 
-+ [Who's that guy in the {VISITING_BARRON_MASK}?]
++ [Who's that guy in the {VISITING_BARON_MASK}?]
    Actually, you got me there, I don't actually know who that person is! I'll have to go talk to them later on.
 + [Who's in the {BISHOP_MASK}?]
    Oh, that's {BISHOP_NAME}, you can just tell immediately. Of course, I saw them making that mask one time when I visited them too, so I guess it's a bit easier for me.
@@ -262,7 +262,7 @@ So what do you think of the coustumes tonight?
 +[I see someone has a similar outfit to you!]
  Yeah that chatty mayor got the same outfit as me! Really wish they didn't choose a {MAYOR_MASK}. Quite rude!
 + [Those domino people look cool]
-  Ah, that's {VISITING_BARRON_NAME} and {STABLEMASTER_NAME} in those matching ones. Don't think they coordinated it either!
+  Ah, that's {VISITING_BARON_NAME} and {STABLEMASTER_NAME} in those matching ones. Don't think they coordinated it either!
 + Good chat!
   -> SeeYa
 -
@@ -575,7 +575,7 @@ Hello!
   ++ [Oh, that's not good.]
     Yeah, it could be dangerous in the wrong hands. Ask around to see if anyone's been in the kitchen, will you?
 + [Cool to see such a great turnout!]
-  Yeah, even the visiting Barron {VISITING_BARRON_NAME} came. He seems to really like my food!
+  Yeah, even the visiting Baron {VISITING_BARON_NAME} came. He seems to really like my food!
  
 + [See ya!]
  -> CharacterSelection

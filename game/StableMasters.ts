@@ -5,7 +5,7 @@ import { CHARACTERS } from "../inkle/constants.js";
 import { Game } from "./Game.js";
 
 const NPCPositions = {
-  [CHARACTERS.VISISING_BARRON]: [10, 5, 0],
+  [CHARACTERS.VISITING_BARON]: [10, 5, 0],
   [CHARACTERS.STABLEMASTER]: [10, -1, 0],
   [CHARACTERS.HEADCHEF]: [10, -7, 0],
   [CHARACTERS.HEAD_ENGINEER]: [5, 8, 0],

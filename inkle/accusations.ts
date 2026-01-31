@@ -47,15 +47,17 @@ export function renderResults() {
 
   document.getElementById("modal").style.display = "none";
   document.getElementById("AccusationModal").style.display = "block";
-
-  document.getElementById("Accusations").innerHTML = `
-  <div>
-    <h2 class="text-white text-2xl mb-4">Results</h2>
+  const accusationsDiv = document.getElementById("AccusationModal");
+  accusationsDiv.innerHTML = `
+  <div class="text-white m-auto text-center">
     <h2>Assasins:</h2>
-    <div class="w-full h-400 flex flex-row justify-center" id="badguys"></div>
+    <div class="h-400 flex flex-row justify-center" id="badguys"></div>
     <h2>Innocents:</h2>
-    <div class="w-full h-400 flex flex-row" id="goodguys"></div>
+    <div class="h-400 flex flex-row justify-center" id="goodguys"></div>
+
+     <div id="finalText" ></div>
     </div>
+   
   </div>
   `
   const badddies = [
@@ -65,7 +67,7 @@ export function renderResults() {
   ]
   const gooddies = [
     characters[CHARACTERS.HEADCHEF],
-    characters[CHARACTERS.VISISING_BARRON],
+    characters[CHARACTERS.VISITING_BARON],
     characters[CHARACTERS.JUDGE],
     characters[CHARACTERS.BISHOP],
     characters[CHARACTERS.STEWARD],
@@ -81,6 +83,17 @@ export function renderResults() {
     goodguys.appendChild(image(good.accused, 200, good.characterImage));
   }
 
+  const aliveVillians = badddies.filter(b => !b.accused).length;
+  const deadInnocents = gooddies.filter(g => g.accused).length;
+  const deadVillians = badddies.filter(b => b.accused).length;
+  const aliveInnocents = gooddies.filter(g => !g.accused).length;
+
+  const finalText = document.getElementById("finalText");
+  finalText.innerHTML = `
+  ${aliveVillians === 0 ? "No villians were left alive" : `You killed ${deadVillians} villians, but ${aliveVillians} were left alive.`}<br/>
+  ${deadInnocents === 0 ? "No innocents were harmed" : `You accidentally killed ${deadInnocents} innocents, while ${aliveInnocents} survived.`} <br/>
+  ${aliveVillians === 0 && deadInnocents === 0 ? "<strong>You successfully saved the kingdom!</strong>" : ""}
+  `
 
 
 }
