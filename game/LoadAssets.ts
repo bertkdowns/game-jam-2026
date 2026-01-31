@@ -13,6 +13,8 @@ import { AllocateUniformBuffer } from "../src/engine_core/renderer";
 // Export variables that will be set after loading
 export let backgroundTexture: any;
 export let placeholderTexture: any;
+export let tutorialTexture: any;
+export let endingTexture: any;
 export let playerTexture: any;
 export let fontTexture: any;
 export let tileTexture: any;
@@ -36,7 +38,7 @@ export let audioClips: any[];
 // Function to load all assets (must be called after renderer is initialized)
 export async function loadAllAssets() {
   const [
-    [bgTexture, placeholderTex],
+    [bgTexture, placeholderTex, tutorialTex],
     [
       playerTex,
       fontTex,
@@ -53,7 +55,8 @@ export async function loadAllAssets() {
   ] = await Promise.all([
     loadImages(
       `/assets/sprites/ballroom_background.png`,
-      `/assets/sprites/characterPortraits/placeholder guy.png`
+      `/assets/sprites/characterPortraits/placeholder guy.png`,
+      `/assets/sprites/intro_background.png`
     ).then((textures) =>
       textures.map((texture: any) =>
         Object.assign(texture, { pixelScale: 1 / 256 })
@@ -111,6 +114,8 @@ export async function loadAllAssets() {
   // Assign to exported variables
   backgroundTexture = bgTexture;
   placeholderTexture = placeholderTex;
+  tutorialTexture = tutorialTex;
+  endingTexture = tutorialTex; // using tutorial texture for ending until we have an ending background
   playerTexture = playerTex;
   fontTexture = fontTex;
   tileTexture = tileTex;

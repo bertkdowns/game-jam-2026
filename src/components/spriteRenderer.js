@@ -66,9 +66,31 @@ export class SpriteRenderer {
     // x, y, u, v 
     material = material;
     handlePass = HandlePass;
+    _currentTextureView = null; // Track the texture view to detect changes
+    _bindGroupLayout = null; // Store bindGroupLayout for reuse
+    
     init() {
         const gpu = window.renderer.device; // window.renderer.device might also work;
-        [this.renderPipeline, this.bindGroup] = InitRenderer.bind(this)(gpu)
+        [this.renderPipeline, this.bindGroup, this._bindGroupLayout] = InitRenderer.bind(this)(gpu);
+        this._currentTextureView = this.texture?.view;
+    }
+    
+    // Update bindGroup when texture changes
+    updateBindGroup() {
+        if (!this.texture?.view) return;
+        if (this._currentTextureView === this.texture.view) return; // No change
+        if (!this._bindGroupLayout) return; // Not initialized yet
+        
+        const gpu = window.renderer.device;
+        this.bindGroup = gpu.createBindGroup({
+            layout: this._bindGroupLayout,
+            entries: [
+                { binding: 0, resource: gpu.createSampler() },
+                { binding: 1, resource: this.texture.view },
+                { binding: 2, resource: { buffer: this.cameraMatrixBuffer } },
+            ]
+        });
+        this._currentTextureView = this.texture.view;
     }
 }
 
@@ -96,11 +118,16 @@ function InitRenderer(gpu) {
         ]
     });
 
-    return [renderPipeline, bindGroup];
+    return [renderPipeline, bindGroup, bindGroupLayout];
 }
 
 
 function HandlePass(pass, gpu, camera) {
+    // Update bindGroup if texture changed
+    if (this.updateBindGroup) {
+        this.updateBindGroup();
+    }
+    
     // writes a single instance of the object to the buffer 
     pass.setPipeline(this.renderPipeline);
     pass.setVertexBuffer(0, this.vertexBuffer);

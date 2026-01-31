@@ -8,6 +8,8 @@ import { InputUpdate, InputLateUpdate } from "../src/engine_core/input";
 import {
   loadAllAssets,
   backgroundTexture,
+  tutorialTexture,
+  endingTexture,
   playerTexture,
   skyboxTexture,
   explosionTexture,
@@ -85,7 +87,7 @@ export class Game {
     Game.instance = this;
   }
 
-  async init() {
+  async init(scene: GameScene = GameScene.Tutorial) {
     // Initialize renderer first (required for asset loading)
     await Promise.all([this.renderer.initialise(this.canvas)]);
 
@@ -105,33 +107,15 @@ export class Game {
     (window as any).playerTexture = playerTexture;
 
     // Create entities
-    this.skybox = createSkybox(cubeMesh, skyboxShader, skyboxTexture, this);
-    this.background = createBackground(backgroundTexture, this);
-    this.explosion = createExplosion(
-      explosionTexture,
-      spriteShaderWithAtlus,
-      audioClips,
-      this.canvas,
-      this.camera,
-      this
-    );
-    this.textObj = createTextObj(
-      textMesh,
-      textShader,
-      fontTexture,
-      this.camera,
-      this
-    );
-    this.player = createPlayer(playerTexture, this);
-    // Don't create characters here - they'll be created per scene
 
-    // Set up input handlers
+    this.background = createBackground(backgroundTexture, this);
+    this.player = createPlayer(playerTexture, this);
+
     setupInputHandlers();
 
     // Set up audio system
     await setupAudioSystem();
 
-    // Set up update loop
     Manager.AddUpdateEvents([
       InputUpdate,
       () => Scene.HandleUpdate(this.scene),
@@ -154,7 +138,7 @@ export class Game {
     console.log("started gameloop");
 
     // Initialize with tutorial scene
-    this.setupTutorialScene();
+    this.switchToScene(scene);
     // testrun(); // Commented out so modal starts closed
   }
 
@@ -189,9 +173,10 @@ export class Game {
     // Remove characters from previous scene
     removeAllCharacters(this);
 
-    // Hide main game background
+    // Show tutorial background
     if (this.background) {
-      this.background.scale = [0, 0, 1];
+      this.background.texture = tutorialTexture;
+      this.background.scale = [1.1, 1.1, 1];
     }
     // Keep skybox visible for tutorial
     if (this.skybox) {
@@ -213,16 +198,16 @@ export class Game {
 
   // Setup ending scene
   setupEndingScene() {
-
     this.currentScene = GameScene.Ending;
     switchInkScene(GameScene.Ending);
 
     // Remove characters from previous scene
     removeAllCharacters(this);
 
-    // Hide main game background
+    // Show ending background
     if (this.background) {
-      this.background.scale = [0, 0, 1];
+      this.background.texture = endingTexture;
+      this.background.scale = [1, 1, 1];
     }
     // Keep skybox visible for ending
     if (this.skybox) {
