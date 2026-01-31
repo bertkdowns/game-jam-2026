@@ -19,7 +19,7 @@ import {
   continueStory,
   bindExternalFunctions,
 } from "./StoryManager.js";
-import { HEAD_ENGINEER } from "./constants.js";
+import { CHARACTERS, CHARACTERS_PIC } from "./constants.js";
 import { GameScene } from "../game/Types/scenes.js";
 import { Game } from "../game/Game.js";
 
@@ -35,10 +35,7 @@ bindExternalFunctions(switchCharacter, switchToMainGame);
 // Test function for initializing the dialogue system
 export function testrun() {
   modal.state = "close";
-  const character = new Character(
-    HEAD_ENGINEER,
-    "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"
-  );
+  const character = new Character(CHARACTERS.HEAD_ENGINEER);
   character.chat();
   const gameStory = getGameStory();
   gameStory.ChoosePathString("CharacterSelection");

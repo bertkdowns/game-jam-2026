@@ -1,37 +1,24 @@
 import { Instantiate } from "../src/engine_core/utils.js";
 import { SpriteDependencies, placeholderTexture } from "./LoadAssets.js";
 import { createInteractablePerson } from "./InteractablePerson.js";
-import {
-  VISISING_BARON,
-  STABLEMASTER,
-  HEADCHEF,
-  HEAD_ENGINEER,
-  JESTER,
-  BISHOP,
-  STEWARD,
-  MAYOR,
-  GENERAL,
-  JUDGE,
-  TUTORIAL_CHARACTER,
-  CHARACTERS,
-} from "../inkle/index.js";
+import { CHARACTERS } from "../inkle/constants.js";
 import { Game } from "./Game.js";
 
 const NPCPositions = {
-  [VISISING_BARON]: [10, 5, 0],
-  [STABLEMASTER]: [10, -1, 0],
-  [HEADCHEF]: [10, -7, 0],
-  [HEAD_ENGINEER]: [5, 8, 0],
-  [JESTER]: [-5, 8, 0],
-  [BISHOP]: [-10, 5, 0],
-  [STEWARD]: [-10, -1, 0],
-  [MAYOR]: [-10, -7, 0],
-  [GENERAL]: [1, -7, 0],
-  [JUDGE]: [-1, 0, 0],
+  [CHARACTERS.VISISING_BARON]: [10, 5, 0],
+  [CHARACTERS.STABLEMASTER]: [10, -1, 0],
+  [CHARACTERS.HEADCHEF]: [10, -7, 0],
+  [CHARACTERS.HEAD_ENGINEER]: [5, 8, 0],
+  [CHARACTERS.JESTER]: [-5, 8, 0],
+  [CHARACTERS.BISHOP]: [-10, 5, 0],
+  [CHARACTERS.STEWARD]: [-10, -1, 0],
+  [CHARACTERS.MAYOR]: [-10, -7, 0],
+  [CHARACTERS.GENERAL]: [1, -7, 0],
+  [CHARACTERS.JUDGE]: [-1, 0, 0],
 };
 
 const tutorialPositions = {
-  [TUTORIAL_CHARACTER]: [5, 0, 0], // Tutorial character position
+  [CHARACTERS.TUTORIAL_CHARACTER]: [5, 0, 0], // Tutorial character position
 };
 
 const endingPositions = {
