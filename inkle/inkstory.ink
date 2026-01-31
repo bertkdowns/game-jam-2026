@@ -69,8 +69,8 @@ This is such a cool party isn't it?
   Yeah, just got here a couple weeks back, but gotta head home soon. Gonna miss this place.
   
 + [What do you think of everyone's costumes?]
-  Super cool, very creative. I wish people did parties like this where i'm from. I think it's funny that the Jordan doesn't look at all like a Jester with that mask on!
-   ++ [Oh, so you know Jordan?]
+  Super cool, very creative. I wish people did parties like this where i'm from. I think it's funny that the {JESTER_NAME} doesn't look at all like a Jester with that mask on!
+   ++ [Oh, so you know {JESTER_NAME}?]
         Yeah, don't know many people here but he's with the kings court so i've had a good chat with him. Super nice guy, sooo funny!
    ++ [I don't know who Jordan is, could you introduce me?]
         Nah, that's the point of a masked party man!
@@ -91,16 +91,100 @@ This is such a cool party isn't it?
 
 == StableMaster
 
-Gday!
+{Gday! | Fancy seeing you again!}
 
--> CharacterSelection
+-> MainQs
+
+
+
+= MainQs
+
++ [How has your day been?]
+   Fine, a bit worried about my horses though, they've been a bit on edge this week and one is a bit sick. 
+    ++ [oh, that's sad!] 
+       Kinda just want to get back to them and make sure they're okay. 
+    ++ [Fair enough.]
+       Yeah, so forgive me for being a bit on edge tonight.
+    -- -> MainQs
++ [What do you think about everyone's masks?]
+    Pretty funny how the general and the judge both have such expressionless masks, suits their personality. I swear those guys basically look like that anyway.
+    ++ [Sounds like you get stuck with them a lot?]
+       More than I would like. 
+    ++ [Maybe they have something to hide.]
+       I wouldn't be suprised. I think the general might be getting a bit power hungry these days.
++ [A lot of people here right?]
+    yeah, once that mayor gets wind of something, a few words to the king and next thing you know the whole town is invited. Be careful what you invite {MAYOR_NAME} too.
+    
+
++ [Bye!]
+  -> CharacterSelection
+  
+ -
+
+-> MainQs
+
+
 
 == Mayor
 
-Good Evening to you!
+Good Evening to you! This is such a wonderful night, I absolutely looove your fit! Oh, I'm so happy that this is hosted tonight, the king is so amazing to do this, just what I wanted! And the mask theme? Perfect! Being a bit of a celebrity I hate the attention you know? Always people wanting to talk, but ah, what can you do? Part of the job am I right?
 
--> CharacterSelection
+-> MQ
 
++ [How's your day?]
+ -> HowDay
+  
+
+= MQ
+
+
+
+
+- 
+-> MQ
+
+= HowDay
+
+My day was amazing! And what a way to end the night! It's been so cool getting to see everyone dressed up.
+
++ [Oh, you know who's who then?]
+   Yeah, but i'm not gonna tell you, that's part of the suprise!
+   ++ [okay, fine]
+     -> MQ
+   ++ [come on, I think I know anyway!]
+     Okay, I'll tell you, but don't tell anyone else! -> WhosWho
++ [Oh really?]
+   Yeah, I pretty much know who everyone is now, hehe!
+   ++ [No way, you're good at this!]
+     -> WhosWho
+   ++ [Don't tell me, it'll ruin the suprise!]
+     Don't worry, I won't! -> MQ
++ [What did you get up to today?]
+  ++ Oh had a meeting with {GENERAL_NAME} The meeting went on for so long you know? I was probably there for hours and hours and hours? And {GENERAL_NAME} barely even said anything the whole time. I don't know what took so long for us to get across. I wanted to get to the party but it just wouldn't end, we had so much to talk about! I guess being the general they're always worried about stuff.
+
+- 
+-> MQ
+
+= WhosWho
+
++ [Who's that guy in the {VISITING_BARON_MASK}?]
+   Actually, you got me there, I don't actually know who that person is! I'll have to go talk to them later on.
++ [Who's in the {BISHOP_MASK}?]
+   Oh, that's {BISHOP_NAME}, you can just tell immediately. Of course, I saw them making that mask one time when I visited them too, so I guess it's a bit easier for me.
+   ++ [uh huh]
+      They really shouldn't have left their mask out like that.
+   ++ [Oh you went to visit them?]
+        yeah, as I was saying, shouldn't leave their mask out like that.
+   --
+ + [Who's the guy in the {JESTER_MASK}?]
+    Oh, that's definitely the Jester. I didn't see him but you can just tell by the way he walks, it's almost like he's tripping over himself trying so desperately to make people laugh.
+  + [Bet you don't know who's in the {STEWARD_MASK}!]
+    Oh hmm... no that's {STEWARD_NAME}, you can tell by the straw still on their shoes, and besides, they alway come in late to everything! I always say being early makes a better impression, wouldn't you agree?
++ [Anyways...]
+   -> MQ
+- 
+
+-> WhosWho
 == Jester
 
 Hey hey hey!
@@ -109,7 +193,11 @@ Hey hey hey!
 
 == General
 
-Hello kiddo!
+Hello kiddo! 
+
+Haven't seen you around these parts. Got my eye on you.
+
+
 
 -> CharacterSelection
 
