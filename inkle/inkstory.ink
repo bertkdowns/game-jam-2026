@@ -191,7 +191,61 @@ Good Evening to you! This is such a wonderful night, I absolutely looove your fi
 -> WhosWho
 == Jester
 
-Hey hey hey!
+Hey hey hey! Today's a great day! {| |Sing with me, hip hip horray!}
+
+How are you enjoying the party?
+
++ [Kinda sick of it]
+   Hey man, you just gotta get into it! Trust me, it'll be a night to remember! Like your fit, why did you choose it?
+   ++ [It's nice and inconspicuious]
+      Hey, in this enviornment, everything is inconspicuious! Anyways, I'mma go get some more food or something. See ya! -> SeeYa
++ [It's great, best thing ever!]
+   I know right?!? The king is the absolute best for hosting this, I love him so much! Makes it totally worth it that I have to humiliate myself in front of the entire kings court every day! 
+    ++ [Really? Do you think the king is mean?]
+       No of course not, I'm just the Jester it's my job! Pay could be better, but that's what everyone says right?
+    ++ [Yes he's amazing, I love him so much!]
+       Hey hey, next time he needs an army I'll tell him you'd like to be on the front lines protecting him aye? Nah just kidding man, I like you! 
+- 
+
+So what do you think of the coustumes tonight?
+
++ [Not great, I've seen better]
+   Ohhh we got a challenger! I dare you say that to the king, that'd be a laugh! Lucky he didn't hear you!
++ [Oh impeccable, and yours? Absolutely stunning!]
+   Yeah, doesn't really suit my profession much but I'm not on duty here anyways, best thing about the party am I right?!?
+- 
+-> costumes
+
+= costumes
+   
++[I see someone has a similar outfit to you!]
+ Yeah that chatty mayor got the same outfit as me! Really wish they didn't choose a {MAYOR_MASK}. Quite rude!
++ [Those domino people look cool]
+  Ah, that's {VISITING_BARON_NAME} and {STABLEMASTER_NAME} in those matching ones. Don't think they coordinated it either!
++ Good chat!
+  -> SeeYa
+-
+-> costumes
+ 
+
+
++[Bye]
+
+-> CharacterSelection
+
+= SeeYa
+
++ [See Ya]
+ See Ya!
++ [Bye]
+
++ [You're so cool!]
+  Haha, thank you! Not as cool as you though!
+    ++ [Bye]
+
+- 
+
+
 
 -> CharacterSelection
 
