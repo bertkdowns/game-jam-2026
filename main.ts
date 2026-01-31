@@ -166,9 +166,7 @@ scene.heirachy["sprite1"] = Instantiate(SpriteDependencies, {
     },
     distance: 0.2,
     Update() {
-        const rotation = Time.lastTime * 5;
-        this.position = [Math.sin(rotation) * this.distance, Math.cos(rotation) * this.distance, 0];
-    },
+},
 
 });
 scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, {
@@ -178,6 +176,8 @@ scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, {
     },
     distance: 0.10,
     Update() {
+        const rotation = Time.lastTime * 5;
+        this.position = [Math.sin(rotation) * this.distance, Math.cos(rotation) * this.distance, 0];
     }
 })
 
@@ -350,7 +350,7 @@ function HandleCameraRotation() {
 const MIN_X = -15
 const MAX_X = 15
 const MIN_Y = -15
-const MAX_Y = 8
+const MAX_Y = 12.5
 
 // MOVE 2D 
 function Move2D() {
@@ -369,9 +369,24 @@ function Move2D() {
     x = Math.min(Math.max(x, MIN_X), MAX_X);
     y = Math.min(Math.max(y, MIN_Y), MAX_Y);
 
+    const BG_WIDTH = 5.7;   // Half-width of the background
+    const BG_HEIGHT = 10.2; // Half-height of the background
 
-    camera.position.x += ((x - camera.position.x) * 0.05);
-    camera.position.y += ((y - camera.position.y) * 0.05);
+    // Calculate the target camera position (usually follows the player)
+    let targetCamX = x;
+    let targetCamY = y;
+
+    // Stop the camera if the player is near the background boundary
+    if (targetCamX > BG_WIDTH) targetCamX = BG_WIDTH;
+    if (targetCamX < -BG_WIDTH) targetCamX = -BG_WIDTH;
+    if (targetCamY > BG_HEIGHT) targetCamY = BG_HEIGHT;
+    if (targetCamY < -BG_HEIGHT) targetCamY = -BG_HEIGHT;
+
+    // Smoothly follow the target position
+    camera.position.x += (targetCamX - camera.position.x) * 0.05;
+    camera.position.y += (targetCamY - camera.position.y) * 0.05;
+
+
 }
 
 
