@@ -1,6 +1,6 @@
 import { input } from "../src/engine_core/input.js";
 import { Time } from "../src/engine_core/time.js";
-import { modal } from "../inkle/inkle.js";
+import { modal } from "../inkle/index.js";
 import { Instantiate } from "../src/engine_core/utils.js";
 import { DemoEntity } from "../src/components/StateMachine.js";
 import { SpriteDependencies } from "./LoadAssets.js";
@@ -93,7 +93,10 @@ function checkNearbyNPC(player: PlayerEntity, game: Game): boolean {
 function updateInteractPrompt(isNearNPC: boolean) {
   const prompt = document.getElementById("interact-prompt");
   if (prompt) {
-    if (isNearNPC) {
+    // Hide prompt if modal is open
+    if (modal.stateName == "open") {
+      prompt.classList.remove("show");
+    } else if (isNearNPC) {
       prompt.classList.add("show");
     } else {
       prompt.classList.remove("show");

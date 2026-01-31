@@ -57,6 +57,9 @@ let compiler = new Compiler(inkStory);
 const gameStory = compiler.Compile();
 
 gameStory.BindExternalFunction("closeModal", closeModal);
+gameStory.BindExternalFunction("exitGame", () => {
+  window.close();
+});
 
 //gameStory.ChoosePathString("SecretStory");
 

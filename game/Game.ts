@@ -29,7 +29,7 @@ import { createPlayer } from "./Player";
 import { createStableMasters } from "./StableMasters";
 import { setupInputHandlers } from "./InputHandlers";
 import { setupAudioSystem } from "./AudioSystem";
-import { testrun } from "../inkle/inkle";
+import { testrun } from "../inkle";
 import type {
   PlayerEntity,
   BackgroundEntity,
@@ -141,6 +141,6 @@ export class Game {
     // Start the game loop
     Manager.StartUpdateLoop();
     console.log("started gameloop");
-    testrun();
+    // testrun(); // Commented out so modal starts closed
   }
 }

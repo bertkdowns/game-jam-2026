@@ -12,7 +12,7 @@ import {
   MAYOR,
   GENERAL,
   JUDGE,
-} from "../inkle/inkle.js";
+} from "../inkle/index.js";
 import { Game } from "./Game.js";
 
 const stableMasterPositions = {
