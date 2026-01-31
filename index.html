@@ -54,6 +54,8 @@
             border-radius: 0.5rem;
             text-align: left;
             transition: background 0.15s ease;
+            background-color: white;
+            min-height: '40px'
         }
 
         #DialogChoices button:hover {
@@ -71,7 +73,7 @@
         }
 
         #fullscreen {
-            float: right;
+            float: right;[]
             height: 2.5em;
             aspect-ratio: 1;
         }
@@ -91,16 +93,19 @@
             class="absolute w-[1920px] h-[1080px] flex flex-col justify-center items-center bg-transparent">
             <!-- MAIN DIALOG CONTAINER -->
             <div class="flex flex-col w-[100%] h-[100%] bg-black/30 rounded-md text-black p-8 shadow-lg">
-                <div class="flex gap-6 rounded-md text-white">
+                <div class="flex flex-1 gap-6 rounded-md text-white">
                     <!-- LEFT: CHARACTER -->
-                    <div class="relative flex-[1] flex items-end justify-start h-[550px]">
-                        <img src="./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"
-                            id="CharacterImage" class="w-full h-full object-cover object-top pointer-events-none"
-                            style="pointer-events: none" />
-                    </div>
+            <div class="  h-[800px] w-[968px] overflow-hidden">
+
+                <img src="./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"
+                id="CharacterImage" class="relative items-end justify-start  object-cover  w-full pointer-events-none"
+                style="pointer-events: none;" />
+            </div>
+                
+                   
 
                     <!-- RIGHT: DIALOG + OPTIONS -->
-                    <div class="flex-[1.5] flex flex-col gap-4 h-full">
+                    <div class="flex flex-col gap-4">
                         <div class="flex items-start gap-2 mt-6">
                             <!-- Bubble -->
                             <div class="relative bg-white text-gray-900 rounded-2xl p-5 shadow-lg">
@@ -141,7 +146,7 @@
                         <!-- Choices -->
                     </div>
                 </div>
-                <div id="DialogChoices" class="grid grid-cols-2 gap-2 bg-white">
+                <div id="DialogChoices" class="flex flex-1 grid grid-cols-2 gap-2 min-h-[300px]">
                     <!-- Choice buttons injected here -->
                 </div>
             </div>
