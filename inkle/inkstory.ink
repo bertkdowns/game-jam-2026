@@ -1,3 +1,7 @@
+// EXTERNAL exitGame()
+EXTERNAL closeModal()
+EXTERNAL switchCharacter(characterName)
+
 Hello!
 
 * [Begin]-> 
@@ -27,20 +31,27 @@ CONST STEWARD_MASK = "fancy green mask"
 CONST CHEF_MASK = "split face mask"
 
 
-EXTERNAL closeModal()
+
 == function closeModal()==
 Close Modal
 ~ return 
 
-EXTERNAL switchCharacter(characterName)
-== function switchCharacter(characterName)==
+
+
+== function exitGame()  ==
+Exit Game
+~ return
+
+
+
+== function switchCharacter(characterName) ==
 Switch Character {characterName}
 ~ return
 
-EXTERNAL exitGame()
-== function exitGame() ==
-Exit Game
-~ return
+
+
+
+
 
 
 == CharacterSelection
@@ -60,9 +71,42 @@ Choose a character: Choose a character:
  + [Steward] {switchCharacter("Steward")} -> Steward
  + [HeadChef] {switchCharacter("HeadChef")}-> HeadChef
  + [Tutorial] -> Tutorial
+ + [GuessThePeople] -> GuessThePeople
+
+
+== GuessThePeople
+
+So, you think you know who the assasins are?
+
+-> CharacterSelection
+= ChoosePerson
+
+VAR VISITINGBARONGUILTY = false
+VAR STABLEMASTERGUILTY = false
+VAR MAYORGUILTY = false
+VAR JESTERGUILTY = false
+VAR GENERALGUILTY = false
+VAR JUDGEGUILTY = false
+VAR BISHOPGUILTY = false
+VAR STEWARDGUILTY = false
+VAR ENGINEERGUILTY = false
+VAR CHEFGUILTY = false
+
+{ VISITINGBARONGUILTY :
+ + [The Visiting Baron is not guilty!] 
+    ~VISITINGBARONGUILTY = false
+    -> ChoosePerson
+ - else:
+  + [The Visiting Baron is guilty!] 
+      ~ VISITINGBARONGUILTY = true 
+      -> ChoosePerson
+}
++ Someone else
+- 
 
 
 
+-> END
 
 
 
@@ -662,7 +706,8 @@ Yep, you'll only get one shot! Keep track of everyone's names, occupations, and 
 == LeaveGame
 
 {exitGame()}
--> END
+
+-> CharacterSelection
 
 
 
