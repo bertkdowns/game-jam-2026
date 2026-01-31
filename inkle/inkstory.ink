@@ -1,6 +1,8 @@
 // EXTERNAL exitGame()
 EXTERNAL closeModal()
 EXTERNAL switchCharacter(characterName)
+EXTERNAL nextScene()
+
 
 Hello!
 
@@ -35,6 +37,9 @@ CONST CHEF_MASK = "split face mask"
 == function closeModal()==
 Close Modal
 ~ return 
+== function nextScene()==
+Close Modal
+~ return 
 
 
 
@@ -65,6 +70,25 @@ Choose a character:
  + [HeadEngineer] {switchCharacter("HeadEngineer")} -> HeadEngineer
  + [Steward] {switchCharacter("Steward")} -> Steward
  + [HeadChef] {switchCharacter("HeadChef")}-> HeadChef
+ + [King] {switchCharacter("King")}-> King
+
+
+
+== King
+
+So, you know who's the assasin right?
+
++ Yep
+  -> NextScene
++ Not yet
+
+-> CharacterSelection
+
+=NextScene
+
+ ~ nextScene()
+
+-> CharacterSelection
 
 
 -> CharacterSelection

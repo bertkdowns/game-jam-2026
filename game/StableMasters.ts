@@ -15,6 +15,7 @@ const NPCPositions = {
   [CHARACTERS.MAYOR]: [-10, -7, 0],
   [CHARACTERS.GENERAL]: [1, -7, 0],
   [CHARACTERS.JUDGE]: [-1, 0, 0],
+  [CHARACTERS.KING]: [0, 15, 0],
 };
 
 const tutorialPositions = {
