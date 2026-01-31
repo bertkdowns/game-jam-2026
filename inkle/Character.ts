@@ -15,6 +15,7 @@ export class Character {
 
   characterImage: string;
   name: string;
+  accused: boolean = false;
   constructor(character: CHARACTERS) {
     this.characterImage = CHARACTERS_PIC[character];
     this.name = character;
@@ -36,14 +37,14 @@ export class Character {
   }
 }
 
-const characters: { [key: string]: Character } = {
+export const characters: { [key: string]: Character } = {
   HeadEngineer: new Character(CHARACTERS.HEAD_ENGINEER),
   StableMaster: new Character(CHARACTERS.STABLEMASTER),
   HeadChef: new Character(CHARACTERS.HEADCHEF),
   VisitingBaron: new Character(CHARACTERS.VISISING_BARON),
   Jester: new Character(CHARACTERS.JESTER),
   Judge: new Character(CHARACTERS.JUDGE),
-  Bishop: new Character(CHARACTERS.BISHOP, CHARACTERS_PIC[CHARACTERS.BISHOP]),
+  Bishop: new Character(CHARACTERS.BISHOP),
   Steward: new Character(CHARACTERS.STEWARD),
   General: new Character(CHARACTERS.GENERAL),
   Mayor: new Character(CHARACTERS.MAYOR),
