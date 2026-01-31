@@ -75,36 +75,6 @@ Choose a character:
  + [GuessThePeople] -> GuessThePeople
 
 
-== GuessThePeople
-
-So, you think you know who the assasins are?
-
--> ChoosePerson
-= ChoosePerson
-
-VAR VISITINGBARONGUILTY = false
-VAR STABLEMASTERGUILTY = false
-VAR MAYORGUILTY = false
-VAR JESTERGUILTY = false
-VAR GENERALGUILTY = false
-VAR JUDGEGUILTY = false
-VAR BISHOPGUILTY = false
-VAR STEWARDGUILTY = false
-VAR ENGINEERGUILTY = false
-VAR CHEFGUILTY = false
-
-
-+ Nobody
-+ { VISITINGBARONGUILTY:
-    "The Visiting Baron is not guilty"
-  - else:
-    "The Visiting Baron is guilty"
-  }
-    ~ VISITINGBARONGUILTY = !VISITINGBARONGUILTY
-+ Someone else
-- 
-
-
 -> CharacterSelection
 -> END
 
