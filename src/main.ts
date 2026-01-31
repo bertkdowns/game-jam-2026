@@ -1,3 +1,4 @@
+
 @external("env", "logf")
 declare function logf(val: f32): f32;
 /// intended use case
@@ -8,7 +9,7 @@ declare function logf(val: f32): f32;
 
 // called from main.js atm (lets me test logf) to see if its working 
 
-export function run(): void {
+export async function run(): Promise<void> {
     const out: f32 = logf(67); // Calls the 'logf' function from the 'env' module in the host
-  console.log(out.toString()); 
+    console.log(out.toString());
 }
