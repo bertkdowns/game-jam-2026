@@ -1,6 +1,6 @@
 import { input } from "../src/engine_core/input.js";
 import { Time } from "../src/engine_core/time.js";
-import { modal } from "../inkle/inkle.js";
+import { modal } from "../inkle/index.js";
 import { Instantiate } from "../src/engine_core/utils.js";
 import { DemoEntity } from "../src/components/StateMachine.js";
 import { SpriteDependencies } from "./LoadAssets.js";
