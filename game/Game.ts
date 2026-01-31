@@ -141,6 +141,6 @@ export class Game {
     // Start the game loop
     Manager.StartUpdateLoop();
     console.log("started gameloop");
-    testrun();
+    // testrun(); // Commented out so modal starts closed
   }
 }

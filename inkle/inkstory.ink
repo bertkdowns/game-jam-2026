@@ -1,6 +1,6 @@
 Hello!
 
-* [Begin]-> CharacterSelection
+* [Begin]-> 
 
 // Character Names
 CONST VISITING_BARON_NAME = "Alex"
@@ -40,8 +40,10 @@ Switch Character {characterName}
 
 == CharacterSelection
 
-Choose a character: Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:Choose a character:
+// comment this out for debugging
+{closeModal()}
 
+Choose a character: Choose a character:
  + [VisitingBaron] {switchCharacter("VisitingBaron")}  -> VisitingBaron
  + [StableMaster] {switchCharacter("StableMaster")} -> StableMaster
  + [Mayor] {switchCharacter("Mayor")} -> Mayor
@@ -83,7 +85,6 @@ This is such a cool party isn't it?
    Oh the foood is sooo good! Taylor is such a good cook, I totally wish we had someone like that cooking food at home for us. I would kill for it!
 + [Anyways, see you around!]
    Bye!
-   ++ [Exit]
      -> FINISH_TALKING
    
 - 

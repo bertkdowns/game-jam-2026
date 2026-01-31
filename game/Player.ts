@@ -93,7 +93,10 @@ function checkNearbyNPC(player: PlayerEntity, game: Game): boolean {
 function updateInteractPrompt(isNearNPC: boolean) {
   const prompt = document.getElementById("interact-prompt");
   if (prompt) {
-    if (isNearNPC) {
+    // Hide prompt if modal is open
+    if (modal.stateName == "open") {
+      prompt.classList.remove("show");
+    } else if (isNearNPC) {
       prompt.classList.add("show");
     } else {
       prompt.classList.remove("show");

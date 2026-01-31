@@ -7,7 +7,18 @@ import {
 export class Modal {
   constructor() {
     this.skillSystem = new StateSystem(this);
-    this.state = 0;
+    // Initialize state after DOM is ready to ensure hideModal can find the element
+    const initClose = () => {
+      this.state = "close";
+      // Also explicitly hide it to ensure it's closed
+      Modal.hideModal();
+    };
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initClose);
+    } else {
+      // DOM already loaded, but use setTimeout to ensure it's fully ready
+      setTimeout(initClose, 0);
+    }
   }
   skillSystem: StateSystem;
 

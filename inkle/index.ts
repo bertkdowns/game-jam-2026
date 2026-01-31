@@ -20,7 +20,7 @@ bindExternalFunctions(switchCharacter);
 
 // Test function for initializing the dialogue system
 export function testrun() {
-  modal.state = 0;
+  modal.state = "close";
   const character = new Character(
     HEAD_ENGINEER,
     "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"

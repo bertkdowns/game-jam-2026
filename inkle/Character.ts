@@ -10,7 +10,12 @@ import {
   GENERAL,
   MAYOR,
 } from "./constants.js";
-import { getGameStory, continueStory, clearText, setCharacterName } from "./StoryManager.js";
+import {
+  getGameStory,
+  continueStory,
+  clearText,
+  setCharacterName,
+} from "./StoryManager.js";
 import { openModal } from "./Modal.js";
 
 export class Character {

@@ -1,5 +1,6 @@
 import { Story, Compiler } from "inkjs/compiler/Compiler";
 import { Choice } from "inkjs/engine/Choice";
+// @ts-ignore
 import inkStory from "./inkstory.ink?raw";
 import { closeModal } from "./Modal.js";
 
@@ -16,6 +17,8 @@ interface DialogMessage {
 
 let conversationHistory: DialogMessage[] = [];
 let currentCharacterName: string = "";
+let isAnimating = false;
+let currentAnimationInterval: NodeJS.Timeout | null = null;
 
 // Bind external functions - these will be set up after Character module loads
 gameStory.BindExternalFunction("closeModal", closeModal);
@@ -27,8 +30,8 @@ export function bindExternalFunctions(
   gameStory.BindExternalFunction("switchCharacter", switchCharacterFn);
 }
 
-export function continueStory() {
-  displayText();
+export async function continueStory() {
+  await displayText();
   setDialogOptions(gameStory.currentChoices);
 }
 
@@ -39,17 +42,53 @@ function setDialogOptions(choices: Choice[]) {
     let choice = choices[i];
     let button = document.createElement("button");
     button.innerText = choice.text;
-    button.onclick = () => {
+    button.disabled = isAnimating; // Disable button if animation is happening
+    button.onclick = async () => {
+      // Skip animation if one is happening
+      if (isAnimating && currentAnimationInterval) {
+        clearInterval(currentAnimationInterval);
+        currentAnimationInterval = null;
+        isAnimating = false;
+        // Complete the current animation by showing full text
+        const container = document.getElementById("ConversationContainer");
+        if (container && container.children.length > 0) {
+          const lastBubble = container.children[
+            container.children.length - 1
+          ] as HTMLElement;
+          const textElement = lastBubble.querySelector("p");
+          const lastMessage =
+            conversationHistory[conversationHistory.length - 1];
+          if (
+            textElement &&
+            lastMessage &&
+            lastMessage.type === "character" &&
+            !lastMessage.animated
+          ) {
+            textElement.textContent = lastMessage.text;
+            lastMessage.animated = true;
+            // Scroll to bottom after completing animation
+            requestAnimationFrame(() => {
+              container.scrollTop = container.scrollHeight;
+            });
+          }
+        }
+      }
+
       // Add player's choice to conversation history
       addPlayerDialog(choice.text);
       gameStory.ChooseChoiceIndex(i);
-      continueStory();
+      await continueStory();
     };
     dialogChoicesDiv.appendChild(button);
   }
 }
 
 async function displayText() {
+  // Prevent duplicate calls
+  if (isAnimating) {
+    return;
+  }
+
   // Collect all text first
   const textSegments: string[] = [];
   while (gameStory.canContinue) {
@@ -66,7 +105,16 @@ async function displayText() {
 }
 
 async function addCharacterDialog(text: string) {
+  // Prevent duplicate messages - check if the last message is the same
+  if (conversationHistory.length > 0) {
+    const lastMessage = conversationHistory[conversationHistory.length - 1];
+    if (lastMessage.type === "character" && lastMessage.text === text) {
+      return; // Already added this message
+    }
+  }
+
   // Add to history first (mark as not animated yet)
+  const messageIndex = conversationHistory.length;
   conversationHistory.push({
     type: "character",
     text: text,
@@ -77,6 +125,9 @@ async function addCharacterDialog(text: string) {
   // Render all messages
   renderConversation();
 
+  // Disable all choice buttons during animation
+  disableChoiceButtons(true);
+
   // Animate the last character message
   const container = document.getElementById("ConversationContainer");
   if (container && container.children.length > 0) {
@@ -85,14 +136,20 @@ async function addCharacterDialog(text: string) {
     ] as HTMLElement;
     const textElement = lastBubble.querySelector("p");
     if (textElement) {
-      const message = conversationHistory[conversationHistory.length - 1];
+      const message = conversationHistory[messageIndex];
       if (!message.animated) {
+        isAnimating = true;
         textElement.textContent = "";
-        await typewriterEffect(textElement, text);
+        await typewriterEffect(textElement, text, container);
         message.animated = true;
+        isAnimating = false;
+        currentAnimationInterval = null;
       }
     }
   }
+
+  // Re-enable choice buttons after animation
+  disableChoiceButtons(false);
 }
 
 function addPlayerDialog(text: string) {
@@ -114,8 +171,11 @@ function renderConversation() {
     container.appendChild(bubble);
   }
 
-  // Auto-scroll to bottom
-  container.scrollTop = container.scrollHeight;
+  // Auto-scroll to bottom (newest messages)
+  // Use requestAnimationFrame to ensure DOM is updated before scrolling
+  requestAnimationFrame(() => {
+    container.scrollTop = container.scrollHeight;
+  });
 }
 
 function createDialogBubble(message: DialogMessage): HTMLElement {
@@ -165,22 +225,49 @@ function createDialogBubble(message: DialogMessage): HTMLElement {
 function typewriterEffect(
   element: HTMLElement,
   text: string,
+  container: HTMLElement,
   speed: number = 30
 ): Promise<void> {
   return new Promise((resolve) => {
+    // Cancel any existing animation
+    if (currentAnimationInterval) {
+      clearInterval(currentAnimationInterval);
+    }
+
     let index = 0;
     element.textContent = "";
 
-    const interval = setInterval(() => {
+    currentAnimationInterval = setInterval(() => {
       if (index < text.length) {
         element.textContent = text.substring(0, index + 1);
         index++;
+        // Auto-scroll to bottom during animation
+        requestAnimationFrame(() => {
+          container.scrollTop = container.scrollHeight;
+        });
       } else {
-        clearInterval(interval);
+        if (currentAnimationInterval) {
+          clearInterval(currentAnimationInterval);
+          currentAnimationInterval = null;
+        }
+        // Final scroll to bottom
+        requestAnimationFrame(() => {
+          container.scrollTop = container.scrollHeight;
+        });
         resolve();
       }
     }, speed);
   });
+}
+
+function disableChoiceButtons(disabled: boolean) {
+  const dialogChoicesDiv = document.getElementById("DialogChoices");
+  if (dialogChoicesDiv) {
+    const buttons = dialogChoicesDiv.querySelectorAll("button");
+    buttons.forEach((button) => {
+      button.disabled = disabled;
+    });
+  }
 }
 
 export function clearText() {

@@ -6,6 +6,7 @@
   <title>WebGPU + WASM</title>
 
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="stylesheet" href="index.css">
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
@@ -15,239 +16,54 @@
 
   <!-- WebGPU / WASM entry -->
   <script type="module" src="./main.ts"></script>
-
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
-    @import url("https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap");
-
-    body {
-      padding: 0;
-      margin: auto;
-      height: max-content;
-      width: min-content;
-      font-family: "Coming Soon";
-      font-size: 2.5em;
-    }
-
-    input {
-      display: inline;
-      font-size: inherit;
-      padding: 0.5em;
-      margin: 0.5em;
-      border-radius: 1rem;
-      font-family: inherit;
-    }
-
-    canvas {
-      box-sizing: content-box;
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    #DialogChoices {
-      font-size: 0.6em;
-      overflow-y: auto;
-    }
-
-    #DialogChoices button {
-      padding: 0.5em 0.75em;
-      /*background-color: black;*/
-      flex: 1;
-      border-radius: 0.5rem;
-      text-align: left;
-      transition: background 0.15s ease;
-      background-color: white;
-      min-height: 60px;
-      max-height: 60px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    #DialogChoices button:hover {
-      background-color: #afacac;
-    }
-
-    #CharacterTalk {
-      font-size: 0.9em;
-      line-height: 1.3;
-    }
-
-    #ConversationContainer {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
-    }
-
-    #ConversationContainer::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    #ConversationContainer::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    #ConversationContainer::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 255, 255, 0.3);
-      border-radius: 4px;
-    }
-
-    #ConversationContainer::-webkit-scrollbar-thumb:hover {
-      background-color: rgba(255, 255, 255, 0.5);
-    }
-
-    .dialog-bubble {
-      font-size: 0.9em;
-      line-height: 1.3;
-    }
-
-    .dialog-bubble-character {
-      align-self: flex-start;
-    }
-
-    .dialog-bubble-player {
-      align-self: flex-end;
-    }
-
-    .fa-input {
-      font-family: "Font Awesome 5 Free", "Helvetica", sans-serif;
-      font-weight: 900;
-    }
-
-    #controls {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      align-items: flex-end;
-    }
-
-    .top-controls {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    #fullscreen {
-      height: 1.8em;
-      width: 1.8em;
-      aspect-ratio: 1;
-      cursor: pointer;
-      font-size: 0.9em;
-      border-radius: 0.4rem;
-      background-color: rgba(255, 255, 255, 0.9);
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.15s ease;
-    }
-
-    #fullscreen:hover {
-      background-color: rgba(255, 255, 255, 1);
-    }
-
-    #mute-button {
-      height: 1.8em;
-      width: 1.8em;
-      aspect-ratio: 1;
-      cursor: pointer;
-      font-size: 0.9em;
-      border-radius: 0.4rem;
-      background-color: rgba(255, 255, 255, 0.9);
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.15s ease;
-    }
-
-    #mute-button:hover {
-      background-color: rgba(255, 255, 255, 1);
-    }
-
-    .audio-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      align-items: flex-end;
-    }
-
-    .audio-button {
-      padding: 0.3em 0.5em;
-      border-radius: 0.4rem;
-      text-align: left;
-      transition: background 0.15s ease;
-      background-color: rgba(255, 255, 255, 0.9);
-      border: none;
-      cursor: pointer;
-      font-size: 0.5em;
-      white-space: nowrap;
-    }
-
-    .audio-button:hover {
-      background-color: rgba(255, 255, 255, 1);
-    }
-
-    #interact-prompt {
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      background-color: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 0.5em 1em;
-      border-radius: 0.5rem;
-      font-size: 0.6em;
-      display: none;
-      pointer-events: none;
-      white-space: nowrap;
-    }
-
-    #interact-prompt.show {
-      display: block;
-    }
-  </style>
 </head>
 
 <body>
-  <div style="position: relative; height: 1080px; width: 1920px">
+  <!-- GAME -->
+  <div style="height: 1080px; width: 1920px">
+
+    <!-- INTERACTION MODAL -->
     <dialog id="modal" style="display: none; /* close modal by default**/"
       class="absolute w-[1920px] h-[1080px] flex flex-col justify-center items-center bg-transparent">
+
       <!-- MAIN DIALOG CONTAINER -->
       <div class="flex flex-col w-[100%] h-[100%] bg-black/30 rounded-md text-black p-8 shadow-lg">
+
+        <!-- TOP SECTION: NPC PICTURE + DIALOG -->
         <div class="flex w-full gap-6 rounded-md text-white">
-          <!-- LEFT: CHARACTER -->
+          <!-- LEFT: NPC PICTURE -->
           <div class="h-[700px] w-[968px] overflow-hidden">
 
-            <img src="./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG" id="CharacterImage"
+            <img src="#" id="CharacterImage"
               class="relative items-end justify-start  object-cover  w-full pointer-events-none"
               style="pointer-events: none;" />
           </div>
-          <!-- RIGHT: DIALOG + OPTIONS -->
+
+          <!-- RIGHT: DIALOG -->
           <div class="h-full w-[50%] flex flex-col items-end justify-end gap-4">
             <!-- Scrollable conversation container -->
-            <div id="ConversationContainer" class="flex flex-col gap-4 w-full overflow-y-auto flex-1 pr-2"
-              style="max-height: 600px;">
+            <div id="ConversationContainer"
+              class="flex flex-col gap-4 w-full overflow-y-auto overflow-x-hidden flex-1 pb-2"
+              style="max-height: 600px; justify-content: flex-end;">
               <!-- Dialog bubbles will be dynamically added here -->
             </div>
 
             <!-- Choices -->
           </div>
         </div>
+
+        <!-- BOTTOM SECTION: DIALOG CHOICE BUTTONS -->
         <div id="DialogChoices" class="flex flex-1 grid grid-cols-2 gap-2">
           <!-- Choice buttons injected here -->
         </div>
       </div>
     </dialog>
 
+    <!-- GAME CANVAS -->
     <canvas width="1920" height="1080"></canvas>
   </div>
 
-  <!-- CONTROLS -->
+  <!-- CONTROLS OVERLAY-->
   <div id="controls">
     <div class="top-controls">
       <input type="button" id="fullscreen" class="fa-input" value="&#xf065;" />
