@@ -4,11 +4,7 @@ EXTERNAL switchToMainGame()
 
 == Start
 
-
-+ [<Walk up to the gate>]
- Hey, good to see you again! you're a detective, aren't you?
-- 
-
+Hey, good to see you again! you're a detective, aren't you?
 
 + [Yep!]
 + [What's up?]

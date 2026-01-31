@@ -56,7 +56,12 @@ Switch Character {characterName}
 == CharacterSelection
 
 // comment this out for debugging
-//{closeModal()}
+{closeModal()}
+
++ [...]
+
+- 
+
 
 Choose a character:
 
@@ -331,7 +336,7 @@ Good day!
  ++ [Ah, must have been lovely. But there must be something of value here for an intellectual such as yourself, right?]
     -> whos_the_bishop
 + [Quite the party, isn't it?]
-  Not as good as the old days, but better than recently. Is the guy in the red mask the chef? I saw him go into the kitchen before, looking worried. But the food's real good, strange he was so shifty.
+  Not as good as the old days, but better than recently. Is the girl in the red mask the chef? I saw him go into the kitchen before, looking worried. But the food's real good, strange he was so shifty.
 + [Did someone copy your costume?]
   Yeah, Nico seems to have also gone with a {GENERAL_MASK}. Oh well, I don't really care.
 + [Gotta go, see ya!]
