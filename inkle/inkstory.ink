@@ -84,7 +84,7 @@ This is such a cool party isn't it?
 + [Anyways, see you around!]
    Bye!
    ++ [Exit]
-     -> CharacterSelection
+     -> FINISH_TALKING
    
 - 
 
@@ -92,7 +92,7 @@ This is such a cool party isn't it?
 
 
 
--> CharacterSelection
+-> FINISH_TALKING
 
 == StableMaster
 
@@ -122,7 +122,7 @@ This is such a cool party isn't it?
     
 
 + [Bye!]
-  -> CharacterSelection
+  -> FINISH_TALKING
   
  -
 
@@ -141,7 +141,7 @@ Good Evening to you! This is such a wonderful night, I absolutely looove your fi
  My day was amazing! And what a way to end the night! It's been so cool getting to see everyone dressed up. -> HowDay
 + [Bye]
 
--> CharacterSelection
+-> FINISH_TALKING
   
 
 = HowDay
@@ -165,7 +165,7 @@ Good Evening to you! This is such a wonderful night, I absolutely looove your fi
   ++ [Very cool.]
       -> HowDay
 + [Bye!]
-  -> CharacterSelection
+  -> FINISH_TALKING
 - 
 -> MQ
 
@@ -231,7 +231,7 @@ So what do you think of the coustumes tonight?
 
 +[Bye]
 
--> CharacterSelection
+-> FINISH_TALKING
 
 = SeeYa
 
@@ -247,7 +247,7 @@ So what do you think of the coustumes tonight?
 
 
 
--> CharacterSelection
+-> FINISH_TALKING
 
 == General
 
@@ -273,7 +273,7 @@ Hello kiddo!
  See ya.
 
 
--> CharacterSelection
+-> FINISH_TALKING
 
 == Judge
 
@@ -320,12 +320,14 @@ Do you even know what's going on?
  * Jokes, there's more
  * CHoose MEEE!
 
-- ~ closeModal()
-    -> END
+- -> FINISH_TALKING
 
 == SecretStory
 
 This is a secret story!
-    -> END
+-> FINISH_TALKING
 
 
+=== FINISH_TALKING === 
+~ closeModal()
+-> END
