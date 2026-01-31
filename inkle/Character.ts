@@ -49,6 +49,7 @@ export const characters: { [key: string]: Character } = {
   General: new Character(CHARACTERS.GENERAL),
   Mayor: new Character(CHARACTERS.MAYOR),
   Tutorial: new Character(CHARACTERS.TUTORIAL_CHARACTER),
+  King: new Character(CHARACTERS.KING),
 };
 
 export function switchCharacter(characterName: string) {
