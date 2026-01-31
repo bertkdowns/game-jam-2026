@@ -1,18 +1,46 @@
 import { Story, Compiler } from 'inkjs/compiler/Compiler';
 import { Choice } from 'inkjs/engine/Choice';
 import inkStory from './inkstory.ink?raw'
+import { StateSystem,State, StateList } from '../src/components/StateMachine.js';
 
+
+
+export const ModalState = new StateSystem(this);
+
+
+class Modal {
+   skillSystem = new StateSystem(this);
+
+    // setter for state allows some transformation before updating the state
+    set state(newState) { this.skillSystem.set(newState) };
+    get state() { return this.skillSystem.currentState };
+
+  static STATES = new StateList({
+        inModal: new State("inModal", {
+            onStart: () => { console.log(`switching to idle`) },
+            onExit: () => { console.log(`finishing idle`) },
+            onEvent: e => e.whileIdle(e),
+        }),
+        outOfModal: new State("outOfModal", {
+            onStart: e => e.onJump(e),
+            onExit: () => { console.log("end of jump"); },
+        }),
+
+        
+    });
+}
 
 console.log("Inkle test")
 
 
 
 
-function openModal() {
+
+export function openModal() {
   let modal = document.querySelector("#modal").style.display = "flex";
 }
 
-function closeModal() {
+export function closeModal() {
   let modal = document.querySelector("#modal").style.display = "none";
 }
 
