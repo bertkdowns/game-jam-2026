@@ -1,4 +1,5 @@
 import { characters } from "./Character.js";
+import { CHARACTERS } from "./constants.js"
 
 export function renderAccusations() {
   document.getElementById("modal").style.display = "none";
@@ -8,10 +9,16 @@ export function renderAccusations() {
 
 
   for (let charac of Object.values(characters)) {
+    if (charac.name === CHARACTERS.TUTORIAL_CHARACTER || charac.name === CHARACTERS.KING) {
+      continue; // Skip tutorial character and king
+    }
+    let div = document.createElement("div");
+
     let node = document.createElement("img");
     node.src = charac.characterImage;
-    node.style.width = "50px";
+    node.style.width = "100px";
     node.style.cursor = "pointer";
+    div.className = "flex flex-row items-center gap-2 text-white"
     node.onclick = () => {
       charac.accused = !charac.accused;
       renderAccusations();
@@ -19,7 +26,12 @@ export function renderAccusations() {
     if (charac.accused) {
       node.style.border = "2px solid red";
     }
-    accusationsDiv.appendChild(node);
+    div.appendChild(node);
+    accusationsDiv.appendChild(div);
+
+    let span = document.createElement("span");
+    span.innerText = charac.name;
+    div.appendChild(span);
 
   }
 
