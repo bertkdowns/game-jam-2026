@@ -278,24 +278,271 @@ Hello kiddo!
 == Judge
 
 Good day!
+-> continue_chat
+
+
+= continue_chat 
+
++ [What have you been up to?]
+ Well, before this party I'd been reading The Lord of the Rings, my annual tradition. Sad that it got interrupted, I was up to my favourite part.
+ ** [What's that book? Never heard of it]
+    -> judge_lotr
+ ++ [Ah, must have been lovely. But there must be something of value here for an intellectual such as yourself, right?]
+    -> whos_the_bishop
++ [Quite the party, isn't it?]
+  Not as good as the old days, but better than recently. Is the guy in the red mask the chef? I saw him go into the kitchen before, looking worried. But the food's real good, strange he was so shifty.
++ [Did someone copy your costume?]
+  Yeah, Nico seems to have also gone with a {GENERAL_MASK}. Oh well, I don't really care.
++ [Gotta go, see ya!]
+  -> CharacterSelection
+- 
+ 
+ -> continue_chat
+ 
+= whos_the_bishop
+
+I've been to so many of these things now, you wouldn't believe it. I remember as a young lad when Riley and I came for the first time, those parties were the days. People had a bit more reason then.
+
++ [Riley? Not sure if I met him.]
+  Oh, you know, everyone just calls him Bishop these days, but he and I go way back.
++ [I would have loved to be there.]
+  Yeah, it was quite the time. 
+  
+- Crazy he's the bishop now, didn't see that one coming. Guess with age does come wisdom.
+
+-> continue_chat
+
+
 
 -> CharacterSelection
+
+
+=== judge_lotr ===
+
+You've never heard of it?
+
+*   [Never heard of what?]
+    -> judge_lotr_rant
+*   [Lord of the Rings?]
+    Yes. *That* Lord of the Rings.
+    -> judge_lotr_continue
+*   [Oh, wait maybe I have.]
+    Hm. We'll see.
+    -> judge_lotr_quiz
+
+
+=== judge_lotr_rant ===
+
+Never heard of it.
+Never.
+Heard.
+Of it.
+
+All right. Sit down. This may take a moment.
+
+Books first. *Books*, mind you, not whatever theatrical nonsense came later.
+Three volumes. Six parts. Appendices longer than most respectable novels.
+
+Do you know how it *starts*?
+
+*   [With a war?]
+    No.
+    A birthday party.
+    -> judge_lotr_party
+*   [In a tavern?]
+     No.
+    Hobbits don't even like taverns yet.
+    -> judge_lotr_party
+*   "I have no idea."
+    Exactly.
+    -> judge_lotr_party
+
+
+=== judge_lotr_party ===
+
+A birthday party.
+Bilbo Baggins. Eleventy-one years old.
+Vanishes mid-speech. Disgraceful. Magnificent.
+
+And already, already, people miss the point.
+They think it's about swords.
+Or magic.
+Or that blasted ring.
+
+It's about *leaving home*.
+
+Did you catch that?
+
+*   [Yes?]
+    Hm. We'll see.
+    -> judge_lotr_continue
+*   [Not really.]
+    Of course you didn't.
+    -> judge_lotr_continue
+*   [Isn't it about the ring?]
+    Everyone asks that.
+    -> judge_lotr_ring
+
+
+=== judge_lotr_ring ===
+
+The ring is a problem, not a solution. Like power.
+Or authority.
+Or judges, if we're being honest.
+
+It corrupts quietly.
+Slowly.
+Like paperwork.
+
+Frodo doesn't *want* it.
+That's the point.
+Anyone who wants it shouldn't have it.
+
+Simple, really.
+
+-> judge_lotr_continue
+
+
+=== judge_lotr_quiz ===
+
+Fine then.
+Who carries the ring?
+
+*   [Frodo.]
+    Correct.
+    -> judge_lotr_ring
+*   [Gandalf?]
+    Absolutely not.
+    He *knows better*.
+    -> judge_lotr_ring
+*   [Some king?]
+    No, no, no.
+    You're thinking like a historian, not a reader.
+    -> judge_lotr_ring
+
+
+=== judge_lotr_continue ===
+ And then there are the chapters people complain about.
+
+Tom Bombadil.
+Trees that talk back.
+Songs that go on too long.
+
+I ask you—what is a world, if not a place that refuses to hurry for you?
+
+Anyway.
+
+I suppose I shouldn't expect everyone to have read it. Attention spans have declined.
+As has patience.
+And respect for footnotes.
+
+Still.
+If you ever find yourself wondering why duty feels heavier than desire—
+
+That's why.
+
+-> judge_lotr_end
+
+
+=== judge_lotr_end ===
+
+Now.
+Where were we?
+
+-> Judge.continue_chat
+
 
 == Bishop
 
-Greetings!
+Greetings, youngster!
+
++ [Youngster?]
+  Hey, if you can sit down without your bones creaking, you're young in my book. The king should've got more chairs.
++ [Greetings!]
+  Hope you're enjoying the party more than this old codger!
+  
+- -> main_loop
+
+= main_loop
+
+
++ [Good to see everyone's enjoying it!]
+   Yeah, but more interesting to see what they do.
+   ++ [a bit of a fan of people watching, are you?]
+     Hey, you learn a lot from observing.
+   ++ [Why do you say that?]
+     There's always something that you learn if you watch and listen carefully.
+   -- I noticed today that Russo hasn't been talking to many people. He seems a bit distant since he lost all that money in that bet. -> bet
++ [Good on you for dragging those old bones out here!]
+  Hey, better watch your tounge! But if {JUDGE_NAME} can do it, I can. Me and the Judge go way back.
++ [What do you think of the theme?]
+  Masks aren't my thing, but this {BISHOP_MASK} is okay. I think {CHEF_NAME}'s made a strange choice with the {CHEF_MASK}, but all good.
+   ++ [Fair enough.]
+    We'll see what the next theme is. The last one was bubbles, at least this is better.
+   ++ [See what next year is.]
+     Hey, this won't be the last Global Game Jam!
++ [See ya!]
+- 
+  -> CharacterSelection
 
 -> CharacterSelection
+
+= bet
+
++ [bet?] 
+  Yeah, I think he bet against the king at the last horserace. Was close, but he got unlucky that day.
++ [Ah, risky move.]
+  I always tell them, it's not worth it, and they never listen.
+ 
+ - 
+-> main_loop
 
 == Steward
 
 Yo wassup?
+-> chat_loop
 
+=chat_loop
+
++ [I saw you came in late, must have been a busy day!]
+  Yeah, the king's always got me working hard. I'm super busy all the time.
++ [What do you think about the dance setup?]
+  What I'm wondering is why there are so many animals in the pen out the back? Strange that Russo put them there. They could easily stampede and that would be very dangerous.
++ [I like your style!] 
+  Thank you! I pretty hurriedly put it together. My favourite's probably {ENGINEER_NAME}'s {ENGINEER_MASK}, they did a really good job with that. Unusual for them to put so much effort in something that doesn't matter that much.
++ [See ya!]
 -> CharacterSelection
 
+- -> chat_loop
 == HeadChef
 
 Bonjour!
+
+
+
+
+
+
+Hello!
+-> chat_loop
+
+
+= chat_loop
+
++ [what's up?]
+  Food's going great! But my big knife is missing from the kitchen. A carving knife, great for tearing through flesh. 
+  ++ [Oh, that's not good.]
+    Yeah, it could be dangerous in the wrong hands. Ask around to see if anyone's been in the kitchen, will you?
++ [Cool to see such a great turnout!]
+  Yeah, even the visiting baron {VISITING_BARON_NAME} came. He seems to really like my food!
+ 
++ [See ya!]
+ -> CharacterSelection
+- 
+-> chat_loop
+
+
+
 - ~ closeModal()
 
 
@@ -303,22 +550,26 @@ Bonjour!
 
 == HeadEngineer
 
-Once upon a time...
 
- * There were two choices.
- * There were four lines of content.
-
-- They lived happily ever after.
+Hello!
+-> chat_loop
 
 
+= chat_loop
 
--> CharacterSelection
++ [what's up?]
+ Hey man, not really in the mood for talking right now.
+ ++ [Okay fine, have you seen the stablemaster?]
+    {STABLEMASTER_NAME}? Oh, I'm sure he's around somewhere.
++ [Have you seen the steward around?]
+  The steward's here? Suprised that grumpy king let him in. Doesn't really like us lowly folk. Oh, that's him in the {STEWARD_MASK}.
++ [Are you enjoying the dance?]
+  Why is the king staying up on the balcony? He should come down and dance with the rest of us. Trying to make himself look undefeatable.
++ [See ya!]
+ -> CharacterSelection
+- 
+-> chat_loop
 
-
-Do you even know what's going on?
-
- * Jokes, there's more
- * CHoose MEEE!
 
 - -> FINISH_TALKING
 
