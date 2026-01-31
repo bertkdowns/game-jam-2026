@@ -21,7 +21,7 @@ import { DemoEntity } from "./src/components/StateMachine.js";
 import { Transform } from "./src/components/transform.js";
 
 
-import { testrun, switchCharacter } from "./inkle/inkle.js"
+import { testrun, switchCharacter, VISISING_BARON, STABLEMASTER } from "./inkle/inkle.js"
 
 // creates an instance of the object to use for the background (window scene allows me to access objects from the console)
 const scene = window.scene = new Scene();
@@ -143,21 +143,11 @@ const background = window.background = scene.heirachy["background"] = Instantiat
 });
 
 
-
-
-
-
-
-
-scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, {
-    texture: placeholderTexture,
+const interactablePerson = {
     interactionRadius : 3,
     hasTalked :false, 
-    Start() {
-        this.position = [5, 0, 0];
-    },
     
-    Update() {
+    CheckPosition() {
         // 核心：计算玩家到NPC的距离
         const player = window.player;
         const dx = this.position[0] - player.position[0];
@@ -167,7 +157,7 @@ scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, {
         // 🔑 靠近 + 按E键 → 触发对话
         if (distance < this.interactionRadius && input.KeyE && !this.hasTalked) {
             console.log("触发马夫对话！");
-            switchCharacter("StableMaster");  // ← 直接调用你的 Ink 函数
+            switchCharacter(this.characterProfile);  // ← 直接调用你的 Ink 函数
             this.hasTalked = true;  // 防止1帧内多次触发
         }
         
@@ -182,7 +172,38 @@ scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, {
             this.scale = [scale, scale];
         }
     }
+}
+
+scene.heirachy["stablemaster"] = Instantiate(SpriteDependencies, interactablePerson, { 
+    texture: placeholderTexture, 
+    characterProfile : VISISING_BARON,
+    Start() {
+        this.position = [10,0, 0];
+    },
+    Update(){
+        this.CheckPosition(); 
+
+        
+    }
 })
+
+
+scene.heirachy["stablemaster2"] = Instantiate(SpriteDependencies, interactablePerson, { 
+    texture: placeholderTexture,  
+    characterProfile : STABLEMASTER,
+    Start() {
+        this.position = [10,10, 0];
+    },
+    Update(){
+        this.CheckPosition(); 
+
+        
+    }
+})
+
+
+
+
 
 
 
