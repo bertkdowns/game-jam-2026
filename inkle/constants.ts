@@ -4,7 +4,7 @@ export enum CHARACTERS {
   HEAD_ENGINEER = "HeadEngineer",
   STABLEMASTER = "StableMaster",
   HEADCHEF = "HeadChef",
-  VISISING_BARRON = "VisitingBarron",
+  VISITING_BARON = "VisitingBaron",
   JESTER = "Jester",
   JUDGE = "Judge",
   BISHOP = "Bishop",
@@ -17,13 +17,13 @@ export enum CHARACTERS {
 
 export const CHARACTERS_PIC = {
   [CHARACTERS.HEAD_ENGINEER]:
-    "./assets/sprites/characterPortraits/characters.portraits/general.PNG",
+    "./assets/sprites/characterPortraits/characters.portraits/engineer.PNG",
   [CHARACTERS.STABLEMASTER]:
-    "./assets/sprites/characterPortraits/characters.portraits/stablemaster.PNG",
+    "./assets/sprites/characterPortraits/characters.portraits/stable-master.PNG",
   [CHARACTERS.HEADCHEF]:
-    "./assets/sprites/characterPortraits/characters.portraits/headchef.PNG",
-  [CHARACTERS.VISISING_BARRON]:
-    "./assets/sprites/characterPortraits/characters.portraits/barron.PNG",
+    "./assets/sprites/characterPortraits/characters.portraits/chef.PNG",
+  [CHARACTERS.VISITING_BARON]:
+    "./assets/sprites/characterPortraits/characters.portraits/baron.PNG",
   [CHARACTERS.JESTER]:
     "./assets/sprites/characterPortraits/characters.portraits/jester.PNG",
   [CHARACTERS.JUDGE]:
