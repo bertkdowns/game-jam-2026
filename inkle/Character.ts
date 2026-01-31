@@ -43,7 +43,7 @@ const characters: { [key: string]: Character } = {
   VisitingBaron: new Character(CHARACTERS.VISISING_BARON),
   Jester: new Character(CHARACTERS.JESTER),
   Judge: new Character(CHARACTERS.JUDGE),
-  Bishop: new Character(CHARACTERS.BISHOP, CHARACTERS_PIC[CHARACTERS.BISHOP]),
+  Bishop: new Character(CHARACTERS.BISHOP),
   Steward: new Character(CHARACTERS.STEWARD),
   General: new Character(CHARACTERS.GENERAL),
   Mayor: new Character(CHARACTERS.MAYOR),
