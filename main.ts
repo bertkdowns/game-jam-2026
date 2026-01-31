@@ -350,7 +350,7 @@ function HandleCameraRotation() {
 const MIN_X = -15
 const MAX_X = 15
 const MIN_Y = -15
-const MAX_Y = 8
+const MAX_Y = 12.5
 
 // MOVE 2D 
 function Move2D() {
