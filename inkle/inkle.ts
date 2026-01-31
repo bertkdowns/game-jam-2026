@@ -22,6 +22,7 @@ let compiler = new Compiler(inkStory);
 const gameStory = compiler.Compile()
 
 gameStory.BindExternalFunction("closeModal", closeModal);
+
 //gameStory.ChoosePathString("SecretStory");
 
 class Character {
@@ -80,8 +81,51 @@ function clearText() {
   characterTalkDiv.innerHTML = ""
 }
 
+export const HEAD_ENGINEER = "HeadEngineer"
+export const STABLEMASTER = "StableMaster"
+export const HEADCHEF = "HeadChef"
+export const VISISING_BARON = "VisitingBaron"
+export const JESTER = "Jester"
+export const JUDGE = "Judge"
+export const BISHOP = "Bishop"
+export const STEWARD = "Steward"
+export const GENERAL = "General"
+export const MAYOR = "Mayor"
+
+
+
+
 
 let character = new Character("HeadEngineer", "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG")
+const characters: { [key: string]: Character } = {
+  "HeadEngineer": character,
+  "StableMaster": new Character(STABLEMASTER, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+  "HeadChef": new Character(HEADCHEF, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+  "VisitingBaron": new Character(VISISING_BARON, "./assets/sprites/characterPortraits/characters.portraits/barron.PNG"),
+  "Jester": new Character(JESTER, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+  "Judge": new Character(JUDGE, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+  "Bishop": new Character(BISHOP, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+  "Steward": new Character(STEWARD, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+  "General": new Character(GENERAL, "./assets/sprites/characterPortraits/characters.portraits/general.PNG"),
+  "Mayor": new Character(MAYOR, "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG"),
+
+
+
+
+}
+
+
+
+
+
+export function switchCharacter(characterName: string) {
+  let charact = characters[characterName]
+  charact.chat()
+}
+
+
+gameStory.BindExternalFunction("switchCharacter", switchCharacter);
+
 
 export function testrun() {
   character.chat()

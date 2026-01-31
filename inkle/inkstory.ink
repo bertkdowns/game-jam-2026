@@ -28,25 +28,30 @@ CONST CHEF_MASK = "split face mask"
 
 
 EXTERNAL closeModal()
-
 == function closeModal()==
 Close Modal
 ~ return 
+
+EXTERNAL switchCharacter(characterName)
+== function switchCharacter(characterName)==
+Switch Character {characterName}
+~ return
+
 
 == CharacterSelection
 
 Choose a character:
 
- + [VisitingBaron] -> VisitingBaron
- + [StableMaster] -> StableMaster
- + [Mayor] -> Mayor
- + [Jester] -> Jester
- + [General] -> General
- + [Judge] -> Judge
- + [Bishop] -> Bishop
- + [HeadEngineer] -> HeadEngineer
- + [Steward] -> Steward
- + [HeadChef] -> HeadChef
+ + [VisitingBaron] {switchCharacter("VisitingBaron")}  -> VisitingBaron
+ + [StableMaster] {switchCharacter("StableMaster")} -> StableMaster
+ + [Mayor] {switchCharacter("Mayor")} -> Mayor
+ + [Jester] {switchCharacter("Jester")} -> Jester
+ + [General] {switchCharacter("General")} -> General
+ + [Judge] {switchCharacter("Judge")} -> Judge
+ + [Bishop] {switchCharacter("Bishop")} -> Bishop
+ + [HeadEngineer] {switchCharacter("HeadEngineer")} -> HeadEngineer
+ + [Steward] {switchCharacter("Steward")} -> Steward
+ + [HeadChef] {switchCharacter("HeadChef")}-> HeadChef
 
 
 == VisitingBaron
@@ -69,8 +74,8 @@ This is such a cool party isn't it?
   Yeah, just got here a couple weeks back, but gotta head home soon. Gonna miss this place.
   
 + [What do you think of everyone's costumes?]
-  Super cool, very creative. I wish people did parties like this where i'm from. I think it's funny that the Jordan doesn't look at all like a Jester with that mask on!
-   ++ [Oh, so you know Jordan?]
+  Super cool, very creative. I wish people did parties like this where i'm from. I think it's funny that the {JESTER_NAME} doesn't look at all like a Jester with that mask on!
+   ++ [Oh, so you know {JESTER_NAME}?]
         Yeah, don't know many people here but he's with the kings court so i've had a good chat with him. Super nice guy, sooo funny!
    ++ [I don't know who Jordan is, could you introduce me?]
         Nah, that's the point of a masked party man!
@@ -91,25 +96,182 @@ This is such a cool party isn't it?
 
 == StableMaster
 
-Gday!
+{Gday! | Fancy seeing you again!}
 
--> CharacterSelection
+-> MainQs
+
+
+
+= MainQs
+
++ [How has your day been?]
+   Fine, a bit worried about my horses though, they've been a bit on edge this week and one is a bit sick. 
+    ++ [oh, that's sad!] 
+       Kinda just want to get back to them and make sure they're okay. 
+    ++ [Fair enough.]
+       Yeah, so forgive me for being a bit on edge tonight.
+    -- -> MainQs
++ [What do you think about everyone's masks?]
+    Pretty funny how the general and the judge both have such expressionless masks, suits their personality. I swear those guys basically look like that anyway.
+    ++ [Sounds like you get stuck with them a lot?]
+       More than I would like. 
+    ++ [Maybe they have something to hide.]
+       I wouldn't be suprised. I think the general might be getting a bit power hungry these days.
++ [A lot of people here right?]
+    yeah, once that mayor gets wind of something, a few words to the king and next thing you know the whole town is invited. Be careful what you invite {MAYOR_NAME} too.
+    
+
++ [Bye!]
+  -> CharacterSelection
+  
+ -
+
+-> MainQs
+
+
 
 == Mayor
 
-Good Evening to you!
+-> MQ
+
+= MQ
+Good Evening to you! This is such a wonderful night, I absolutely looove your fit! Oh, I'm so happy that this is hosted tonight, the king is so amazing to do this, just what I wanted! And the mask theme? Perfect! Being a bit of a celebrity I hate the attention you know? Always people wanting to talk, but ah, what can you do? Part of the job am I right?
+
++ [How's your day?]
+ My day was amazing! And what a way to end the night! It's been so cool getting to see everyone dressed up. -> HowDay
++ [Bye]
+
+-> CharacterSelection
+  
+
+= HowDay
+
+
+
++ [Oh, you know who's who then?]
+   Yeah, but i'm not gonna tell you, that's part of the suprise!
+   ++ [okay, fine]
+     -> MQ
+   ++ [come on, I think I know anyway!]
+     Okay, I'll tell you, but don't tell anyone else! -> WhosWho
++ [Oh really?]
+   Yeah, I pretty much know who everyone is now, hehe!
+   ++ [No way, you're good at this!]
+     -> WhosWho
+   ++ [Don't tell me, it'll ruin the suprise!]
+     Don't worry, I won't! -> MQ
++ [What did you get up to today?]
+  Oh had a meeting with {GENERAL_NAME}. The meeting went on for so long you know? I was probably there for hours and hours and hours? And {GENERAL_NAME} barely even said anything the whole time. I don't know what took so long for us to get across. I wanted to get to the party but it just wouldn't end, we had so much to talk about! I guess being the general they're always worried about stuff.
+  ++ [Very cool.]
+      -> HowDay
++ [Bye!]
+  -> CharacterSelection
+- 
+-> MQ
+
+= WhosWho
+
++ [Who's that guy in the {VISITING_BARON_MASK}?]
+   Actually, you got me there, I don't actually know who that person is! I'll have to go talk to them later on.
++ [Who's in the {BISHOP_MASK}?]
+   Oh, that's {BISHOP_NAME}, you can just tell immediately. Of course, I saw them making that mask one time when I visited them too, so I guess it's a bit easier for me.
+   ++ [uh huh]
+      They really shouldn't have left their mask out like that.
+   ++ [Oh you went to visit them?]
+        yeah, as I was saying, shouldn't leave their mask out like that.
+   --
+ + [Who's the guy in the {JESTER_MASK}?]
+    Oh, that's definitely the Jester. I didn't see him but you can just tell by the way he walks, it's almost like he's tripping over himself trying so desperately to make people laugh.
+  + [Bet you don't know who's in the {STEWARD_MASK}!]
+    Oh hmm... no that's {STEWARD_NAME}, you can tell by the straw still on their shoes, and besides, they alway come in late to everything! I always say being early makes a better impression, wouldn't you agree?
++ [Anyways...]
+   -> MQ
+- 
+
+-> WhosWho
+== Jester
+
+Hey hey hey! Today's a great day! {| |Sing with me, hip hip horray!}
+
+How are you enjoying the party?
+
++ [Kinda sick of it]
+   Hey man, you just gotta get into it! Trust me, it'll be a night to remember! Like your fit, why did you choose it?
+   ++ [It's nice and inconspicuious]
+      Hey, in this enviornment, everything is inconspicuious! Anyways, I'mma go get some more food or something. See ya! -> SeeYa
++ [It's great, best thing ever!]
+   I know right?!? The king is the absolute best for hosting this, I love him so much! Makes it totally worth it that I have to humiliate myself in front of the entire kings court every day! 
+    ++ [Really? Do you think the king is mean?]
+       No of course not, I'm just the Jester it's my job! Pay could be better, but that's what everyone says right?
+    ++ [Yes he's amazing, I love him so much!]
+       Hey hey, next time he needs an army I'll tell him you'd like to be on the front lines protecting him aye? Nah just kidding man, I like you! 
+- 
+
+So what do you think of the coustumes tonight?
+
++ [Not great, I've seen better]
+   Ohhh we got a challenger! I dare you say that to the king, that'd be a laugh! Lucky he didn't hear you!
++ [Oh impeccable, and yours? Absolutely stunning!]
+   Yeah, doesn't really suit my profession much but I'm not on duty here anyways, best thing about the party am I right?!?
+- 
+-> costumes
+
+= costumes
+   
++[I see someone has a similar outfit to you!]
+ Yeah that chatty mayor got the same outfit as me! Really wish they didn't choose a {MAYOR_MASK}. Quite rude!
++ [Those domino people look cool]
+  Ah, that's {VISITING_BARON_NAME} and {STABLEMASTER_NAME} in those matching ones. Don't think they coordinated it either!
++ Good chat!
+  -> SeeYa
+-
+-> costumes
+ 
+
+
++[Bye]
 
 -> CharacterSelection
 
-== Jester
+= SeeYa
 
-Hey hey hey!
++ [See Ya]
+ See Ya!
++ [Bye]
+
++ [You're so cool!]
+  Haha, thank you! Not as cool as you though!
+    ++ [Bye]
+
+- 
+
+
 
 -> CharacterSelection
 
 == General
 
-Hello kiddo!
+Hello kiddo! 
+
++ [Enjoying the party?]
+ Just observing mostly.
+ ++ [Looking for anything in particular?]
+   Haven't seen you around these parts. Got my eye on you.
+ ++ [Observing is a good thing to do these days.]
+   Yeah, I'm a bit worried in this kind of environment where everyone is masked. The king isn't as protected as normal. I'm on high alert.
++ [Many people you know here?]
+ Not really. That's what I'm worried about. Anything could happen.
+ ++ Why so worried?
+   Part of the job more than anything else.
+ ++ [Surely you know some people.]
+   Oh, I know morgan over there. He's a good guy, gets in a bit of a mood sometimes. But it's tough work being an engineer.
+ 
+ - 
+
+
++ [Bye!]
+ See ya.
+
 
 -> CharacterSelection
 
