@@ -1,0 +1,197 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Coming+Soon&display=swap");
+
+    body {
+      padding: 0;
+      margin: auto;
+      height: max-content;
+      width: min-content;
+      font-family: "Coming Soon";
+      font-size: 2.5em;
+    }
+
+    input {
+      display: inline;
+      font-size: inherit;
+      padding: 0.5em;
+      margin: 0.5em;
+      border-radius: 1rem;
+      font-family: inherit;
+    }
+
+    canvas {
+      box-sizing: content-box;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    #DialogChoices {
+      font-size: 0.6em;
+      overflow-y: auto;
+    }
+
+    #DialogChoices button {
+      padding: 0.5em 0.75em;
+      /*background-color: black;*/
+      flex: 1;
+      border-radius: 0.5rem;
+      text-align: left;
+      transition: background 0.15s ease;
+      background-color: white;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #DialogChoices button:hover:not(:disabled) {
+      background-color: #afacac;
+    }
+
+    #DialogChoices button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    #CharacterTalk {
+      font-size: 0.9em;
+      line-height: 1.3;
+    }
+
+    #ConversationContainer {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    }
+
+    #ConversationContainer::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    #ConversationContainer::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    #ConversationContainer::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+    }
+
+    #ConversationContainer::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .dialog-bubble {
+      font-size: 0.9em;
+      line-height: 1.3;
+    }
+
+    .dialog-bubble-character {
+      align-self: flex-start;
+    }
+
+    .dialog-bubble-player {
+      align-self: flex-end;
+    }
+
+    .fa-input {
+      font-family: "Font Awesome 5 Free", "Helvetica", sans-serif;
+      font-weight: 900;
+    }
+
+    #controls {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .top-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    #fullscreen {
+      height: 1.8em;
+      width: 1.8em;
+      aspect-ratio: 1;
+      cursor: pointer;
+      font-size: 0.9em;
+      border-radius: 0.4rem;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.15s ease;
+    }
+
+    #fullscreen:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    #mute-button {
+      height: 1.8em;
+      width: 1.8em;
+      aspect-ratio: 1;
+      cursor: pointer;
+      font-size: 0.9em;
+      border-radius: 0.4rem;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.15s ease;
+    }
+
+    #mute-button:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    .audio-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: flex-end;
+    }
+
+    .audio-button {
+      padding: 0.3em 0.5em;
+      border-radius: 0.4rem;
+      text-align: left;
+      transition: background 0.15s ease;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: none;
+      cursor: pointer;
+      font-size: 0.5em;
+      white-space: nowrap;
+    }
+
+    .audio-button:hover {
+      background-color: rgba(255, 255, 255, 1);
+    }
+
+    #interact-prompt {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 0.5em 1em;
+      border-radius: 0.5rem;
+      font-size: 0.6em;
+      display: none;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    #interact-prompt.show {
+      display: block;
+    }

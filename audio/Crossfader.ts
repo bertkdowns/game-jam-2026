@@ -39,13 +39,19 @@ export class MultiTrackCrossfader {
   private startTime = 0; // ctx time when started
   private offset = 0; // seconds into track when started/resumed
   private currentIndex = 0;
+  private masterGain: GainNode;
+  private isMuted = false;
 
   constructor(urls: string[], opts: MultiTrackOptions = {}) {
     if (!urls.length) throw new Error("Provide at least one track url.");
     this.urls = urls.slice();
 
     this.ctx = new AudioContext({ latencyHint: opts.latencyHint });
-    this.destination = this.ctx.destination;
+    // Create master gain node for mute functionality
+    this.masterGain = this.ctx.createGain();
+    this.masterGain.gain.value = 1;
+    this.masterGain.connect(this.ctx.destination);
+    this.destination = this.masterGain;
 
     this.loop = opts.loop ?? true;
     this.startSafetySec = opts.startSafetySec ?? 0.01;
@@ -268,6 +274,31 @@ export class MultiTrackCrossfader {
     }
 
     return this.gains.length - 1;
+  }
+
+  /**
+   * Mute or unmute all audio
+   */
+  mute(muted: boolean): void {
+    this.isMuted = muted;
+    const now = this.ctx.currentTime;
+    this.masterGain.gain.cancelScheduledValues(now);
+    this.masterGain.gain.setValueAtTime(muted ? 0 : 1, now);
+  }
+
+  /**
+   * Toggle mute state
+   */
+  toggleMute(): boolean {
+    this.mute(!this.isMuted);
+    return this.isMuted;
+  }
+
+  /**
+   * Get current mute state
+   */
+  getMuted(): boolean {
+    return this.isMuted;
   }
 
   /** Connect output to another node instead of destination */
