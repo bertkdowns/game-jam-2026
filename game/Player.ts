@@ -6,7 +6,11 @@ import { DemoEntity } from "../src/components/StateMachine.js";
 import { SpriteDependencies } from "./LoadAssets.js";
 import { checkCollision } from "./Collision.js";
 import { Game } from "./Game.js";
-import type { PlayerEntity, CameraType, InteractablePersonEntity } from "./types.js";
+import type {
+  PlayerEntity,
+  CameraType,
+  InteractablePersonEntity,
+} from "./types.js";
 
 const MIN_X = -15;
 const MAX_X = 15;
@@ -59,33 +63,39 @@ export function Move2D(entity: PlayerEntity): [number, number] {
     nextY = y; // stay in place
   }
 
-  entity.position = [nextX, nextY];
+  const [_, __, z] = entity.position;
+  entity.position = [nextX, nextY, z ?? 0];
   return [nextX, nextY];
 }
 
 // Check if player is near any interactable NPC
 function checkNearbyNPC(player: PlayerEntity, game: Game): boolean {
   if (!player.position) return false;
-  
+
   const playerPos = player.position;
-  
+
   // Check all entities in the scene hierarchy for interactable NPCs
   for (const key in game.scene.heirachy) {
     const entity = game.scene.heirachy[key] as any;
-    
+
     // Check if this entity has CheckPosition method (interactable person)
-    if (entity && entity.CheckPosition && entity.position && entity.interactionRadius) {
+    if (
+      entity &&
+      entity.CheckPosition &&
+      entity.position &&
+      entity.interactionRadius
+    ) {
       const npc = entity as InteractablePersonEntity;
       const dx = npc.position[0] - playerPos[0];
       const dy = npc.position[1] - playerPos[1];
       const distance = Math.sqrt(dx * dx + dy * dy);
-      
+
       if (distance < npc.interactionRadius) {
         return true;
       }
     }
   }
-  
+
   return false;
 }
 
@@ -120,8 +130,14 @@ export function UpdateCamera(x: number, y: number, camera: CameraType) {
   if (targetCamY < -BG_HEIGHT) targetCamY = -BG_HEIGHT;
 
   // Smoothly follow the target position
-  camera.position.x += (targetCamX - camera.position.x) * 0.05;
-  camera.position.y += (targetCamY - camera.position.y) * 0.05;
+  // Handle both array and object position formats
+  if (Array.isArray(camera.position)) {
+    camera.position[0] += (targetCamX - camera.position[0]) * 0.05;
+    camera.position[1] += (targetCamY - camera.position[1]) * 0.05;
+  } else {
+    camera.position.x += (targetCamX - camera.position.x) * 0.05;
+    camera.position.y += (targetCamY - camera.position.y) * 0.05;
+  }
 }
 
 export function createPlayer(playerTexture: any, game: Game): PlayerEntity {

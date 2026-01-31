@@ -3,7 +3,7 @@ import { Camera } from "../src/components/camera";
 // Common entity properties
 export interface BaseEntity {
   position: [number, number, number];
-  scale?: [number, number];
+  scale?: [number, number, number] | [number, number];
   texture?: any;
   Start?: () => void;
   Update?: () => void;

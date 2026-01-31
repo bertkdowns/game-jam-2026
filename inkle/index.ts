@@ -3,7 +3,13 @@
 
 export { modal, openModal, closeModal } from "./Modal.js";
 export { switchCharacter } from "./Character.js";
-export { continueStory, clearText, getGameStory } from "./StoryManager.js";
+export {
+  continueStory,
+  clearText,
+  getGameStory,
+  switchScene,
+  getCurrentScene,
+} from "./StoryManager.js";
 export * from "./constants.js";
 
 import { modal } from "./Modal.js";
@@ -14,9 +20,17 @@ import {
   bindExternalFunctions,
 } from "./StoryManager.js";
 import { HEAD_ENGINEER } from "./constants.js";
+import { GameScene } from "../game/Types/scenes.js";
+import { Game } from "../game/Game.js";
+
+// Function to switch to main game scene
+function switchToMainGame() {
+  const game = Game.getInstance();
+  game.switchToScene(GameScene.Main);
+}
 
 // Initialize external function bindings
-bindExternalFunctions(switchCharacter);
+bindExternalFunctions(switchCharacter, switchToMainGame);
 
 // Test function for initializing the dialogue system
 export function testrun() {

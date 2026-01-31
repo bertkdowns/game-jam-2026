@@ -12,12 +12,16 @@
     "skipLibCheck": true,
     "strict": false,
     "resolveJsonModule": true,
-    "types": ["@webgpu/types"]
+    "types": ["@webgpu/types"],
+    "noEmit": true
   },
   "include": [
     "./**/*.ts",
-    "./**/*.js",
-    "build/**/*.d.ts"
+    "./**/*.js"
   ],
-  "exclude": ["node_modules", "build/release.wat"]
+  "exclude": [
+    "node_modules",
+    "build/**/*",
+    "dist/**/*"
+  ]
 }
