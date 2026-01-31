@@ -57,9 +57,10 @@ Switch Character {characterName}
 == CharacterSelection
 
 // comment this out for debugging
-{closeModal()}
+//{closeModal()}
 
-Choose a character: Choose a character:
+Choose a character:
+
  + [VisitingBaron] {switchCharacter("VisitingBaron")}  -> VisitingBaron
  + [StableMaster] {switchCharacter("StableMaster")} -> StableMaster
  + [Mayor] {switchCharacter("Mayor")} -> Mayor
@@ -78,7 +79,7 @@ Choose a character: Choose a character:
 
 So, you think you know who the assasins are?
 
--> CharacterSelection
+-> ChoosePerson
 = ChoosePerson
 
 VAR VISITINGBARONGUILTY = false
@@ -92,20 +93,19 @@ VAR STEWARDGUILTY = false
 VAR ENGINEERGUILTY = false
 VAR CHEFGUILTY = false
 
-{ VISITINGBARONGUILTY :
- + [The Visiting Baron is not guilty!] 
-    ~VISITINGBARONGUILTY = false
-    -> ChoosePerson
- - else:
-  + [The Visiting Baron is guilty!] 
-      ~ VISITINGBARONGUILTY = true 
-      -> ChoosePerson
-}
+
++ Nobody
++ { VISITINGBARONGUILTY:
+    "The Visiting Baron is not guilty"
+  - else:
+    "The Visiting Baron is guilty"
+  }
+    ~ VISITINGBARONGUILTY = !VISITINGBARONGUILTY
 + Someone else
 - 
 
 
-
+-> CharacterSelection
 -> END
 
 
