@@ -15,7 +15,10 @@ import {
   continueStory,
   clearText,
   setCharacterName,
+  getCurrentScene,
+  switchScene,
 } from "./StoryManager.js";
+import { GameScene } from "../game/Types/scenes.js";
 import { openModal } from "./Modal.js";
 
 export class Character {
@@ -88,6 +91,27 @@ const characters: { [key: string]: Character } = {
 };
 
 export function switchCharacter(characterName: string) {
+  const currentScene = getCurrentScene();
+
+  // If we're in the tutorial scene, start the tutorial dialogue instead
+  if (currentScene === GameScene.Tutorial) {
+    clearText();
+    setCharacterName("Tutorial");
+    // Set a default tutorial character image
+    const img = document.getElementById("CharacterImage") as HTMLImageElement;
+    if (img) {
+      img.src =
+        "./assets/sprites/characterPortraits/characters.portraits/noble-lady.PNG";
+    }
+
+    // Make sure we're using the tutorial story and start from the beginning
+    switchScene(GameScene.Tutorial, "Start");
+    openModal();
+    continueStory();
+    return;
+  }
+
+  // For other scenes, use the normal character dialogue
   let charact = characters[characterName];
   if (charact) {
     charact.chat();
