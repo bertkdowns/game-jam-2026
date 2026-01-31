@@ -48,6 +48,8 @@ import type {
   TextEntity,
   CameraType,
 } from "./types";
+import { switchCharacter } from "../inkle/Character";
+import { CHARACTERS } from "../inkle/constants";
 
 interface Assets {
   images: Record<string, HTMLImageElement>;
@@ -187,6 +189,8 @@ export class Game {
 
     // Create only tutorial-specific characters
     createTutorialCharacters(this);
+
+    switchCharacter(CHARACTERS.TUTORIAL_CHARACTER);
 
     // You can add tutorial-specific entities here
     // For example: tutorial markers, instructions, etc.

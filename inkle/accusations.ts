@@ -37,7 +37,94 @@ export function renderAccusations() {
 
   document.getElementById("SubmitAccusations").onclick = () => {
     // TODO: Handle accusations
+    renderResults();
   }
 
 
+}
+
+export function renderResults() {
+
+  document.getElementById("modal").style.display = "none";
+  document.getElementById("AccusationModal").style.display = "block";
+  const accusationsDiv = document.getElementById("AccusationModal");
+  accusationsDiv.innerHTML = `
+  <div class="text-white m-auto text-center">
+    <h2>Assasins:</h2>
+    <div class="h-400 flex flex-row justify-center" id="badguys"></div>
+    <h2>Innocents:</h2>
+    <div class="h-400 flex flex-row justify-center" id="goodguys"></div>
+
+     <div id="finalText" ></div>
+    </div>
+   
+  </div>
+  `
+  const badddies = [
+    characters[CHARACTERS.STABLEMASTER],
+    characters[CHARACTERS.HEAD_ENGINEER],
+    characters[CHARACTERS.JESTER],
+  ]
+  const gooddies = [
+    characters[CHARACTERS.HEADCHEF],
+    characters[CHARACTERS.VISITING_BARON],
+    characters[CHARACTERS.JUDGE],
+    characters[CHARACTERS.BISHOP],
+    characters[CHARACTERS.STEWARD],
+    characters[CHARACTERS.GENERAL],
+    characters[CHARACTERS.MAYOR],
+  ]
+  let badguys = document.getElementById("badguys");
+  for (let bad of badddies) {
+    badguys.appendChild(image(bad.accused, 300, bad.characterImage));
+  }
+  let goodguys = document.getElementById("goodguys");
+  for (let good of gooddies) {
+    goodguys.appendChild(image(good.accused, 200, good.characterImage));
+  }
+
+  const aliveVillians = badddies.filter(b => !b.accused).length;
+  const deadInnocents = gooddies.filter(g => g.accused).length;
+  const deadVillians = badddies.filter(b => b.accused).length;
+  const aliveInnocents = gooddies.filter(g => !g.accused).length;
+
+  const finalText = document.getElementById("finalText");
+  finalText.innerHTML = `
+  ${aliveVillians === 0 ? "No villians were left alive" : `You killed ${deadVillians} villians, but ${aliveVillians} were left alive.`}<br/>
+  ${deadInnocents === 0 ? "No innocents were harmed" : `You accidentally killed ${deadInnocents} innocents, while ${aliveInnocents} survived.`} <br/>
+  ${aliveVillians === 0 && deadInnocents === 0 ? "<strong>You successfully saved the kingdom!</strong>" : ""}
+  `
+
+
+}
+
+function image(dead: boolean, size: number, srcImage: string) {
+  // Returns a dead or alive image icon of given size
+  let div = document.createElement("div");
+  div.style.position = "relative";
+  div.style.width = `${size}px`;
+  div.style.height = `${size}px`;
+
+  const imgBase = document.createElement("img");
+  imgBase.style.width = "100%";
+  imgBase.style.height = "100%";
+  imgBase.style.display = "block";
+
+  if (dead) {
+    const imgOverlay = document.createElement("img");
+    imgOverlay.style.position = "absolute";
+    imgOverlay.style.top = "0";
+    imgOverlay.style.left = "0";
+    imgOverlay.style.width = "100%";
+    imgOverlay.style.height = "100%";
+    imgOverlay.style.pointerEvents = "none";
+    div.appendChild(imgOverlay);
+    imgOverlay.src = "assets/dead.png"
+  }
+
+  imgBase.src = srcImage
+
+  div.appendChild(imgBase);
+
+  return div;
 }

@@ -41,7 +41,7 @@ export const characters: { [key: string]: Character } = {
   HeadEngineer: new Character(CHARACTERS.HEAD_ENGINEER),
   StableMaster: new Character(CHARACTERS.STABLEMASTER),
   HeadChef: new Character(CHARACTERS.HEADCHEF),
-  VisitingBarron: new Character(CHARACTERS.VISISING_BARRON),
+  VisitingBaron: new Character(CHARACTERS.VISITING_BARON),
   Jester: new Character(CHARACTERS.JESTER),
   Judge: new Character(CHARACTERS.JUDGE),
   Bishop: new Character(CHARACTERS.BISHOP),
