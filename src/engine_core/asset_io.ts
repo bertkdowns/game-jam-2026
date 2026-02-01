@@ -4,40 +4,41 @@ import { audioCtx } from "./audio";
 
 
 
-export const loadImages = (...src) => Promise.all(src.map(loadImage));
-export const loadCubeMaps = (...src) => Promise.all(src.map(loadCubeMap));
-export const loadShaders = (...src) => Promise.all(src.map(loadShader));
-export const loadAudioClips = (...src) => Promise.all(src.map(loadAudioClip));
-export const loadObjects = (...src) => Promise.all(src.map(loadObject));
-export const loadInkFiles = (...src) => Promise.all(src.map(loadInkFile));
+export const loadImages = (...src: any[]) => Promise.all(src.map(loadImage));
+export const loadCubeMaps = (...src: any[]) => Promise.all(src.map(loadCubeMap));
+export const loadShaders = (...src: any[]) => Promise.all(src.map(loadShader));
+export const loadAudioClips = (...src: any[]) => Promise.all(src.map(loadAudioClip));
+export const loadObjects = (...src: any[]) => Promise.all(src.map(loadObject));
+export const loadInkFiles = (...src: any[]) => Promise.all(src.map(loadInkFile));
 
 
-export const loadImage = (src) => fetch(src).then(r => r.blob()).then(decodeImage).then(bitmap => AllocateTexture(bitmap)).catch(err=> console.error(err));
-export const loadCubeMap = (src) => fetch(src).then(r => r.blob()).then(decodeImage).then(bitmap => AllocateCubeMap(bitmap)).catch(err=> console.error(err));
-export const loadShader = (src) => fetch(src).then(r => r.text()).then(decodeShader).then(text => AllocateShaderModule({ label: src, code: text })).catch(err=> console.error(err));
-export const loadAudioClip = (src) => fetch(src).then(r => r.arrayBuffer()).then(decodeAudio).then(buffer => { return { src, buffer } }).catch(err=> console.error(err));
-export const loadObject = (src) => fetch(src).then(r => r.text()).then(decodeObject).then(array => AllocateMesh(array)).catch(err=> console.error(err));
+export const loadImage = (src : string) => fetch(src).then(r => r.blob()).then(decodeImage).then(bitmap => AllocateTexture(bitmap)).catch(err=> console.error(err));
+export const loadCubeMap = (src : string) => fetch(src).then(r => r.blob()).then(decodeImage).then(bitmap => AllocateCubeMap(bitmap)).catch(err=> console.error(err));
+export const loadShader = (src : string) => fetch(src).then(r => r.text()).then(decodeShader).then(text => AllocateShaderModule({ label: src, code: text })).catch(err=> console.error(err));
+export const loadAudioClip = (src : string) => fetch(src ).then(r => r.arrayBuffer()).then(decodeAudio).then(buffer => { return { src, buffer } }).catch(err=> console.error(err));
+export const loadObject = (src : string) => fetch(src).then(r => r.text()).then(decodeObject).then(array => AllocateMesh(array)).catch(err=> console.error(err));
 
-export const loadInkFile = (src) => fetch(src).then(r => r.text()); 
+export const loadInkFile = (src : string) => fetch(src).then(r => r.text()); 
 
-export const loadTextureArray = (...src) => Promise.all(src.map((src) => fetch(src).then(r => r.blob()).then(decodeImage))).then(bitmaps => AllocateTextureArray(bitmaps)).catch(err=> console.error(err));
+export const loadTextureArray = (...src: any[]) => Promise.all(src.map((src) => fetch(src).then(r => r.blob()).then(decodeImage))).then(bitmaps => AllocateTextureArray(bitmaps)).catch(err=> console.error(err));
 
 
 
 
 
 /* converts the image from blob to byteArray*/
-async function decodeImage(blob) {
+async function decodeImage(blob: Blob) {
     
     try{
     //return { data: {}, width: 0, height: 0, textureFormat:{ format: 'rgba8unorm', usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST }}; 
-    const bmp = await createImageBitmap(blob, { premultiplyAlpha: "none" });
+
+    const arrayBuffer = await blob.arrayBuffer();
+    const bmp = await createImageBitmap(new Blob([arrayBuffer]), { premultiplyAlpha: "none" });
         
     // Draw into a canvas to extract pixel data
     
     const canvas = new OffscreenCanvas(bmp.width, bmp.height);
-    
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d") as OffscreenCanvasRenderingContext2D;
     
     ctx.drawImage(bmp, 0, 0);
 

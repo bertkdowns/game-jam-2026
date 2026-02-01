@@ -4,9 +4,9 @@ export async function setupAudioSystem() {
   // Init the audio system
   const mixer = new MultiTrackCrossfader(
     [
-      "/assets/audio/music/AquaticPulsations.wav",
-      "/assets/audio/music/Background.wav",
-      "/assets/audio/music/Borderlands.wav",
+      "assets/audio/music/AquaticPulsations.wav",
+      "assets/audio/music/Background.wav",
+      "assets/audio/music/Borderlands.wav",
     ],
     { loop: true, defaultFadeSec: 1.5 }
   );

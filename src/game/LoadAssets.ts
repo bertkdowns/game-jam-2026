@@ -57,64 +57,64 @@ export async function loadAllAssets() {
     [endingInk, storyInk, tutorialInk], 
   ] = await Promise.all([
     loadImages(
-      `/assets/sprites/ballroom_background.png`,
-      `/assets/sprites/characterPortraits/placeholder guy.png`,
-      `/assets/sprites/intro_background.png`,
-      `/assets/sprites/character.png`,
+      `assets/sprites/ballroom_background.png`,
+      `assets/sprites/characterPortraits/placeholder guy.png`,
+      `assets/sprites/intro_background.png`,
+      `assets/sprites/character.png`,
     ).then((textures) =>
       textures.map((texture: any) =>
         Object.assign(texture, { pixelScale: 1 / 256 })
       )
     ),
     loadImages( 
-      `/assets/sprites/font.png`,
-      `/assets/sprites/flatColor.png`,
-      `/assets/sprites/skybox.png`,
-      `/assets/sprites/characterStanding/stablemaster.png`,
-      `/assets/sprites/characterStanding/bishop.png`
+      `assets/sprites/font.png`,
+      `assets/sprites/flatColor.png`,
+      `assets/sprites/skybox.png`,
+      `assets/sprites/characterStanding/stablemaster.png`,
+      `assets/sprites/characterStanding/bishop.png`
     ).then((textures) =>
       textures.map((texture: any) =>
         Object.assign(texture, { pixelScale: 1 / 64 })
       )
     ),
     loadTextureArray(
-      `/assets/sprites/explosion/explosion0000.png`,
-      `/assets/sprites/explosion/explosion0001.png`,
-      `/assets/sprites/explosion/explosion0002.png`,
-      `/assets/sprites/explosion/explosion0003.png`,
-      `/assets/sprites/explosion/explosion0004.png`,
-      `/assets/sprites/explosion/explosion0005.png`,
-      `/assets/sprites/explosion/explosion0006.png`,
-      `/assets/sprites/explosion/explosion0007.png`,
-      `/assets/sprites/explosion/explosion0008.png`,
-      `/assets/sprites/explosion/explosion0009.png`,
-      `/assets/sprites/explosion/explosion0010.png`,
-      `/assets/sprites/explosion/explosion0011.png`,
-      `/assets/sprites/explosion/explosion0012.png`,
-      `/assets/sprites/explosion/empty.png`
+      `assets/sprites/explosion/explosion0000.png`,
+      `assets/sprites/explosion/explosion0001.png`,
+      `assets/sprites/explosion/explosion0002.png`,
+      `assets/sprites/explosion/explosion0003.png`,
+      `assets/sprites/explosion/explosion0004.png`,
+      `assets/sprites/explosion/explosion0005.png`,
+      `assets/sprites/explosion/explosion0006.png`,
+      `assets/sprites/explosion/explosion0007.png`,
+      `assets/sprites/explosion/explosion0008.png`,
+      `assets/sprites/explosion/explosion0009.png`,
+      `assets/sprites/explosion/explosion0010.png`,
+      `assets/sprites/explosion/explosion0011.png`,
+      `assets/sprites/explosion/explosion0012.png`,
+      `assets/sprites/explosion/empty.png`
     ).then((texture: any) => Object.assign(texture, { pixelScale: 1 / 64 })),
     loadShaders(
-      `/assets/shader/spriteShader.wgsl`,
-      `/assets/shader/tileShader.wgsl`,
-      `/assets/shader/textShader.wgsl`,
-      `/assets/shader/meshShader.wgsl`,
-      `/assets/shader/skyboxShader.wgsl`,
-      `/assets/shader/spriteShaderWithAtlus.wgsl`
+      `assets/shader/spriteShader.wgsl`,
+      `assets/shader/tileShader.wgsl`,
+      `assets/shader/textShader.wgsl`,
+      `assets/shader/meshShader.wgsl`,
+      `assets/shader/skyboxShader.wgsl`,
+      `assets/shader/spriteShaderWithAtlus.wgsl`
     ),
     loadObjects(
-      `/assets/models/quad.obj`,
-      `/assets/models/textQuad.obj`,
-      `/assets/models/cube.obj`,
-      `/assets/models/suzanne.obj`
+      `assets/models/quad.obj`,
+      `assets/models/textQuad.obj`,
+      `assets/models/cube.obj`,
+      `assets/models/suzanne.obj`
     ),
     loadAudioClips(
-      `/assets/audio/footstep1.wav`,
-      `/assets/audio/footstep2.wav`
+      `assets/audio/footstep1.wav`,
+      `assets/audio/footstep2.wav`
     ),
     loadInkFiles(
-      `/assets/dialogue/ending.ink`, 
-      `/assets/dialogue/inkstory.ink`, 
-      `/assets/dialogue/tutorial.ink`, 
+      `assets/dialogue/ending.ink`, 
+      `assets/dialogue/inkstory.ink`, 
+      `assets/dialogue/tutorial.ink`, 
     ), 
 
     
