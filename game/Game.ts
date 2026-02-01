@@ -50,6 +50,7 @@ import type {
 } from "./types";
 import { switchCharacter } from "../inkle/Character";
 import { CHARACTERS } from "../inkle/constants";
+import { initializeStories,  bindExternalFunctions } from "../inkle/StoryManager";
 
 interface Assets {
   images: Record<string, HTMLImageElement>;
@@ -102,6 +103,9 @@ export class Game {
     // Load all assets (must happen after renderer is initialized)
     await loadAllAssets();
 
+
+    // Initialize stories on module load
+  
     this.camera.position = [0, -1, -15];
 
     (window as any).playerTexture = playerTexture;
@@ -111,7 +115,14 @@ export class Game {
     this.background = createBackground(backgroundTexture, this);
     this.player = createPlayer(playerTexture, this);
 
+    
     setupInputHandlers();
+    
+    // Initialize external function bindings
+    initializeStories();
+    bindExternalFunctions(switchCharacter, switchToMainGame);
+
+    
 
     // Set up audio system
     await setupAudioSystem();
@@ -235,7 +246,7 @@ export class Game {
         break;
       case GameScene.Main:
         this.setupMainScene();
-        
+
         break;
       case GameScene.Ending:
         this.setupEndingScene();
@@ -244,4 +255,13 @@ export class Game {
         console.warn(`Unknown scene: ${scene}`);
     }
   }
+}
+
+
+
+
+// Function to switch to main game scene
+function switchToMainGame() {
+  const game = Game.getInstance();
+  game.switchToScene(GameScene.Main);
 }

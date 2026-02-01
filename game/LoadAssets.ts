@@ -7,6 +7,7 @@ import {
   loadObjects,
   loadShaders,
   loadTextureArray,
+  loadInkFiles, 
 } from "../src/engine_core/asset_io";
 import { AllocateUniformBuffer } from "../src/engine_core/renderer";
 
@@ -33,6 +34,10 @@ export let textMesh: any;
 export let cubeMesh: any;
 export let suzanne: any;
 export let audioClips: any[];
+export let endingStory: string;
+export let tutorialStory: string;
+export let inkStory: string;
+
 
 // Function to load all assets (must be called after renderer is initialized)
 export async function loadAllAssets() {
@@ -49,6 +54,7 @@ export async function loadAllAssets() {
     [spriteSh, tileSh, textSh, meshSh, skyboxSh, spriteShaderWithAtlusSh],
     [quadM, textM, cubeM, suzanneM],
     audioClipsArray,
+    [endingInk, storyInk, tutorialInk], 
   ] = await Promise.all([
     loadImages(
       `/assets/sprites/ballroom_background.png`,
@@ -105,6 +111,13 @@ export async function loadAllAssets() {
       `/assets/audio/footstep1.wav`,
       `/assets/audio/footstep2.wav`
     ),
+    loadInkFiles(
+      `/assets/dialogue/ending.ink`, 
+      `/assets/dialogue/inkstory.ink`, 
+      `/assets/dialogue/tutorial.ink`, 
+    ), 
+
+    
   ]);
 
   // Assign to exported variables
@@ -130,6 +143,10 @@ export async function loadAllAssets() {
   cubeMesh = cubeM;
   suzanne = suzanneM;
   audioClips = audioClipsArray;
+  endingStory = endingInk;
+  tutorialStory= tutorialInk;
+  inkStory = storyInk;
+  
 }
 
 // abstracted out the dependancies for sprites.

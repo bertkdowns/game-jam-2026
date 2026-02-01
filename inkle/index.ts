@@ -23,14 +23,6 @@ import { CHARACTERS, CHARACTERS_PIC } from "./constants.js";
 import { GameScene } from "../game/Types/scenes.js";
 import { Game } from "../game/Game.js";
 
-// Function to switch to main game scene
-function switchToMainGame() {
-  const game = Game.getInstance();
-  game.switchToScene(GameScene.Main);
-}
-
-// Initialize external function bindings
-bindExternalFunctions(switchCharacter, switchToMainGame);
 
 // Test function for initializing the dialogue system
 export function testrun() {

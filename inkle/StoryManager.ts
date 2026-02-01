@@ -1,14 +1,17 @@
 import { Story, Compiler } from "inkjs/compiler/Compiler";
 import { Choice } from "inkjs/engine/Choice";
 // @ts-ignore
-import inkStory from "./inkstory.ink?raw";
-// @ts-ignore
-import tutorialStory from "./tutorial.ink?raw";
-// @ts-ignore
-import endingStory from "./ending.ink?raw";
+
+
 import { closeModal } from "./Modal.js";
 import { GameScene, SCENE_CONFIGS } from "../game/Types/scenes.js";
 import { Game } from "../game/Game.js";
+
+
+import { inkStory, tutorialStory, endingStory } from "../game/LoadAssets.js";
+
+
+
 
 // Store stories for each scene
 const stories: Map<GameScene, Story> = new Map();
@@ -16,9 +19,12 @@ let currentScene: GameScene = GameScene.Tutorial;
 let currentStory: Story;
 
 // Initialize all stories
-function initializeStories() {
+export function initializeStories() {
   try {
+
+    console.log(inkStory); 
     // Main story
+
     const mainCompiler = new Compiler(inkStory);
     const mainStory = mainCompiler.Compile();
     mainStory.BindExternalFunction("closeModal", closeModal);
@@ -47,8 +53,7 @@ function initializeStories() {
   }
 }
 
-// Initialize stories on module load
-initializeStories();
+
 
 // Switch to a different scene's story
 export function switchScene(scene: GameScene, startKnot?: string) {

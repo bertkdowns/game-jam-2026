@@ -9,6 +9,7 @@ export const loadCubeMaps = (...src) => Promise.all(src.map(loadCubeMap));
 export const loadShaders = (...src) => Promise.all(src.map(loadShader));
 export const loadAudioClips = (...src) => Promise.all(src.map(loadAudioClip));
 export const loadObjects = (...src) => Promise.all(src.map(loadObject));
+export const loadInkFiles = (...src) => Promise.all(src.map(loadInkFile));
 
 
 export const loadImage = (src) => fetch(src).then(r => r.blob()).then(decodeImage).then(bitmap => AllocateTexture(bitmap)).catch(err=> console.error(err));
@@ -17,6 +18,7 @@ export const loadShader = (src) => fetch(src).then(r => r.text()).then(decodeSha
 export const loadAudioClip = (src) => fetch(src).then(r => r.arrayBuffer()).then(decodeAudio).then(buffer => { return { src, buffer } }).catch(err=> console.error(err));
 export const loadObject = (src) => fetch(src).then(r => r.text()).then(decodeObject).then(array => AllocateMesh(array)).catch(err=> console.error(err));
 
+export const loadInkFile = (src) => fetch(src).then(r => r.text()); 
 
 export const loadTextureArray = (...src) => Promise.all(src.map((src) => fetch(src).then(r => r.blob()).then(decodeImage))).then(bitmaps => AllocateTextureArray(bitmaps)).catch(err=> console.error(err));
 
