@@ -50,6 +50,8 @@ import {
 import { switchCharacter } from "../inkle/Character";
 import { CHARACTERS } from "../inkle/constants";
 import { initializeStories,  bindExternalFunctions } from "../inkle/StoryManager";
+import { MultiTrackCrossfader } from "../audio/Crossfader";
+
 
 interface Assets {
   images: Record<string, HTMLImageElement>;
@@ -72,6 +74,7 @@ export class Game {
   skybox!: SkyboxEntity;
   explosion!: ExplosionEntity;
   textObj!: TextEntity;
+  audioSystem: MultiTrackCrossfader| undefined = undefined; 
 
   static getInstance() {
     if (!Game.instance) {
@@ -124,7 +127,13 @@ export class Game {
     
 
     // Set up audio system
-    await setupAudioSystem();
+    this.audioSystem = await setupAudioSystem();
+
+    
+
+
+
+
 
     Manager.AddUpdateEvents([
       InputUpdate,
@@ -151,9 +160,16 @@ export class Game {
     this.switchToScene(scene);
   }
 
+
+
+
+  
+
+
   // Setup main game scene (ballroom)
   setupMainScene() {
     this.currentScene = GameScene.Main;
+    this.audioSystem?.fadeTo(1);
     switchInkScene(GameScene.Main);
 
     // Remove characters from previous scene

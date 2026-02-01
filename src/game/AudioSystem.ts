@@ -1,12 +1,14 @@
 import { MultiTrackCrossfader } from "../audio/Crossfader";
 
+var audiosystem: MultiTrackCrossfader; 
+
 export async function setupAudioSystem() {
   // Init the audio system
   const mixer = new MultiTrackCrossfader(
     [
-      "assets/audio/music/AquaticPulsations.wav",
-      "assets/audio/music/Background.wav",
       "assets/audio/music/Borderlands.wav",
+      "assets/audio/music/Background.wav",
+      "assets/audio/music/AquaticPulsations.wav",
     ],
     { loop: true, defaultFadeSec: 1.5 }
   );
@@ -24,6 +26,18 @@ export async function setupAudioSystem() {
 
   // Store mixer globally for mute button access
   (window as any).audioMixer = mixer;
-
+  audiosystem = mixer; 
   return mixer;
 }
+
+
+
+const handleFirstInteraction = () => {
+    audiosystem.play(); 
+    console.log("first interaction, starting music!");
+};
+
+// Add event listeners for various interactions
+window.addEventListener('click', handleFirstInteraction, { once: true });
+window.addEventListener('keydown', handleFirstInteraction, { once: true });
+window.addEventListener('touchstart', handleFirstInteraction, { once: true });
