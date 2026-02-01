@@ -152,6 +152,7 @@ export class Game {
 
     // Show main game background
     if (this.background) {
+      this.background.texture = backgroundTexture;
       this.background.scale = [1, 1, 1];
     }
     if (this.skybox) {
