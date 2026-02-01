@@ -37,11 +37,25 @@ export function renderAccusations() {
 
   document.getElementById("SubmitAccusations").onclick = () => {
     // TODO: Handle accusations
-    renderResults();
-  }
+    showBackgroundOverlay()
 
+    // if king is dead
+    if(false)
+      setTimeout(()=> {hideBackgroundOverlay(); renderResults()}, 2000);
+    else 
+      renderResults(); 
+    
+  }
+}
+
+function showBackgroundOverlay()
+{
 
 }
+function hideBackgroundOverlay(){
+
+}
+
 
 export function renderResults() {
 

@@ -235,6 +235,7 @@ export class Game {
         break;
       case GameScene.Main:
         this.setupMainScene();
+        
         break;
       case GameScene.Ending:
         this.setupEndingScene();
