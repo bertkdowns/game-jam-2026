@@ -4,7 +4,7 @@ EXTERNAL switchToMainGame()
 
 == Start
 
-Hey, good to see you again! you're a detective, aren't you?
+Hey, good to see you again! You're a detective, aren't you?
 
 + [Yep!]
 + [What's up?]
@@ -12,14 +12,14 @@ Hey, good to see you again! you're a detective, aren't you?
 
 Ah, finally someone I can trust! 
 
-I was sleeping in the tavern yesterday evening after being on night watch. And I was just waking up and I heard these hushed voices in the other room. 
+I slept in the tavern yesterday evening after being on night watch, I just woke up and I heard these hushed voices in the other room. 
 
 + [...]
-+ [oh, interesting!]
++ [Oh, interesting!]
   Interesting Indeed! Especially for that time of night.
  - 
  
- And then I heard someone say, "And that's how we'll finally get rid of him. He's been on the throne too long anyways."
+Then I heard someone say, "That's how we will finally get rid of him. He has been on the throne too long anyways."
  
  + [Did you see who they were?]
  + [What did you do?]
@@ -34,7 +34,7 @@ I was sleeping in the tavern yesterday evening after being on night watch. And I
   
 -
 
-He's hosting a masked dance tonight, which is a perfect cover, anything could happen.
+He's hosting a masked dance tonight, which is a perfect cover but anything could happen.
 
 + [Could you tell him to cancel it?]
  And make him look like a laughing stock and a scaredy cat? He'd probably rather die!
@@ -46,15 +46,16 @@ He's hosting a masked dance tonight, which is a perfect cover, anything could ha
 Since they don't know you, could you go to the dance and scout out who's who?
 
 + [Okay, I'll do that.]
+ Thank you so much! I'll tell the king you're coming.
+  ++ [No problem!]
 + [Nah, I don't want to risk it. I'll do something else.]
+ Ignoring the threat to the king is treason.
  
-- 
+-
 
-Thank you so much! I'll tell the king you're coming. 
 
-+[No problem!]
 - 
-Get to know everyone's names and stories, and when you think you know who the assasins are, tell the king. If you're a friend of mine he'll trust you absolutely and kill them on the spot! 
+Get to know everyone's names and stories, and when you think you know who the assassins are, tell the king. If you're a friend of mine he'll trust you absolutely and kill them on the spot! 
 
 + [I better make sure I find the right people then!]
 
@@ -63,6 +64,7 @@ Yep, you'll only get one shot! Keep track of everyone's names, occupations, and 
 + [Sounds good!]
 -
 <Use WASD to move around and chat to people.>
+<Press E to chat to people>
 
 
 * [Start Main Game] 
