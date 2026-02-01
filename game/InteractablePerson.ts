@@ -1,5 +1,5 @@
 import { input } from "../src/engine_core/input.js";
-import { switchCharacter } from "../inkle/index.js";
+import { switchCharacter } from "../inkle/Character.js";
 import type { InteractablePersonEntity, PlayerEntity } from "./types.js";
 
 export const createInteractablePerson =

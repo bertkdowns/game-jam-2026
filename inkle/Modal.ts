@@ -4,6 +4,8 @@ import {
   StateList,
 } from "../src/components/StateMachine.js";
 
+
+
 export class Modal {
   constructor() {
     this.skillSystem = new StateSystem(this);
