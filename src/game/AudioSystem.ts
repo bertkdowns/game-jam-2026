@@ -1,4 +1,4 @@
-import { MultiTrackCrossfader } from "../audio/Crossfader.js";
+import { MultiTrackCrossfader } from "../audio/Crossfader";
 
 export async function setupAudioSystem() {
   // Init the audio system

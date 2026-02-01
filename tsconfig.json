@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
+        "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true, 
+    
+    /*
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "bundler",
@@ -14,10 +22,11 @@
     "resolveJsonModule": true,
     "types": ["@webgpu/types"],
     "noEmit": true
+    */
   },
   "include": [
     "./**/*.ts",
-    "./**/*.js"
+    "./**/*"
   ],
   "exclude": [
     "node_modules",

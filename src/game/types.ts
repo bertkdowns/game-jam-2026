@@ -1,4 +1,4 @@
-import { Camera } from "../src/components/camera";
+import { Camera } from "../components/camera";
 
 // Common entity properties
 export interface BaseEntity {
@@ -63,7 +63,7 @@ export interface BackgroundEntity extends BaseEntity {
   texture: any;
 }
 
-// Camera type (matches the actual Camera class from src/components/camera)
+// Camera type (matches the actual Camera class from components/camera)
 export interface CameraType {
   position:
     | {

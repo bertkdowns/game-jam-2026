@@ -1,10 +1,10 @@
-import { Camera } from "../src/components/camera";
-import { Transform } from "../src/components/transform";
-import { Renderer, newFrameView } from "../src/engine_core/renderer";
-import { Scene } from "../src/engine_core/scene";
-import { Instantiate } from "../src/engine_core/utils";
-import { Manager } from "../src/engine_core/manager";
-import { InputUpdate, InputLateUpdate } from "../src/engine_core/input";
+import { Camera } from "../components/camera";
+import { Transform } from "../components/transform";
+import { Renderer, newFrameView } from "../engine_core/renderer";
+import { Scene } from "../engine_core/scene";
+import { Instantiate } from "../engine_core/utils";
+import { Manager } from "../engine_core/manager";
+import { InputUpdate, InputLateUpdate } from "../engine_core/input";
 import {
   loadAllAssets,
   backgroundTexture,
@@ -36,11 +36,10 @@ import {
 } from "./StableMasters";
 import { setupInputHandlers } from "./InputHandlers";
 import { setupAudioSystem } from "./AudioSystem";
-import { testrun } from "../inkle";
 import { GameScene, SCENE_CONFIGS } from "./Types/scenes";
 import { switchScene as switchInkScene } from "../inkle/StoryManager";
 import { renderAccusations } from "../inkle/accusations";
-import type {
+import {
   PlayerEntity,
   BackgroundEntity,
   SkyboxEntity,
@@ -64,10 +63,10 @@ export class Game {
   assets: Assets;
   currentScene: GameScene = GameScene.Main;
 
-  canvas = document.querySelector("canvas") as HTMLCanvasElement;
-  camera = Instantiate(new Camera(), new Transform()) as CameraType;
-  renderer = new Renderer();
-  scene = ((window as any).scene = new Scene());
+  canvas : HTMLCanvasElement = document.querySelector("canvas") as HTMLCanvasElement;
+  camera : CameraType = Instantiate(new Camera(), new Transform()) as CameraType;
+  renderer : Renderer = new Renderer();
+  scene : Scene  = ((window as any).scene = new Scene());
   player!: PlayerEntity;
   background!: BackgroundEntity;
   skybox!: SkyboxEntity;
@@ -150,7 +149,6 @@ export class Game {
 
     // Initialize with tutorial scene
     this.switchToScene(scene);
-    // testrun(); // Commented out so modal starts closed
   }
 
   // Setup main game scene (ballroom)

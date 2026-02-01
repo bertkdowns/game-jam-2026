@@ -1,4 +1,4 @@
-import { invertMat4, multiplyMat4 } from "../engine_core/math.js";
+import { invertMat4, multiplyMat4 } from "../engine_core/math";
 
 export const material = {
     bindingGroupLayout: {

@@ -1,5 +1,5 @@
 
-import { Time } from "./time.js";
+import { Time } from "./time";
 
 export class Manager {
     static frameUpdateEvent = [Time.Update,Manager.HandleObjectInit];

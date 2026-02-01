@@ -1,4 +1,4 @@
-import { Manager } from "./manager.js";
+import { Manager } from "./manager";
 
 // adds a way to murge objects and their childn objects together recursively 
 Object.assign(Object, {

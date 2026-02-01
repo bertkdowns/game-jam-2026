@@ -19,8 +19,8 @@ Each scene has:
 ### From Game.ts
 
 ```typescript
-import { Game } from "./game/Game.js";
-import { GameScene } from "./game/scenes.js";
+import { Game } from "./game/Game";
+import { GameScene } from "./game/scenes";
 
 const game = Game.getInstance();
 
@@ -51,9 +51,9 @@ You've completed the tutorial!
 Then bind these functions in your code:
 
 ```typescript
-import { Game } from "./game/Game.js";
-import { GameScene } from "./game/scenes.js";
-import { getGameStory } from "./inkle/index.js";
+import { Game } from "./game/Game";
+import { GameScene } from "./game/scenes";
+import { getGameStory } from "./inkle/index";
 
 const game = Game.getInstance();
 
@@ -117,8 +117,8 @@ You can modify the `startKnot` to change where each scene's story begins.
 To start the game with the tutorial scene, modify `main.ts`:
 
 ```typescript
-import { Game } from "./game/Game.js";
-import { GameScene } from "./game/scenes.js";
+import { Game } from "./game/Game";
+import { GameScene } from "./game/scenes";
 
 const game = Game.getInstance();
 await game.init();

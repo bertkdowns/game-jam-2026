@@ -1,6 +1,6 @@
 
-import { AllocateMesh, AllocateTexture, AllocateShaderModule, AllocateTextureArray, AllocateCubeMap } from "./renderer.js";
-import { audioCtx } from "./audio.js";
+import { AllocateMesh, AllocateTexture, AllocateShaderModule, AllocateTextureArray, AllocateCubeMap } from "./renderer";
+import { audioCtx } from "./audio";
 
 
 

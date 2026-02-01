@@ -3,7 +3,7 @@ import {
   Enable2DMouse,
   Disable2DMouse,
   EnableCanvasLock,
-} from "../src/engine_core/input.js";
+} from "../engine_core/input";
 
 export function setupInputHandlers() {
   document.getElementById("to2D")?.addEventListener("click", () => {

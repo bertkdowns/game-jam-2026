@@ -5,8 +5,10 @@ import {
   multiplyMat4Vec4,
   normalize,
   subtract,
-} from "../engine_core/math.js";
-import { createDepthTextureFromCanvas, gpu } from "../engine_core/renderer.js";
+} from "../engine_core/math";
+import { createDepthTextureFromCanvas, gpu } from "../engine_core/renderer";
+
+
 export class Camera {
   // actual camera stuff
   initialise(canvas) {

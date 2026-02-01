@@ -1,11 +1,11 @@
 import { Game } from "../Game";
 import { CameraType, TextEntity } from "../types";
-import { Instantiate } from "../../src/engine_core/utils";
-import { TextRenderer } from "../../src/components/textRenderer";
-import { Transform } from "../../src/components/transform";
-import { AllocateUniformBuffer } from "../../src/engine_core/renderer";
-import { Time } from "../../src/engine_core/time";
-import { DrawPage } from "../../src/textRenderer";
+import { Instantiate } from "../../engine_core/utils";
+import { TextRenderer } from "../../components/textRenderer";
+import { Transform } from "../../components/transform";
+import { AllocateUniformBuffer } from "../../engine_core/renderer";
+import { Time } from "../../engine_core/time";
+import { DrawPage } from "../../textRenderer";
 
 export function createTextObj(
   textMesh: any,

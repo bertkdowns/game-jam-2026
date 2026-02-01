@@ -1,5 +1,5 @@
-import { characters } from "./Character.js";
-import { CHARACTERS } from "./constants.js"
+import { characters } from "./Character";
+import { CHARACTERS } from "./constants";
 
 export function renderAccusations() {
   document.getElementById("modal").style.display = "none";

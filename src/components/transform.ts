@@ -1,4 +1,4 @@
-import { Vec3, quatFromEuler, eulerFromQuaternion, degToRad, radToDeg, TransformFromTRS } from "../engine_core/math.js";
+import { Vec3, quatFromEuler, eulerFromQuaternion, degToRad, radToDeg, TransformFromTRS } from "../engine_core/math";
 
 
 

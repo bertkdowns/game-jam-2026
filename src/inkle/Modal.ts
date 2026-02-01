@@ -2,7 +2,7 @@ import {
   StateSystem,
   State,
   StateList,
-} from "../src/components/StateMachine.js";
+} from "../components/StateMachine";
 
 
 

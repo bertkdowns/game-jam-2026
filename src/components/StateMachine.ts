@@ -1,4 +1,4 @@
-import { input } from "../engine_core/input.js";
+import { input } from "../engine_core/input";
 // - an implementation of a finite state machine, with entry and exit functions called when switching state. 
 
 

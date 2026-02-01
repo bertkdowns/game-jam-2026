@@ -1,11 +1,11 @@
 import { Game } from "../Game";
 import { CameraType, ExplosionEntity } from "../types";
-import { Instantiate } from "../../src/engine_core/utils";
+import { Instantiate } from "../../engine_core/utils";
 import { SpriteDependencies } from "../LoadAssets";
-import { material as HDRmaterial } from "../../src/hdrMaterial";
-import { Time } from "../../src/engine_core/time";
-import { Play } from "../../src/engine_core/audio";
-import { input } from "../../src/engine_core/input";
+import { material as HDRmaterial } from "../../hdrMaterial";
+import { Time } from "../../engine_core/time";
+import { Play } from "../../engine_core/audio";
+import { input } from "../../engine_core/input";
 
 export function createExplosion(
   explosionTexture: any,

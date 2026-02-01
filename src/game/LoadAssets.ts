@@ -1,6 +1,6 @@
-import { MeshRenderer } from "../src/components/meshRenderer";
-import { SpriteRenderer } from "../src/components/spriteRenderer";
-import { Transform } from "../src/components/transform";
+import { MeshRenderer } from "../components/meshRenderer";
+import { SpriteRenderer } from "../components/spriteRenderer";
+import { Transform } from "../components/transform";
 import {
   loadAudioClips,
   loadImages,
@@ -8,8 +8,8 @@ import {
   loadShaders,
   loadTextureArray,
   loadInkFiles, 
-} from "../src/engine_core/asset_io";
-import { AllocateUniformBuffer } from "../src/engine_core/renderer";
+} from "../engine_core/asset_io";
+import { AllocateUniformBuffer } from "../engine_core/renderer";
 
 // Export variables that will be set after loading
 export let backgroundTexture: any;

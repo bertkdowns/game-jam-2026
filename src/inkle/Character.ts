@@ -1,4 +1,4 @@
-import { CHARACTERS_PIC, CHARACTERS } from "./constants.js";
+import { CHARACTERS_PIC, CHARACTERS } from "./constants";
 import {
   getGameStory,
   continueStory,
@@ -6,9 +6,9 @@ import {
   setCharacterName,
   getCurrentScene,
   switchScene,
-} from "./StoryManager.js";
-import { GameScene } from "../game/Types/scenes.js";
-import { openModal } from "./Modal.js";
+} from "./StoryManager";
+import { GameScene } from "../game/Types/scenes";
+import { openModal } from "./Modal";
 
 export class Character {
   story: any;

@@ -1,16 +1,16 @@
-import { input } from "../src/engine_core/input.js";
-import { Time } from "../src/engine_core/time.js";
-import { modal } from "../inkle/Modal.js";
-import { Instantiate } from "../src/engine_core/utils.js";
-import { DemoEntity } from "../src/components/StateMachine.js";
-import { SpriteDependencies } from "./LoadAssets.js";
-import { checkCollision } from "./Collision.js";
-import { Game } from "./Game.js";
+import { input } from "../engine_core/input";
+import { Time } from "../engine_core/time";
+import { Instantiate } from "../engine_core/utils";
+import { DemoEntity } from "../components/StateMachine";
+import { SpriteDependencies } from "./LoadAssets";
+import { checkCollision } from "./Collision";
+import { Game } from "./Game";
+import { modal } from "../inkle/Modal";
 import type {
   PlayerEntity,
   CameraType,
   InteractablePersonEntity,
-} from "./types.js";
+} from "./types";
 
 const MIN_X = -15;
 const MAX_X = 15;

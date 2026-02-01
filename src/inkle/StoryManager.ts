@@ -3,12 +3,10 @@ import { Choice } from "inkjs/engine/Choice";
 // @ts-ignore
 
 
-import { closeModal } from "./Modal.js";
-import { GameScene, SCENE_CONFIGS } from "../game/Types/scenes.js";
-import { Game } from "../game/Game.js";
-
-
-import { inkStory, tutorialStory, endingStory } from "../game/LoadAssets.js";
+import { closeModal } from "./Modal";
+import { GameScene, SCENE_CONFIGS } from "../game/Types/scenes";
+import { Game } from "../game/Game";
+import { inkStory, tutorialStory, endingStory } from "../game/LoadAssets";
 
 
 
@@ -92,7 +90,7 @@ interface DialogMessage {
 let conversationHistory: DialogMessage[] = [];
 let currentCharacterName: string = "";
 let isAnimating = false;
-let currentAnimationInterval: NodeJS.Timeout | null = null;
+let currentAnimationInterval: any = null;
 
 // This will be called from index.ts after all modules are loaded
 export function bindExternalFunctions(

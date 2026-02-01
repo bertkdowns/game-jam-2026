@@ -1,7 +1,7 @@
-import { SkyboxRenderer } from "../../src/components/skyboxRenderer";
-import { Transform } from "../../src/components/transform";
-import { AllocateUniformBuffer } from "../../src/engine_core/renderer";
-import { Instantiate } from "../../src/engine_core/utils";
+import { SkyboxRenderer } from "../../components/skyboxRenderer";
+import { Transform } from "../../components/transform";
+import { AllocateUniformBuffer } from "../../engine_core/renderer";
+import { Instantiate } from "../../engine_core/utils";
 import { Game } from "../Game";
 import { SkyboxEntity } from "../types";
 

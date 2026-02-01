@@ -1,8 +1,8 @@
-import { Instantiate } from "../src/engine_core/utils.js";
-import { SpriteDependencies, placeholderTexture } from "./LoadAssets.js";
-import { createInteractablePerson } from "./InteractablePerson.js";
-import { CHARACTERS } from "../inkle/constants.js";
-import { Game } from "./Game.js";
+import { Instantiate } from "../engine_core/utils";
+import { SpriteDependencies, placeholderTexture } from "./LoadAssets";
+import { createInteractablePerson } from "./InteractablePerson";
+import { CHARACTERS } from "../inkle/constants";
+import { Game } from "./Game";
 
 const NPCPositions = {
   [CHARACTERS.VISITING_BARON]: [10, 5, 0],

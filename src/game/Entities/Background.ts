@@ -1,6 +1,6 @@
 import { SpriteDependencies } from "../LoadAssets";
 
-import { Instantiate } from "../../src/engine_core/utils";
+import { Instantiate } from "../../engine_core/utils";
 import { BackgroundEntity } from "../types";
 import { Game } from "../Game";
 

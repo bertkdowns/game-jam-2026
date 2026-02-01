@@ -1,6 +1,6 @@
-import { input } from "../src/engine_core/input.js";
-import { switchCharacter } from "../inkle/Character.js";
-import type { InteractablePersonEntity, PlayerEntity } from "./types.js";
+import { input } from "../engine_core/input";
+import { switchCharacter } from "../inkle/Character";
+import type { InteractablePersonEntity, PlayerEntity } from "./types";
 
 export const createInteractablePerson =
   (): Partial<InteractablePersonEntity> => ({
