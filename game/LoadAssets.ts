@@ -17,7 +17,6 @@ export let tutorialTexture: any;
 export let endingTexture: any;
 export let playerTexture: any;
 export let fontTexture: any;
-export let tileTexture: any;
 export let flatColorTexture: any;
 export let skyboxTexture: any;
 export let stablemasterTexture: any;
@@ -38,11 +37,9 @@ export let audioClips: any[];
 // Function to load all assets (must be called after renderer is initialized)
 export async function loadAllAssets() {
   const [
-    [bgTexture, placeholderTex, tutorialTex],
+    [bgTexture, placeholderTex, tutorialTex , playerTex,],
     [
-      playerTex,
       fontTex,
-      tileTex,
       flatColorTex,
       skyboxTex,
       stablemasterTex,
@@ -56,16 +53,15 @@ export async function loadAllAssets() {
     loadImages(
       `/assets/sprites/ballroom_background.png`,
       `/assets/sprites/characterPortraits/placeholder guy.png`,
-      `/assets/sprites/intro_background.png`
+      `/assets/sprites/intro_background.png`,
+      `/assets/sprites/character.png`,
     ).then((textures) =>
       textures.map((texture: any) =>
         Object.assign(texture, { pixelScale: 1 / 256 })
       )
     ),
-    loadImages(
-      `/assets/sprites/character.png`,
+    loadImages( 
       `/assets/sprites/font.png`,
-      `/assets/sprites/groundTile.png`,
       `/assets/sprites/flatColor.png`,
       `/assets/sprites/skybox.png`,
       `/assets/sprites/characterStanding/stablemaster.png`,
@@ -118,7 +114,6 @@ export async function loadAllAssets() {
   endingTexture = tutorialTex; // using tutorial texture for ending until we have an ending background
   playerTexture = playerTex;
   fontTexture = fontTex;
-  tileTexture = tileTex;
   flatColorTexture = flatColorTex;
   skyboxTexture = skyboxTex;
   stablemasterTexture = stablemasterTex;

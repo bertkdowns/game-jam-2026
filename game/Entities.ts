@@ -66,6 +66,10 @@ export function createBackground(
   return background;
 }
 
+
+
+export function createExplosion(){};
+/*
 export function createExplosion(
   explosionTexture: any,
   spriteShaderWithAtlus: any,
@@ -124,7 +128,10 @@ export function createExplosion(
   ));
   return explosion;
 }
+*/
 
+export function createTextObj(){}
+/*
 export function createTextObj(
   textMesh: any,
   textShader: any,
@@ -191,3 +198,6 @@ export function createTextObj(
   ));
   return textObj;
 }
+*/
+
+
