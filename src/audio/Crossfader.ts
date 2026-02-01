@@ -306,7 +306,7 @@ export class MultiTrackCrossfader {
     this.gains.forEach((g) => {
       try {
         g.disconnect();
-      } catch {}
+      } catch(error) {console.error(error);}
       g.connect(node);
     });
   }
@@ -343,10 +343,10 @@ export class MultiTrackCrossfader {
       if (!s) continue;
       try {
         s.stop();
-      } catch {}
+      } catch(error) {console.error(error);}
       try {
         s.disconnect();
-      } catch {}
+      } catch(error) {console.error(error);}
     }
     this.sources = this.sources.map(() => null);
   }
