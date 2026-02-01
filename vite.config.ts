@@ -1,6 +1,21 @@
 import { defineConfig } from "vite";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 export default defineConfig({
+  plugins: [
+    viteStaticCopy({
+      targets: [
+        {
+          src: "build/module.wasm",
+          dest: "build",
+        },
+        {
+          src: "build/module.wasm.map",
+          dest: "build",
+        },
+      ],
+    }),
+  ],
   server: {
     open: true,
     port: 5173,
