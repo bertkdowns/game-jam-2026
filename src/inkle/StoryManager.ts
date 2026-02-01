@@ -1,15 +1,11 @@
-import { Story, Compiler } from "inkjs/compiler/Compiler";
-import { Choice } from "inkjs/engine/Choice";
+import { Story, Compiler } from "inkjs/full";
+import type { Choice } from "inkjs/engine/Choice";
 // @ts-ignore
-
 
 import { closeModal } from "./Modal";
 import { GameScene, SCENE_CONFIGS } from "../game/Types/scenes";
 import { Game } from "../game/Game";
 import { inkStory, tutorialStory, endingStory } from "../game/LoadAssets";
-
-
-
 
 // Store stories for each scene
 const stories: Map<GameScene, Story> = new Map();
@@ -19,8 +15,7 @@ let currentStory: Story;
 // Initialize all stories
 export function initializeStories() {
   try {
-
-    console.log(inkStory); 
+    console.log(inkStory);
     // Main story
 
     const mainCompiler = new Compiler(inkStory);
@@ -28,7 +23,7 @@ export function initializeStories() {
     mainStory.BindExternalFunction("closeModal", closeModal);
     mainStory.BindExternalFunction("nextScene", () => {
       Game.getInstance().switchToScene(GameScene.Ending);
-    })
+    });
     stories.set(GameScene.Main, mainStory);
 
     // Tutorial story
@@ -50,8 +45,6 @@ export function initializeStories() {
     throw error;
   }
 }
-
-
 
 // Switch to a different scene's story
 export function switchScene(scene: GameScene, startKnot?: string) {
@@ -258,14 +251,16 @@ function createDialogBubble(message: DialogMessage): HTMLElement {
   const isCharacter = message.type === "character";
 
   const bubbleContainer = document.createElement("div");
-  bubbleContainer.className = `flex ${isCharacter ? "items-start justify-start" : "items-end justify-end"
-    } gap-2 w-full`;
+  bubbleContainer.className = `flex ${
+    isCharacter ? "items-start justify-start" : "items-end justify-end"
+  } gap-2 w-full`;
 
   const bubble = document.createElement("div");
-  bubble.className = `relative rounded-2xl p-5 shadow-lg max-w-[80%] dialog-bubble ${isCharacter
-    ? "bg-white text-gray-900 dialog-bubble-character"
-    : "bg-blue-500 text-white dialog-bubble-player"
-    }`;
+  bubble.className = `relative rounded-2xl p-5 shadow-lg max-w-[80%] dialog-bubble ${
+    isCharacter
+      ? "bg-white text-gray-900 dialog-bubble-character"
+      : "bg-blue-500 text-white dialog-bubble-player"
+  }`;
 
   // Name tag - hidden cause we aren't suppsoed to know it
   // if (isCharacter && message.characterName) {
@@ -288,8 +283,9 @@ function createDialogBubble(message: DialogMessage): HTMLElement {
 
   // Tail
   const tail = document.createElement("div");
-  tail.className = `absolute w-4 h-4 rotate-45 ${isCharacter ? "-left-2 top-6 bg-white" : "-right-2 top-6 bg-blue-500"
-    }`;
+  tail.className = `absolute w-4 h-4 rotate-45 ${
+    isCharacter ? "-left-2 top-6 bg-white" : "-right-2 top-6 bg-blue-500"
+  }`;
   bubble.appendChild(tail);
 
   bubbleContainer.appendChild(bubble);

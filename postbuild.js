@@ -1,6 +1,6 @@
 import fs from "fs";
 
-const file = "./build/module";
+const file = "./build/module.js";
 let content = fs.readFileSync(file, "utf8");
 
 // 1. Prepend your import line

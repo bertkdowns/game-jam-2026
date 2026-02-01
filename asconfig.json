@@ -1,6 +1,5 @@
 {
   "entries": [
-    "./src/main.ts",
     "./src/textRenderer.ts",
     "./src/tileRenderer.ts",
     "./src/utils.ts"

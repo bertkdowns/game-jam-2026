@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 export default defineConfig({
   server: {
@@ -6,29 +6,27 @@ export default defineConfig({
     port: 5173,
   },
 
-
   build: {
-    target: 'esnext',
+    target: "esnext",
     commonjsOptions: {
       include: [],
-      transformMixedEsModules: false
+      transformMixedEsModules: false,
     },
     rollupOptions: {
       treeshake: {
-      moduleSideEffects: id =>
-        id.includes("inkjs") || id.includes("src")
-    }
-  }
+        moduleSideEffects: (id) => id.includes("inkjs") || id.includes("src"),
+      },
+    },
   },
   optimizeDeps: {
-    //include: ["inkjs", "inkjs/compiler/Compiler", "inkjs/engine/Choice"], 
+    include: ["inkjs/full"],
 
     esbuildOptions: {
-      target: 'esnext',
-    }
+      target: "esnext",
+    },
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json']
+    extensions: [".ts", ".js", ".json"],
   },
-   base: './',
+  base: "./",
 });
