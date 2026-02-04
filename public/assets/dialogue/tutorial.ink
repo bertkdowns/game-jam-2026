@@ -1,5 +1,5 @@
 EXTERNAL closeModal()
-EXTERNAL switchCharacter(characterName)
+EXTERNAL switchToCharacter(characterName)
 EXTERNAL switchToMainGame()
 
 == Start
@@ -71,8 +71,3 @@ Yep, you'll only get one shot! Keep track of everyone's names, occupations, and 
   ~ closeModal()
   ~ switchToMainGame()
   -> END
-
-
-
-
-

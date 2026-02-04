@@ -1,6 +1,6 @@
 // EXTERNAL exitGame()
 EXTERNAL closeModal()
-EXTERNAL switchCharacter(characterName)
+EXTERNAL switchToCharacter(characterName)
 EXTERNAL nextScene()
 
 
@@ -43,7 +43,7 @@ Close Modal
 
 
 
-== function switchCharacter(characterName) ==
+== function switchToCharacter(characterName) ==
 Switch Character {characterName}
 ~ return
 
@@ -65,17 +65,17 @@ Switch Character {characterName}
 
 Choose a character:
 
- + [VisitingBaron] {switchCharacter("VisitingBaron")}  -> VisitingBaron
- + [StableMaster] {switchCharacter("StableMaster")} -> StableMaster
- + [Mayor] {switchCharacter("Mayor")} -> Mayor
- + [Jester] {switchCharacter("Jester")} -> Jester
- + [General] {switchCharacter("General")} -> General
- + [Judge] {switchCharacter("Judge")} -> Judge
- + [Bishop] {switchCharacter("Bishop")} -> Bishop
- + [HeadEngineer] {switchCharacter("HeadEngineer")} -> HeadEngineer
- + [Steward] {switchCharacter("Steward")} -> Steward
- + [HeadChef] {switchCharacter("HeadChef")}-> HeadChef
- + [King] {switchCharacter("King")}-> King
+ + [VisitingBaron] {switchToCharacter("VisitingBaron")}  -> VisitingBaron
+ + [StableMaster] {switchToCharacter("StableMaster")} -> StableMaster
+ + [Mayor] {switchToCharacter("Mayor")} -> Mayor
+ + [Jester] {switchToCharacter("Jester")} -> Jester
+ + [General] {switchToCharacter("General")} -> General
+ + [Judge] {switchToCharacter("Judge")} -> Judge
+ + [Bishop] {switchToCharacter("Bishop")} -> Bishop
+ + [HeadEngineer] {switchToCharacter("HeadEngineer")} -> HeadEngineer
+ + [Steward] {switchToCharacter("Steward")} -> Steward
+ + [HeadChef] {switchToCharacter("HeadChef")}-> HeadChef
+ + [King] {switchToCharacter("King")}-> King
 
 
 

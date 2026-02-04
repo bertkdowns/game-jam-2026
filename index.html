@@ -25,7 +25,8 @@
     <dialog id="modal" style="display: none; /* close modal by default**/"
       class="w-[1920px] h-[1080px] flex flex-col bg-transparent m-0">
       <!-- MAIN DIALOG CONTAINER -->
-      <div class="flex flex-col w-[100%] h-[100%] bg-black/30 rounded-md text-black p-8 shadow-lg">
+      <div id="Background"
+        class="flex flex-col w-[100%] h-[100%] bg-black/30 rounded-md text-black p-8 shadow-lg overflow-y-visible">
         <!-- TOP SECTION: NPC PICTURE + DIALOG -->
         <div class="flex w-full gap-6 rounded-md text-white">
           <!-- LEFT: NPC PICTURE -->
@@ -36,11 +37,9 @@
           </div>
 
           <!-- RIGHT: DIALOG -->
-          <div class="h-full w-[50%] flex flex-col items-end justify-end gap-4">
+          <div class=" w-[50%] flex flex-col gap-4 overflow-y-auto scroll-smooth my-auto max-h-[600px] h-max">
             <!-- Scrollable conversation container -->
-            <div id="ConversationContainer"
-              class="flex flex-col gap-4 w-full overflow-y-auto overflow-x-hidden flex-1 pb-2"
-              style="max-height: 600px; justify-content: flex-end">
+            <div id="ConversationContainer" class="flex flex-col gap-4 w-full overflow-y-visible">
               <!-- Dialog bubbles will be dynamically added here -->
             </div>
 

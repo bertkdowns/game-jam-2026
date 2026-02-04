@@ -1,11 +1,13 @@
+
+/*
 import { Game } from "../Game";
 import { CameraType, TextEntity } from "../types";
-import { Instantiate } from "../../engine_core/utils";
+import { Instantiate } from "@engine_core/utils";
 import { TextRenderer } from "../../components/textRenderer";
 import { Transform } from "../../components/transform";
 import { AllocateUniformBuffer } from "../../engine_core/renderer";
 import { Time } from "../../engine_core/time";
-import { DrawPage } from "../../textRenderer";
+import { DrawPage } from "../../as_wasm/textRenderer";
 
 export function createTextObj(
   textMesh: any,
@@ -17,12 +19,16 @@ export function createTextObj(
   const textObj = (game.scene.heirachy["textObj"] = Instantiate(
     TextRenderer,
     new Transform(),
+    textMesh,
     {
-      vertexBuffer: textMesh,
       cameraMatrixBuffer: AllocateUniformBuffer(88),
       transformBuffer: AllocateUniformBuffer(256, 1000),
       shaderModule: textShader,
       texture: fontTexture,
+      timeLastUpdate: 0,
+      lastFPS: 0,
+
+
       Update() {
         screenLeft = -camera.aspect * (0.5 / camera.pixelScale);
         screenTop = 0.5 / camera.pixelScale;
@@ -61,3 +67,4 @@ export function createTextObj(
   ));
   return textObj;
 }
+*/

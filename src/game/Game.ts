@@ -1,138 +1,93 @@
-import { Camera } from "../components/camera";
-import { Transform } from "../components/transform";
-import { Renderer, newFrameView } from "../engine_core/renderer";
-import { Scene } from "../engine_core/scene";
-import { Instantiate } from "../engine_core/utils";
-import { Manager } from "../engine_core/manager";
-import { InputUpdate, InputLateUpdate } from "../engine_core/input";
-import {
-  loadAllAssets,
-  backgroundTexture,
-  tutorialTexture,
-  endingTexture,
-  playerTexture,
-  skyboxTexture,
-  explosionTexture,
-  fontTexture,
-  skyboxShader,
-  spriteShaderWithAtlus,
-  textShader,
-  cubeMesh,
-  textMesh,
-  audioClips,
-} from "./LoadAssets";
-import {
-  createSkybox,
-  createBackground,
-  createExplosion,
-  createTextObj,
-} from "./Entities";
-import { createPlayer } from "./Player";
-import {
-  createStableMasters,
-  createTutorialCharacters,
-  createEndingCharacters,
-  removeAllCharacters,
-} from "./StableMasters";
-import { setupInputHandlers } from "./InputHandlers";
-import { setupAudioSystem } from "./AudioSystem";
-import { GameScene, SCENE_CONFIGS } from "./Types/scenes";
-import { switchScene as switchInkScene } from "../inkle/StoryManager";
-import { renderAccusations } from "../inkle/accusations";
-import {
-  PlayerEntity,
-  BackgroundEntity,
-  SkyboxEntity,
-  ExplosionEntity,
-  TextEntity,
-  CameraType,
-} from "./types";
-import { switchCharacter } from "../inkle/Character";
-import { CHARACTERS } from "../inkle/constants";
-import { initializeStories,  bindExternalFunctions } from "../inkle/StoryManager";
-import { MultiTrackCrossfader } from "../audio/Crossfader";
+// core
+import { Renderer, newFrameView } from "@engine_core/renderer";
+import { Scene } from "@engine_core/scene";
+import { Manager } from "@engine_core/manager";
+import { InputUpdate, InputLateUpdate } from "@engine_core/input";
+import { loadAllAssets } from "@engine_core/asset_io/LoadAssets";
+import { setupAudioSystem, MultiTrackCrossfader } from "@engine_core/audio";
+
+// components 
+
+import { Camera } from "@components/camera";
+import { Transform } from "@components/transform";
 
 
-interface Assets {
-  images: Record<string, HTMLImageElement>;
-  audio: Record<string, HTMLAudioElement>;
-  objects: Record<string, any>;
-}
+import { setupInputHandlers } from "@interface/interface";
+import { GameScene, SceneManager } from "./SceneManager";
+import { StoryManager } from "@game/inkle/StoryManager";
+import { InteractablePersonEntity } from "./types";
+import { Story } from "inkjs/compiler/Compiler";
+import { CHARACTERS, switchToScene } from "./inkle";
+import { Instantiate } from "@engine_core/utils";
+import { Character, characters } from "./inkle/Character";
+
+
+
 
 // Singleton class for the game
 export class Game {
   static instance: Game;
-  assets: Assets;
-  currentScene: GameScene = GameScene.Main;
-
-  canvas : HTMLCanvasElement = document.querySelector("canvas") as HTMLCanvasElement;
-  camera : CameraType = Instantiate(new Camera(), new Transform()) as CameraType;
-  renderer : Renderer = new Renderer();
-  scene : Scene  = ((window as any).scene = new Scene());
-  player!: PlayerEntity;
-  background!: BackgroundEntity;
-  skybox!: SkyboxEntity;
-  explosion!: ExplosionEntity;
-  textObj!: TextEntity;
-  audioSystem: MultiTrackCrossfader| undefined = undefined; 
+  //canvas: HTMLCanvasElement;
+  camera!: Camera;
+  renderer!: Renderer;
+  scene!: Scene;
+  audioSystem: MultiTrackCrossfader | undefined;
+  interactablePeople: InteractablePersonEntity[] = [] as InteractablePersonEntity[];
+  sceneManager: SceneManager;
+  storyManager?: StoryManager;
 
   static getInstance() {
-    if (!Game.instance) {
-      Game.instance = new Game();
-    }
-    return Game.instance;
+    return Game.instance || (Game.instance = new Game());
   }
+  static getCurrentGameStory(): Story | undefined {
+    return StoryManager.currentStory;
+  }
+  static getCurrentScene(): GameScene {
+    return Game.instance.sceneManager.stateName as GameScene;
+  }
+
 
   constructor() {
     if (Game.instance) {
       throw new Error("Game already exists");
     }
     Game.instance = this;
+    this.scene = new Scene();
+    this.sceneManager = new SceneManager();
+    this.storyManager = new StoryManager();
+    console.log("created game instance");
   }
 
-  async init(scene: GameScene = GameScene.Tutorial) {
-    // Initialize renderer first (required for asset loading)
-    await Promise.all([this.renderer.initialise(this.canvas)]);
+  async init() {
 
-    // Set up window globals for compatibility
-    (window as any).renderer = this.renderer;
-    (window as any).camera = this.camera;
-    (window as any).scene = this.scene;
+    console.log("starting game initialisation");
+
+    const canvas = document.querySelector("canvas") as HTMLCanvasElement;
+    // Initialize renderer first (required for asset loading)
+    this.renderer = await Renderer.CreateFromCanvas(canvas);
+
+    console.log("loaded renderer...");
 
     // Initialize camera (sets up ResizeObserver and initial canvas size)
-    this.camera.initialise(this.canvas);
-
-    // Load all assets (must happen after renderer is initialized)
-    await loadAllAssets();
-
-
-    // Initialize stories on module load
-  
+    this.camera = Instantiate(new Camera(), new Transform()) as Camera;
+    this.camera.initialise(canvas);
     this.camera.position = [0, -1, -15];
 
-    (window as any).playerTexture = playerTexture;
+    // allows us to access these from the console 
+    window.renderer = this.renderer;
+    window.camera = this.camera;
+    window.scene = this.scene;
 
-    // Create entities
+    console.log("setup camera...");
 
-    this.background = createBackground(backgroundTexture, this);
-    this.player = createPlayer(playerTexture, this);
+    // Load audio system and all other assets (must happen after renderer is initialized)
+    [this.audioSystem] = await Promise.all([setupAudioSystem(), loadAllAssets(),]);
 
-    
-    setupInputHandlers();
-    
-    // Initialize external function bindings
-    initializeStories();
-    bindExternalFunctions(switchCharacter, switchToMainGame);
+    console.log("loaded audio system and assets");
+    //binds the external functions and sets up the story (uses the ink files so must happen after the load assets) 
+    this.storyManager?.init();
 
-    
-
-    // Set up audio system
-    this.audioSystem = await setupAudioSystem();
-
-    
-
-
-
+    console.log("initialised story");
 
 
     Manager.AddUpdateEvents([
@@ -151,122 +106,21 @@ export class Game {
         ]),
       InputLateUpdate,
     ]);
+    setupInputHandlers();
+  }
 
-    // Start the game loop
+
+  start(sceneName: GameScene = GameScene.Tutorial) {
+    console.log("starting gameloop");
     Manager.StartUpdateLoop();
-    console.log("started gameloop");
+
+    console.log("STARTING GAME");
 
     // Initialize with tutorial scene
-    this.switchToScene(scene);
-  }
-
-
-
-
-  
-
-
-  // Setup main game scene (ballroom)
-  setupMainScene() {
-    this.currentScene = GameScene.Main;
-    this.audioSystem?.fadeTo(1);
-    switchInkScene(GameScene.Main);
-
-    // Remove characters from previous scene
-    removeAllCharacters(this);
-
-    // Show main game background
-    if (this.background) {
-      this.background.texture = backgroundTexture;
-      this.background.scale = [1, 1, 1];
-    }
-    if (this.skybox) {
-      this.skybox.scale = [1, 1, 1];
-    }
-    if (this.player) {
-      this.player.scale = [1, 1, 1];
-    }
-
-    // Create all main game characters
-    createStableMasters(this);
-  }
-
-  // Setup tutorial scene
-  setupTutorialScene() {
-    this.currentScene = GameScene.Tutorial;
-    switchInkScene(GameScene.Tutorial);
-
-    // Remove characters from previous scene
-    removeAllCharacters(this);
-
-    // Show tutorial background
-    if (this.background) {
-      this.background.texture = tutorialTexture;
-      this.background.scale = [1.1, 1.1, 1];
-    }
-    // Keep skybox visible for tutorial
-    if (this.skybox) {
-      this.skybox.scale = [1, 1, 1];
-    }
-    // Show player in tutorial
-    if (this.player) {
-      this.player.scale = [1, 1, 1];
-    }
-
-    // Create only tutorial-specific characters
-    createTutorialCharacters(this);
-
-    switchCharacter(CHARACTERS.TUTORIAL_CHARACTER);
-
-    // You can add tutorial-specific entities here
-    // For example: tutorial markers, instructions, etc.
-  }
-
-  // Setup ending scene
-  setupEndingScene() {
-    this.currentScene = GameScene.Ending;
-    switchInkScene(GameScene.Ending);
-
-    // Remove characters from previous scene
-    removeAllCharacters(this);
-
-    // Show ending background
-    if (this.background) {
-      this.background.texture = endingTexture;
-      this.background.scale = [1, 1, 1];
-    }
-    // Keep skybox visible for ending
-    if (this.skybox) {
-      this.skybox.scale = [1, 1, 1];
-    }
-    // Hide player in ending
-    if (this.player) {
-      this.player.scale = [0, 0, 1];
-    }
-
-    // Create only ending-specific characters
-    createEndingCharacters(this);
-
-    // You can add ending-specific entities here
-    // For example: credits, final scene elements, etc.
-    renderAccusations(); // Render the accusations before switching to ending
-  }
-
-  // Switch to a different scene
-  switchToScene(scene: GameScene) {
-    switch (scene) {
-      case GameScene.Tutorial:
-        this.setupTutorialScene();
-        break;
-      case GameScene.Main:
-        this.setupMainScene();
-
-        break;
-      case GameScene.Ending:
-        this.setupEndingScene();
-        break;
-      default:
-        console.warn(`Unknown scene: ${scene}`);
+    switchToScene(sceneName);
+    // if we are not debugging the game for any reason, starts the standarad tutorial conversation. 
+    if (sceneName === GameScene.Tutorial) {
+      StoryManager.StartConversationWith(CHARACTERS.TUTORIAL_CHARACTER, "Start");
     }
   }
 }
@@ -274,8 +128,59 @@ export class Game {
 
 
 
-// Function to switch to main game scene
-function switchToMainGame() {
-  const game = Game.getInstance();
-  game.switchToScene(GameScene.Main);
+
+
+// preload the textures so it loads immediately 
+
+interface PreloadedTexture {
+  imageSrc: string;
+  imageBitmap?: ImageBitmap;
 }
+
+function preloadCharacterTextures() { return Promise.all(Object.values(characters).map(preloadTexture)) }
+
+async function preloadTexture(texture: PreloadedTexture) {
+
+  const src = texture.imageSrc;
+
+  try {
+    const res = await fetch(src);
+    const blob = await res.blob();
+    const bitmap = await createImageBitmap(blob); // decoded
+    texture.imageBitmap = bitmap;
+
+    // create new fake url to this bitmap data 
+    const canvas = document.createElement("canvas");
+    canvas.width = texture.imageBitmap.width;
+    canvas.height = texture.imageBitmap.height;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(texture.imageBitmap, 0, 0);
+
+    const dataUrl = canvas.toDataURL();
+    texture.imageSrc = dataUrl;
+  } catch (err) {
+    console.error(`Failed to load ${src}`, err);
+    throw err;
+  }
+}
+
+
+
+
+
+//function preloadBackgroundTextures() {  return Promise.all(Object.values(characters).map(preloadTexture))}
+
+
+
+
+
+declare global {
+  interface Window {
+    renderer: Renderer;
+    camera: Camera;
+    scene: Scene;
+  }
+}
+
+
+

@@ -1,11 +1,39 @@
 export const degToRad = Math.PI / 180;
 export const radToDeg = 180 / Math.PI;
 
+
+declare global {
+    interface Window {
+        Vec3: Vec3;
+    }
+    type Vector3 = [number, number, number] | Vec3;
+    type Vector4 = [number, number, number, number];
+    type Matrix = number[] & { length: 16 };
+
+    interface Ray {
+        origin: Vector3;
+        direction: Vector3;
+    }
+    interface Vec3 extends Array<number> {
+        get x(): number;
+        set x(v: number);
+        get y(): number;
+        set y(v: number);
+        get z(): number;
+        set z(v: number);
+
+        0: number;
+        1: number;
+        2: number;
+    }
+}
+
+
 // vector math
-export class Vec3 extends Array {
-    constructor(x = 0, y = 0, z = 0) {
+export class Vec3 extends Array<number> {
+    constructor(x: number | [number, number, number] = 0, y: number = 0, z: number = 0) {
         if (Array.isArray(x))
-            super(x[0], x[1], x[2]);
+            super(...x);
         else
             super(x, y, z);
     }
@@ -18,39 +46,32 @@ export class Vec3 extends Array {
     get z() { return this[2]; }
     set z(v) { this[2] = v; }
 
-    set([x = 0, y = 0, z = 0]) {
-        this[0] = x; this[1] = y; this[2] = z;
-    }
-
     static zero() { return new Vec3(0, 0, 0) };
     static one() { return new Vec3(1, 1, 1) };
 }
 
 
-window.Vec3 = Vec3;  // exposes the vec3 class to call in the console
-
-
-export function dot(a, b) {
+export function dot(a: Vector3, b: Vector3) {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
-export function normalize(v) {
+export function normalize(v: Vector3): Vector3 {
     const len = Math.hypot(...v);
-    return v.map(x => x / len);
+    return v.map(x => x / len) as Vector3;
 }
-export function cross(a, b) {
+export function cross(a: Vector3, b: Vector3): Vector3 {
     return [
         a[1] * b[2] - a[2] * b[1],
         a[2] * b[0] - a[0] * b[2],
         a[0] * b[1] - a[1] * b[0],
     ];
 }
-export function subtract(a, b) {
-    return a.map((v, i) => v - b[i]);
+export function subtract(a: Vector3, b: Vector3): Vector3 {
+    return a.map((v, i) => v - b[i]) as Vector3;
 }
 
 
 // Matrix multiplication  
-export function multiplyMat4Vec4(m, v) {
+export function multiplyMat4Vec4(m: Matrix, v: Vector4): Vector4 {
     const [x, y, z, w] = v;
     return [
         m[0] * x + m[4] * y + m[8] * z + m[12] * w,
@@ -61,8 +82,8 @@ export function multiplyMat4Vec4(m, v) {
 }
 
 
-export function multiplyMat4(a, b) {
-    const out = new Array(16);
+export function multiplyMat4(a: Matrix, b: Matrix): Matrix {
+    const out = new Array(16) as Matrix;
 
     const
         a00 = a[0], a10 = a[1], a20 = a[2], a30 = a[3],
@@ -104,7 +125,7 @@ export function multiplyMat4(a, b) {
 }
 
 // Inverts A matrix
-export function invertMat4(m) {
+export function invertMat4(m: Matrix): Matrix {
     const inv = new Array(16);
     const [
         m00, m10, m20, m30,
@@ -134,17 +155,19 @@ export function invertMat4(m) {
     inv[15] = m00 * m11 * m22 - m00 * m12 * m21 - m10 * m01 * m22 + m10 * m02 * m21 + m20 * m01 * m12 - m20 * m02 * m11;
 
     let det = m00 * inv[0] + m01 * inv[1] + m02 * inv[2] + m03 * inv[3];
-    if (det === 0) return null;
+    if (det === 0) {
+        throw new Error("matrix inversion not valid");
+    }
 
     det = 1.0 / det;
     for (let i = 0; i < 16; i++) inv[i] *= det;
-    return inv;
+    return inv as Matrix;
 }
 
 
 
 // Matrix from Quaternion. 
-export function quatToMat4(q) {
+export function quatToMat4(q: Vector4): Matrix {
     const x = q[0], y = q[1], z = q[2], w = q[3];
 
     const xx = x * x, yy = y * y, zz = z * z;
@@ -162,7 +185,7 @@ export function quatToMat4(q) {
 
 
 
-export function quatFromMat4(m) {
+export function quatFromMat4(m: Matrix): Vector4 {
     // m is a 16-element column-major array (WebGPU/GL style)
     const m00 = m[0], m01 = m[4], m02 = m[8];
     const m10 = m[1], m11 = m[5], m12 = m[9];
@@ -202,7 +225,7 @@ export function quatFromMat4(m) {
 
 
 // Multiplies a Quaternion (add B to A)
-export function quatMul(a, b) {
+export function quatMul(a: Vector4, b: Vector4): Vector4 {
     const ax = a[0], ay = a[1], az = a[2], aw = a[3];
     const bx = b[0], by = b[1], bz = b[2], bw = b[3];
 
@@ -215,7 +238,7 @@ export function quatMul(a, b) {
 }
 
 // Quaternion From [x,y,z]
-export function quatFromEuler([pitch, roll, yaw = 0]) {
+export function quatFromEuler([pitch = 0, roll = 0, yaw = 0]: Vector3): Vector4 {
 
     // all in radians
     const cy = Math.cos(yaw * 0.5);
@@ -235,7 +258,7 @@ export function quatFromEuler([pitch, roll, yaw = 0]) {
 
 
 
-export function eulerFromQuaternion([x, y, z, w]) {
+export function eulerFromQuaternion([x, y, z, w]: Vector4): Vector3 {
     // roll (X axis)
     const sinr_cosp = 2 * (w * x + y * z);
     const cosr_cosp = 1 - 2 * (x * x + y * y);
@@ -258,8 +281,8 @@ export function eulerFromQuaternion([x, y, z, w]) {
 
 
 
-// GENERATING MATRICES for rotating to look in a direction
-export function MatrixLookingInDirection(direction, up) {
+// GENERATING MATRICES for rotating to look in a direction doesnt include translation
+export function MatrixLookingInDirection(direction: Vector3, up: Vector3): Matrix {
     const z = normalize(direction);             //  .forward
     const x = normalize(cross(up, z));          //  .right
     const y = cross(z, x);                      //  .up
@@ -267,12 +290,12 @@ export function MatrixLookingInDirection(direction, up) {
         x[0], y[0], z[0], 0,
         x[1], y[1], z[1], 0,
         x[2], y[2], z[2], 0,
-        -dot(x, eye), -dot(y, eye), -dot(z, eye), 1,
+        0, 0, 0, 1,
     ];
 }
 
 // GENERATING MATRIX from Quaternion Position Scale
-export function TransformFromTRS([qx, qy, qz, qw], [tx, ty, tz], [sx, sy, sz]) {
+export function TransformFromTRS([qx, qy, qz, qw]: Vector4, [tx, ty, tz]: Vector3, [sx, sy, sz]: Vector3): Matrix {
     const x2 = qx + qx, y2 = qy + qy, z2 = qz + qz;
 
     const xx = qx * x2, yy = qy * y2, zz = qz * z2;
@@ -288,16 +311,3 @@ export function TransformFromTRS([qx, qy, qz, qw], [tx, ty, tz], [sx, sy, sz]) {
 }
 
 
-
-export function transformRotationScale(rotation, [tx, ty, tz], [sx, sy, sz]) {
-    // rotates around y
-    const c = Math.cos(rotation);
-    const s = Math.sin(rotation);
-
-    return [
-        c * sx, 0, -s * sx, 0,
-        0, sy, 0, 0,
-        s * sz, 0, c * sz, 0,
-        tx, ty, tz, 1,
-    ];
-}

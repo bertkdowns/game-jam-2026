@@ -1,12 +1,24 @@
+import { AnymatchFn } from "vite";
 import { Manager } from "./manager";
+import type { SceneObject } from "./scene";
 
+
+
+declare global {
+    interface Object {
+        murge: (first: object, second: object) => any;
+        assignWithPropertiesRecursive: (target: any, ...sources: object[]) => any;
+        assignWithProperties: (target: any, ...sources: object[]) => any;
+
+    }
+}
 // adds a way to murge objects and their childn objects together recursively 
 Object.assign(Object, {
-    murge: (first, second) => {
+    murge: (first: object, second: object) => {
         search(first, second);
         return first;
 
-        function search(first, second) {
+        function search(first: any, second: object) {
             Object.entries(second).forEach(([key, value]) => {
                 if (!first[key])
                     first[key] = value;
@@ -21,7 +33,7 @@ Object.assign(Object, {
 
 
 Object.assign(Object, {
-    assignWithPropertiesRecursive: (target, ...sources) => {
+    assignWithPropertiesRecursive: (target: any, ...sources: object[]) => {
 
         // loops through the sources your wanting to assign to the target, if they are objects. 
         for (const source of sources) {
@@ -46,7 +58,7 @@ Object.assign(Object, {
         return target;
 
 
-        function deepAssign(target, source) {
+        function deepAssign(target: any, source: any): any {
             // primitives / null
             if (source === null || typeof source !== "object") {
                 return source;
@@ -83,13 +95,13 @@ Object.assign(Object, {
     }
 });
 
-function isPlainObject(v) {
+function isPlainObject(v: object): boolean {
     if (v === null || typeof v !== "object") return false;
     const proto = Object.getPrototypeOf(v);
     return proto === Object.prototype || proto === null;
 }
 
-function isClassInstance(v) {
+function isClassInstance(v: object): boolean {
     return v !== null &&
         typeof v === "object" &&
         !isPlainObject(v) &&
@@ -100,7 +112,7 @@ function isClassInstance(v) {
 
 
 Object.assign(Object, {
-    assignWithProperties: (target, ...sources) => {
+    assignWithProperties: (target: any, ...sources: object[]) => {
 
         // loops through the sources your wanting to assign to the target, if they are objects. 
         for (const source of sources) {
@@ -133,8 +145,7 @@ Object.assign(Object, {
     }
 });
 
-
-export function Instantiate(...components) {
+export function Instantiate(...components: object[]): any {
     const out = [];
     // allows components to be
     for (var c of components) {
@@ -148,15 +159,15 @@ export function Instantiate(...components) {
     }
 
     // look for init functions and turn them into an array
-    const initList = []; 
-    for(const o of out){
-        if(typeof o["init"] === "function"){
+    const initList: (() => void)[] = [];
+    for (const o of out) {
+        if (typeof o["init"] === "function") {
             initList.push(o.init);
         }
     }
 
-    const obj = Object.assignWithProperties({initList}, ...out);
+    const obj: SceneObject = Object.assignWithProperties({ initList }, ...out);
     // the first function in the Managers update loop initialises everything and also calls start. 
     Manager.PushObjectInit(obj);
-    return obj; 
+    return obj;
 }

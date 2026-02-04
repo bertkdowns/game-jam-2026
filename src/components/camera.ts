@@ -5,20 +5,44 @@ import {
   multiplyMat4Vec4,
   normalize,
   subtract,
+  Vec3,
 } from "../engine_core/math";
-import { createDepthTextureFromCanvas, gpu } from "../engine_core/renderer";
+import { createDepthTextureFromCanvas, Renderer } from "../engine_core/renderer";
+import type { Vector4, Vector3, Matrix, Ray } from "../engine_core/math";
+import type { TransformInterface } from "./types";
+
+
+export interface Camera extends TransformInterface {
+  resolution: [number, number];
+  aspect: number;
+  UIPixelScale: number;
+  near: number;
+  far: number;
+  fovY: number;
+  f: number;
+}
 
 
 export class Camera {
+  resolution: [number, number] = [1280, 720];
+  aspect = 1;
+  // ui stuff (for pixelart)
+  UIPixelScale = 1 / 256;
+  // 3D perspective stuff
+  near = 0.02;
+  far = 1000;
+  fovY = 60;
+  f = 1 / Math.tan((this.fovY * Math.PI) / 360);
+
   // actual camera stuff
-  initialise(canvas) {
+  initialise(canvas: HTMLCanvasElement) {
     const camera = this;
     // Set initial size
     camera.setFromCanvas(canvas);
     // Watch for size changes
     new ResizeObserver(() => camera.setFromCanvas(canvas)).observe(canvas);
   }
-  setFromCanvas(canvas) {
+  setFromCanvas(canvas: HTMLCanvasElement) {
     // Get the display size (CSS size)
     const displayWidth = canvas.clientWidth || canvas.width;
     const displayHeight = canvas.clientHeight || canvas.height;
@@ -29,9 +53,9 @@ export class Camera {
       canvas.height = displayHeight;
 
       // Update depth texture if renderer exists and GPU is initialized
-      if (window.renderer && window.renderer.depthTexture && gpu) {
-        window.renderer.depthTexture.destroy();
-        window.renderer.depthTexture = createDepthTextureFromCanvas(canvas);
+      if (Renderer.depthTexture) {
+        Renderer.depthTexture.destroy();
+        Renderer.depthTexture = createDepthTextureFromCanvas(canvas);
       }
     }
 
@@ -40,160 +64,60 @@ export class Camera {
     this.resolution = [canvas.width, canvas.height];
   }
 
-  // world scale intends for there to be 32pixels per unit, and 8 units to make up the screen height
 
-  aspect = 1;
-  //   resolution = [1280, 720];
 
-  // 3D perspective stuff
-  near = 0.02;
-  far = 1000;
-  fovY = 60;
-  f = 1 / Math.tan((this.fovY * Math.PI) / 360);
 
   // camera perspective projection
-  PerspectiveMatrix() {
+  PerspectiveMatrix(): Matrix {
     return [
-      this.f / this.aspect,
-      0,
-      0,
-      0,
-      0,
-      this.f,
-      0,
-      0,
-      0,
-      0,
-      this.far / (this.far - this.near),
-      1,
-      0,
-      0,
-      (-this.near * this.far) / (this.far - this.near),
-      0,
+      this.f / this.aspect, 0, 0, 0,
+      0, this.f, 0, 0,
+      0, 0, this.far / (this.far - this.near), 1,
+      0, 0, (-this.near * this.far) / (this.far - this.near), 0,
     ];
   }
 
   // translation matrix functions
-  ViewMatrix() {
+  ViewMatrix(): Matrix {
     const eye = this.position;
     const rot = quatToMat4(this.quaternion);
 
     // extract rotation columns
-    const x = [rot[0], rot[1], rot[2]];
-    const y = [rot[4], rot[5], rot[6]];
-    const z = [rot[8], rot[9], rot[10]];
+    const x = [rot[0], rot[1], rot[2]] as Vector3;
+    const y = [rot[4], rot[5], rot[6]] as Vector3;
+    const z = [rot[8], rot[9], rot[10]] as Vector3;
 
     return [
-      x[0],
-      y[0],
-      z[0],
-      0,
-      x[1],
-      y[1],
-      z[1],
-      0,
-      x[2],
-      y[2],
-      z[2],
-      0,
-      -dot(x, eye),
-      -dot(y, eye),
-      -dot(z, eye),
-      1,
+      x[0], y[0], z[0], 0,
+      x[1], y[1], z[1], 0,
+      x[2], y[2], z[2], 0,
+      -dot(x, eye), -dot(y, eye), -dot(z, eye), 1,
     ];
   }
 
-  pixelScale = 1 / 256;
-  UIToScreenMatrix() {
+
+  UIToScreenMatrix(): Matrix {
     return [
-      this.pixelScale / this.aspect,
-      0,
-      0,
-      0,
-      0,
-      this.pixelScale,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      1,
+      this.UIPixelScale / this.aspect, 0, 0,
+      0, 0, this.UIPixelScale, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1,
     ];
   }
-  ScreenToUIMatrix() {
+  ScreenToUIMatrix(): Matrix {
     return [
-      this.aspect / this.pixelScale,
-      0,
-      0,
-      0,
-      0,
-      1 / this.pixelScale,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      1,
+      this.aspect / this.UIPixelScale, 0, 0, 0
+      , 0, 1 / this.UIPixelScale, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1,
     ];
   }
 
-  //#region  /* will probably not need this after making sprites inherit from transfrom()  */
-  WorldToScreenMatrix() {
-    return [
-      1 / (this.aspect * this.pixelScale),
-      0,
-      0,
-      0,
-      0,
-      1 / this.pixelScale,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      -this.position.x / this.aspect,
-      -this.position.y,
-      0,
-      1,
-    ];
-  }
-  ScreenToWorldMatrix() {
-    return [
-      this.aspect * this.pixelScale,
-      0,
-      0,
-      0,
-      0,
-      this.pixelScale,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      this.position.x * this.aspect,
-      this.position.y,
-      0,
-      1,
-    ];
-  }
+  //#region  /* will probably not need this after making sprites inherit from transform()  */
 
-  screenToWorld(x, y, z = 1) {
-    // screenX, screenY in pixels, (0,0) top-left
-    //const nx = (screenX / this.viewportWidth) * 2 - 1;  // normalized -1..1
-    //const ny = 1 - (screenY / this.viewportHeight) * 2; // flip Y
-
+  screenToWorld(x: number, y: number, z: number = 1): Vector3 {
     // clip space
-    const clip = [x, y, z, 1]; // [nx, ny, z, 1];
+    const clip = [x, y, z, 1] as Vector4; // [nx, ny, z, 1];
 
     // transform from clip -> view space
     const invProj = invertMat4(this.PerspectiveMatrix()); // 4x4 inverse
@@ -203,27 +127,28 @@ export class Camera {
     viewSpace[0] /= viewSpace[3];
     viewSpace[1] /= viewSpace[3];
     viewSpace[2] /= viewSpace[3];
+    viewSpace[3] = 1;
 
     // transform from view -> world space
     const invView = invertMat4(this.ViewMatrix()); // 4x4 inverse
-    const worldPos = multiplyMat4Vec4(invView, [...viewSpace, 1]);
+    const worldPos = multiplyMat4Vec4(invView, viewSpace);
 
-    return worldPos.slice(0, 3); // xyz
+    return worldPos.slice(0, 3) as Vector3;  // xyz
   }
 
-  screenPositionToRay(x, y, z = 1) {
-    const origin = camera.position; // camera pos in world
-    const target = camera.screenToWorld(x, y, z);
+  screenPositionToRay(x: number, y: number, z: number = 1): Ray {
+    const origin = this.position; // camera pos in world
+    const target = this.screenToWorld(x, y, z);
     const direction = normalize(subtract(target, origin));
     return { origin, direction };
   }
 
-  rayPlaneZ0(ray) {
+  rayPlaneZ0(ray: Ray): Vector3 {
     const [ox, oy, oz] = ray.origin;
     const [dx, dy, dz] = ray.direction;
 
     // avoid division by zero if ray is parallel to the plane
-    if (Math.abs(dz) < 1e-6) return null;
+    if (Math.abs(dz) < 1e-6) return [NaN, NaN, NaN];
 
     // solve t in oz + dz * t = 0
     const t = -oz / dz;
@@ -231,12 +156,5 @@ export class Camera {
     // intersection point
     return [ox + dx * t, oy + dy * t, 0];
   }
-  /*
-    intersectRayZ0(ray) {
-        if (Math.abs(ray.direction[2]) < 1e-6) return null; // parallel
-        const t = -ray.origin[2] / ray.direction[2];
-        return add(ray.origin, scale(ray.direction, t));
-    }*/
-
   //#endregion
 }

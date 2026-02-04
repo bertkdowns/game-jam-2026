@@ -1,9 +1,37 @@
-import { Camera } from "../components/camera";
+export { CameraInterface, TransformInterface } from "@components/types";
+
+export interface InteractablePersonEntity extends TransformInterface {
+  interactionRadius: number;
+  characterProfile: string;
+  hasTalked: boolean;
+  CheckPosition: () => void;
+}
+
+export interface PlayerEntity extends TransformInterface {
+  Move2D: () => void;
+}
+
+export interface SkyboxEntity extends TransformInterface { }
+
+export interface BackgroundEntity extends TransformInterface { }
+
+
+declare global {
+  interface Window {
+    player: PlayerEntity;
+  }
+}
+
+
+
+/*
+import { Camera } from "@components/camera";
+import { Vector3 } from "@engine_core/math";
 
 // Common entity properties
 export interface BaseEntity {
-  position: [number, number, number];
-  scale?: [number, number, number] | [number, number];
+  position: Vector3;
+  scale: Vector3;
   texture?: any;
   Start?: () => void;
   Update?: () => void;
@@ -66,15 +94,15 @@ export interface BackgroundEntity extends BaseEntity {
 // Camera type (matches the actual Camera class from components/camera)
 export interface CameraType {
   position:
-    | {
-        x: number;
-        y: number;
-        z: number;
-      }
-    | [number, number, number];
+  | {
+    x: number;
+    y: number;
+    z: number;
+  }
+  | [number, number, number];
   aspect: number;
   pixelScale: number;
-  initialise?: (canvas: HTMLCanvasElement) => void;
+  initialise: (canvas: HTMLCanvasElement) => void;
   screenPositionToRay: (
     x: number,
     y: number,
@@ -84,9 +112,9 @@ export interface CameraType {
     direction: [number, number, number];
   };
   rayPlaneZ0: (ray: {
-    origin: [number, number, number];
-    direction: [number, number, number];
-  }) => [number, number, number] | null;
+    origin: Vector3;
+    direction: Vector3;
+  }) => Vector3 | null;
 }
 
 // Game type
@@ -124,3 +152,4 @@ export interface Shader {
 export interface Mesh {
   vertCount?: number;
 }
+*/

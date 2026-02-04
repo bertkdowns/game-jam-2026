@@ -1,21 +1,23 @@
-import { SpriteDependencies } from "../LoadAssets";
+import { SpriteDependencies, backgroundTexture } from "@engine_core/asset_io/LoadAssets";
+import { BackgroundEntity } from "@game/types";
+import { Game } from "@game/Game";
+import { Instantiate } from "@engine_core/utils";
 
-import { Instantiate } from "../../engine_core/utils";
-import { BackgroundEntity } from "../types";
-import { Game } from "../Game";
-
-export function createBackground(
-  backgroundTexture: any,
-  game: Game
-): BackgroundEntity {
-  const background =
-    ((window as any).background =
-    game.scene.heirachy["background"] =
-      Instantiate(SpriteDependencies, {
-        texture: backgroundTexture,
-        Start() {
-          this.position = [0, 0, 0];
-        },
-      }));
+export function createBackground(game: Game): BackgroundEntity {
+  const background = (window.background = game.scene.heirachy["background"] =
+    Instantiate(SpriteDependencies, {
+      texture: backgroundTexture,
+      Start(this: BackgroundEntity) {
+        this.position = [0, 0, 0];
+      },
+    }));
   return background;
 }
+
+
+declare global {
+  interface Window {
+    background: BackgroundEntity;
+  }
+}
+

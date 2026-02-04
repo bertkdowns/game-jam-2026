@@ -209,3 +209,12 @@
       animation: characterBreathing 3s ease-in-out infinite;
       transform-origin: center bottom;
     }
+
+    .no-scrollbar {
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* IE/Edge */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;             /* Chrome/Safari */
+}

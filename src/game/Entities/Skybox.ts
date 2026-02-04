@@ -1,9 +1,10 @@
-import { SkyboxRenderer } from "../../components/skyboxRenderer";
-import { Transform } from "../../components/transform";
-import { AllocateUniformBuffer } from "../../engine_core/renderer";
-import { Instantiate } from "../../engine_core/utils";
-import { Game } from "../Game";
-import { SkyboxEntity } from "../types";
+import { SkyboxRenderer } from "@components/rendering";
+import { Transform } from "@components/transform";
+import { AllocateUniformBuffer } from "@engine_core/renderer";
+import { Instantiate } from "@engine_core/utils";
+import { Game } from "@game/Game";
+import { SkyboxEntity } from "@game/types";
+
 
 export function createSkybox(
   cubeMesh: any,

@@ -1,1 +1,0 @@
-export const tool: number = 10;

@@ -20,7 +20,7 @@
     "asbuild:release": "asc main.ts --target release"
   },
   "devDependencies": {
-    "@webgpu/types": "^0.1.68",
+    "@webgpu/types": "^0.1.69",
     "assemblyscript": "^0.28.9",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
@@ -36,6 +36,7 @@
     }
   },
   "dependencies": {
-    "inkjs": "^2.3.2"
+    "inkjs": "^2.3.2",
+    "vite-tsconfig-paths": "^6.0.5"
   }
 }

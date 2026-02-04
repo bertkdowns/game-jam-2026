@@ -1,9 +1,73 @@
-export var gpu;
 
-export const newFrameView = (renderer) => ({
+// makes Texture... etc, something i can Referance without having to import types to everything that uses them
+declare global {
+  interface Window {
+    renderer: Renderer;
+  }
+
+  interface Texture {
+    view: GPUTextureView,
+    width: number,
+    height: number,
+  }
+  interface TextureArray extends Texture {
+    layers: number;
+  }
+
+
+  interface RenderPass {
+    init: (renderer: Renderer) => GPURenderPassDescriptor,
+    drawPass: (renderPass: GPURenderPassEncoder, gpu: GPUDevice) => void,
+  }
+
+
+  interface Bitmap {
+    width: number;
+    height: number;
+    textureFormat: GPUTextureDescriptor;
+    data: ImageDataArray | GPUAllowSharedBufferSource;
+    view: GPUTextureView;
+    pixelScale: number | 0.015625; // 1/64
+  }
+  interface Mesh {
+    vertexBuffer: GPUBuffer,
+    vertexCount: number
+  }
+}
+
+export interface MeshRaw {
+  verts: Float32Array;
+  vertCount: number;
+}
+
+
+export interface RenderableObject {
+  renderPipeline: GPURenderPipeline;
+  bindGroup: GPUBindGroup;
+
+  vertexBuffer: GPUBuffer;
+  vertexCount: number;
+  cameraMatrixBuffer: GPUBuffer;
+  material: any;
+  shaderModule: GPUShaderModuleDescriptor;
+  texture: Bitmap;
+
+  GetTransformMatrix: () => number[]; // & { length: 16 };
+  handlePass: (pass: GPURenderPassEncoder, gpu: GPUDevice, camera: RenderCamera) => void;
+  init: () => void;
+}
+
+export interface RenderCamera {
+  ViewMatrix: () => Matrix;
+  PerspectiveMatrix: () => Matrix;
+  UIToScreenMatrix: () => Matrix;
+
+}
+
+export const newFrameView = (renderer: Renderer) => ({
   colorAttachments: [
     {
-      view: renderer.context.getCurrentTexture().createView(),
+      view: Renderer.context?.getCurrentTexture().createView(),
       loadOp: "clear",
       clearValue: {
         r: Math.sin(Date.now() / 1000) / 2 + 0.5,
@@ -14,27 +78,28 @@ export const newFrameView = (renderer) => ({
       storeOp: "store",
     },
   ],
-  depthStencilAttachment: attachmentFromDepthTexture(renderer.depthTexture),
-});
-const previousFrameView = (renderer) => ({
+  depthStencilAttachment: attachmentFromDepthTexture(Renderer.depthTexture),
+}) as GPURenderPassDescriptor;
+
+export const previousFrameView = () => ({
   colorAttachments: [
     {
-      view: renderer.context.getCurrentTexture().createView(),
+      view: Renderer.context?.getCurrentTexture().createView(),
       loadOp: "load",
       storeOp: "store",
     },
   ],
-  depthStencilAttachment: attachmentFromDepthTexture(renderer.depthTexture),
-});
+  depthStencilAttachment: attachmentFromDepthTexture(Renderer.depthTexture),
+}) as GPURenderPassDescriptor;
 
-const attachmentFromDepthTexture = (depthTexture) => ({
+const attachmentFromDepthTexture = (depthTexture: GPUTexture) => ({
   view: depthTexture.createView(),
   depthLoadOp: "clear",
   depthStoreOp: "store",
   depthClearValue: 1.0,
 });
-export const createDepthTextureFromCanvas = (canvas) =>
-  gpu.createTexture({
+export const createDepthTextureFromCanvas = (canvas: HTMLCanvasElement) =>
+  Renderer.device.createTexture({
     size: {
       width: canvas.width,
       height: canvas.height,
@@ -44,57 +109,84 @@ export const createDepthTextureFromCanvas = (canvas) =>
     usage: GPUTextureUsage.RENDER_ATTACHMENT,
   });
 
+
+// === RENDERER === 
 export class Renderer {
   // variables
-  context;
-  device;
-  depthTexture;
+  static canvas: HTMLCanvasElement;
+  static canvasFormat: GPUTextureFormat = "bgra8unorm";
+  static context: GPUCanvasContext | null;
+  static device: GPUDevice;
+  static depthTexture: GPUTexture;
 
-  async initialise(canvas) {
-    const context = (this.context = canvas.getContext("webgpu"));
+  static async CreateFromCanvas(canvas: HTMLCanvasElement) {
+
+    const context = canvas.getContext("webgpu");  // canvas.getContext("webgpu");
+    console.log("context", context);
+
 
     //check if webgpu exists/supported
-    if (!navigator.gpu)
+    if (!navigator.gpu || !context)
       throw new Error("WebGPU not supported on this browser.");
+
     console.log("waiting for adapter...");
     const adapter = await navigator.gpu.requestAdapter();
 
     if (!adapter) throw new Error("No appropriate GPUAdapter found.");
     // gets the addressable version of the gpu
     console.log("waiting for device...");
-    const device = (this.device = await adapter.requestDevice());
+    const device = await adapter.requestDevice();
     const format = navigator.gpu.getPreferredCanvasFormat();
 
-    Object.assign(device, { canvasFormat: format, canvas });
-    context.configure({ device, format });
+    return new Renderer(canvas, context, device, format);
+  }
 
-    gpu = device;
-    this.depthTexture = createDepthTextureFromCanvas(canvas);
+
+  constructor(canvas: HTMLCanvasElement, context: GPUCanvasContext, device: GPUDevice, format: GPUTextureFormat) {
+
+    Renderer.canvas = canvas;
+    Renderer.context = context;
+    Renderer.context.configure({ device, format });
+    Renderer.device = device;
+    Renderer.canvasFormat = format;
+    Renderer.depthTexture = createDepthTextureFromCanvas(canvas);
     window.renderer = this;
   }
 
+
   // draws all the passes, then submits the resulting comandbuffer to the gpu
-  RenderPasses(passes) {
+  RenderPasses(passes: RenderPass[]) {
     const renderer = this;
-    const CB_encoder = gpu.createCommandEncoder();
+    const CB_encoder = Renderer.device.createCommandEncoder();
 
     for (const pass of passes) {
       // starts pass (add whatever to renderpass then end it)
       const renderPass = CB_encoder.beginRenderPass(pass.init(renderer));
-      pass.drawPass(renderPass, gpu);
+      pass.drawPass(renderPass, Renderer.device);
       renderPass.end();
       // ends the pass
     }
 
-    gpu.queue.submit([CB_encoder.finish()]); // submits the commandbuffer directly
+    Renderer.device.queue.submit([CB_encoder.finish()]); // submits the commandbuffer directly
   }
 }
 
-export function AllocateTexture(bitmap) {
-  const texture = gpu.createTexture(
+
+
+
+
+
+
+
+
+
+// (ASSET -> GPU) INITIALSATION FUNCTIONS 
+
+export function AllocateTexture(bitmap: Bitmap): Texture {
+  const texture = Renderer.device.createTexture(
     Object.assign({ size: [bitmap.width, bitmap.height] }, bitmap.textureFormat)
   );
-  gpu.queue.writeTexture(
+  Renderer.device.queue.writeTexture(
     { texture },
     bitmap.data,
     { bytesPerRow: bitmap.width * 4 },
@@ -107,11 +199,11 @@ export function AllocateTexture(bitmap) {
   };
 }
 
-export function AllocateCubeMap(bitmap) {
-  const texture = gpu.createTexture(
+export function AllocateCubeMap(bitmap: Bitmap): Texture {
+  const texture = Renderer.device.createTexture(
     Object.assign({ size: [bitmap.width, bitmap.height] }, bitmap.textureFormat)
   );
-  gpu.queue.writeTexture(
+  Renderer.device.queue.writeTexture(
     { texture },
     bitmap.data,
     { bytesPerRow: bitmap.width * 4 },
@@ -124,17 +216,17 @@ export function AllocateCubeMap(bitmap) {
   };
 }
 
-export function AllocateTextureArray(bitmaps) {
+export function AllocateTextureArray(bitmaps: Bitmap[]): TextureArray {
   const width = bitmaps[0].width;
   const height = bitmaps[0].height;
   const layers = bitmaps.length;
-  const textureArray = gpu.createTexture(
+  const textureArray = Renderer.device.createTexture(
     Object.assign({ size: [width, height, layers] }, bitmaps[0].textureFormat)
   );
 
   for (let i = 0; i < layers; i++) {
     const bmp = bitmaps[i];
-    gpu.queue.writeTexture(
+    Renderer.device.queue.writeTexture(
       {
         texture: textureArray,
         origin: { x: 0, y: 0, z: i },
@@ -153,18 +245,18 @@ export function AllocateTextureArray(bitmaps) {
     width,
     height,
     layers,
-    ppi: bitmaps[0].ppi,
   };
 }
 
-export function AllocateMesh(mesh) {
-  const createBuffer = (arr, usage) => {
+export function AllocateMesh(mesh: MeshRaw): Mesh {
+  const createBuffer = (arr: Float32Array, usage: number) => {
     let desc = {
       size: (arr.byteLength + 3) & ~3, // Align to 4 bytes (thanks @chrimsonite)
       usage,
       mappedAtCreation: true,
     };
-    let buffer = gpu.createBuffer(desc);
+
+    let buffer = Renderer.device.createBuffer(desc);
     const writeArray =
       arr instanceof Uint16Array
         ? new Uint16Array(buffer.getMappedRange())
@@ -173,31 +265,26 @@ export function AllocateMesh(mesh) {
     buffer.unmap();
     return buffer;
   };
-  return Object.assign(createBuffer(mesh.verts, GPUBufferUsage.VERTEX), {
-    vertCount: mesh.vertCount,
-  });
+  return { vertexBuffer: createBuffer(mesh.verts, GPUBufferUsage.VERTEX), vertexCount: mesh.vertCount };
 }
 
-export function AllocateShaderModule(shader) {
-  return gpu.createShaderModule(shader); // new shader module from wgsl-string
+
+export function AllocateShaderModule(shader: GPUShaderModuleDescriptor): GPUShaderModule {
+  return Renderer.device.createShaderModule(shader); // new shader module from wgsl-string
 }
 
-export function AllocateUniformBuffer(size, strideOffset = 16) {
+export function AllocateUniformBuffer(size: number, strideOffset: number = 16): GPUBuffer {
   strideOffset--;
-  return gpu.createBuffer({
+  return Renderer.device.createBuffer({
     label: ` uniform Buffer, ${size} `,
     size: (size + strideOffset) & ~strideOffset,
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
 }
 
-export function AllocateInstancedBuffer(
-  sizePerInstance,
-  count,
-  strideOffset = 16
-) {
+export function AllocateInstancedBuffer(sizePerInstance: number, count: number, strideOffset: number = 16): GPUBuffer {
   strideOffset--;
-  return gpu.createBuffer({
+  return Renderer.device.createBuffer({
     label: ` uniform Buffer, ${sizePerInstance}x${count} `,
     size: count * ((sizePerInstance + strideOffset) & ~strideOffset),
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
