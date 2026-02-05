@@ -1,4 +1,5 @@
-import { Story, Compiler as InkCompiler } from "inkjs/compiler/Compiler";
+// @ts-ignore
+import { Story, Compiler as InkCompiler } from "inkjs/full";
 
 
 

@@ -16,7 +16,7 @@ import { setupInputHandlers } from "@interface/interface";
 import { GameScene, SceneManager } from "./SceneManager";
 import { StoryManager } from "@game/inkle/StoryManager";
 import { InteractablePersonEntity } from "./types";
-import { Story } from "inkjs/compiler/Compiler";
+import { Story } from "inkjs";
 import { CHARACTERS, switchToScene } from "./inkle";
 import { Instantiate } from "@engine_core/utils";
 import { Character, characters } from "./inkle/Character";

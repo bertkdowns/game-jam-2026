@@ -1,4 +1,4 @@
-import { Story } from "inkjs/compiler/Compiler";
+import { Story } from "inkjs";
 import { Choice } from "inkjs/engine/Choice";
 
 import { State, StateList, StateOption, StateMachine, GenericStateMachine, Events } from "@components/StateMachine";

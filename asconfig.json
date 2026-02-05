@@ -1,8 +1,8 @@
 {
   "entries": [
-    "./src/textRenderer.ts",
-    "./src/tileRenderer.ts",
-    "./src/utils.ts"
+    "./src/as_wasm/textRenderer.ts",
+    "./src/as_wasm/tileRenderer.ts",
+    "./src/as_wasm/wasmBinds.ts"
   ],
   "targets": {
     "debug": {
