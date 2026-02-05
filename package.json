@@ -1,27 +1,32 @@
 {
-  "name": "wasm_to_webgpu",
+  "name": "game-jam-2026",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
   "author": "jacobsmith3204",
+  "notmain": "node_modules/expo/AppEntry.js",
   "type": "module",
-  "main": "main.ts",
+  "main": "index.tsx",
   "scripts": {
-    "start": "npx serve .",
-    "start:dist": "npx serve ./dist",
+    "start": "expo start",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "start:standalone": "npx serve ./dist",
+    "build:standalone": "npm run assemblyScript:build && npx vite build",
     "dev": "vite",
     "build:app": "vite build",
     "preview": "vite preview",
-    "build:standalone": "npm run build && npx vite build",
-    "build": " asc --config asconfig.json --target release -o build/module.wasm && node ./postbuild",
-    "restart": "npm run build && npm run start",
+    "assemblyScript:build": " asc --config asconfig.json --target release -o build/module.wasm && node ./postbuild",
     "asbuild": "npm run asbuild:debug && npm run asbuild:release",
     "asbuild:debug": "asc main.ts --target debug",
     "asbuild:release": "asc main.ts --target release"
   },
   "devDependencies": {
+    "@types/react": "~19.1.10",
     "@webgpu/types": "^0.1.69",
     "assemblyscript": "^0.28.9",
+    "babel-preset-expo": "^54.0.10",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "vite": "^5.4.21",
@@ -36,7 +41,12 @@
     }
   },
   "dependencies": {
+    "expo": "^54.0.33",
     "inkjs": "^2.3.2",
+    "metro-react-native-babel-transformer": "^0.77.0",
+    "react": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-wgpu": "^0.5.3",
     "vite-tsconfig-paths": "^6.0.5"
   }
 }
